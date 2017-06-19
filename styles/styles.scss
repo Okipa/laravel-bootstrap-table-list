@@ -1,0 +1,127 @@
+$toggle_switch_button_label_background_color: $input-group-addon-bg;
+$toggle_switch_button_label_border-color: $input-group-addon-border-color;
+$toggle_switch_button_label_font-size: $font-size-small;
+$toggle_switch_button_unchecked_background-color: $input-group-addon-border-color;
+$toggle_switch_button_checked_background-color: $brand-primary;
+$toggle_switch_button_border_radius: $btn-border-radius-base;
+@import "../../laravel-toggle-switch-button/styles/styles";
+
+table.table-list {
+
+  thead {
+
+    tr {
+
+      td {
+        padding: 0 0 20px 0;
+
+        .submit {
+          padding: 0;
+
+          a {
+            padding: 6px 12px;
+          }
+        }
+      }
+    }
+  }
+
+  tbody {
+
+    tr {
+
+      td {
+
+        &.empty-list {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  tfoot {
+
+    tr {
+
+      td {
+        padding: 20px 0 0 0;
+
+        .tfoot-tab {
+
+          &:nth-child(1){
+            text-align: left;
+          }
+
+          &:nth-child(2){
+            text-align: center;
+          }
+
+          &.navigation-status {
+            padding: 7px 15px;
+          }
+
+          &.pagination-container {
+            text-align: right;
+
+            .pagination {
+              margin: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  tr {
+
+    th {
+
+      &.actions {
+        text-align: right !important;
+        min-width: 100px;
+      }
+
+      a {
+        font-weight: normal;
+
+        &.sort {
+          display: table;
+
+          i.fa {
+            display: table-cell;
+          }
+
+          span {
+            @extend i.fa;
+          }
+        }
+      }
+    }
+
+    td {
+      @extend th;
+
+      .switch-group {
+        position: relative;
+
+        .switch-action-icon {
+          position: absolute;
+          right: -20px;
+          top: -1px;
+          font-size: 18px;
+        }
+      }
+
+      &.actions {
+
+        form {
+          display: inline-block;
+
+          .btn-rounded {
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}

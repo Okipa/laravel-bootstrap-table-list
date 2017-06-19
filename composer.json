@@ -1,0 +1,37 @@
+{
+  "name": "okipa/laravel-bootstrap-table-list",
+  "description": "A Laravel entities table list generator, that simply builds your table HTML directly from your controller.",
+  "keywords": [
+    "okipa",
+    "laravel",
+    "bootstrap",
+    "php",
+    "table",
+    "list",
+    "entities",
+    "generate",
+    "generation"
+  ],
+  "homepage": "https://github.com/Okipa/table-list",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Arthur LORENT",
+      "email": "arthur.lorent@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "laravel/framework": ">=5.0",
+    "okipa/laravel-toggle-switch-button": "^1.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Okipa\\LaravelBootstrapTableList\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
+}
