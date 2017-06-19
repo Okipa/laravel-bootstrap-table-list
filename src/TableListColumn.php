@@ -23,13 +23,14 @@ class TableListColumn extends Model
         'is_activation_toggle',
         'configuration_closure',
         'link_closure',
+        'html_element_closure',
     ];
     
     /**
      * TableListColumn constructor.
      *
      * @param TableList $table_list
-     * @param string $attribute
+     * @param string    $attribute
      *
      */
     public function __construct(TableList $table_list, string $attribute)
@@ -238,6 +239,20 @@ class TableListColumn extends Model
     public function isLink(Closure $link_closure)
     {
         $this->link_closure = $link_closure;
+        
+        return $this;
+    }
+    
+    /**
+     * Set the HTML element to render in the method closure (optional)
+     *
+     * @param Closure $html_element_closure
+     *
+     * @return $this
+     */
+    public function isHTMLElement(Closure $html_element_closure)
+    {
+        $this->html_element_closure = $html_element_closure;
         
         return $this;
     }

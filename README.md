@@ -266,6 +266,11 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 | `$link_closure` | `Closure` | Optional | Set the link in the method closure |
 
+### isHTMLElement($html_element_closure)
+| Parameter | Type | Required/Optional | Description |
+|-----------|-----------|-----------|-----------|
+| `$html_element_closure` | `Closure` | Optional | Set the HTML element to render in the method closure |
+
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Configuration
