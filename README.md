@@ -14,7 +14,7 @@ To check how to use it, please refer to its documentation [here](https://github.
 ## Installation
 1. Install the package with composer :
 ```
-composer require laravel-bootstrap-table-list
+composer require okipa/laravel-bootstrap-table-list
 ```
 2. Add the package service provider in the `register()` method from your `app/Providers/AppServiceProvider.php` :
 ```
