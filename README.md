@@ -56,10 +56,14 @@ $table->addColumn('updated_at')
     ->isSortable()
     ->formatDate('d/m/Y H:i:s');
 ```
+Then, send your `$table` object in your view and render your table list :
+```
+{!! $table->render() !!}
+```
 That's it !
 
 ### Advanced usage
-If you need your table list for a more advanced usage, with a multilingual project, for example, here is an example of what you can do :
+If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
 ```
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
