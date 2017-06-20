@@ -17,7 +17,7 @@
                             <button class="{{ $button_class }} {{ str_slug(strip_tags($entity->{$column->attribute})) }}">
                         @endif
                             @if($image_path_closure = $column->image_path_closure)
-                                <img src="{{ $image_path_closure($entity, $column) }}" alt="{{ strip_tags($entity->{$column->attribute}) }}">
+                                <img class="img-thumbnail" src="{{ $image_path_closure($entity, $column) }}" alt="{{ strip_tags($entity->{$column->attribute}) }}">
                             @elseif($string_limit = $column->string_limit)
                                 {{ str_limit(strip_tags($entity->{$column->attribute}, $string_limit)) }}
                             @elseif($date_format = $column->date_format)

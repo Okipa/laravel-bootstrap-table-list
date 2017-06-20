@@ -91,6 +91,10 @@ $table->addColumn('image')
             return $entity->imagePath();
         }
     });
+$table->addColumn('logo')->setTitle(trans('widget_survey.back.label.logo'))
+    ->isHTMLElement(function ($entity, $column) {
+        return "<i class="fa fa-file-pdf-o" aria-hidden="true"></i> " . $entity->{$column->attribute};
+    });
 $table->addColumn('title')
     ->setTitle(trans('news.back.label.title'))
     ->setCustomTable('news_translations')
