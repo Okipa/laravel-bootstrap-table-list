@@ -2,6 +2,8 @@
 
 A Laravel entities table list generator, that simply builds your table HTML directly from your controller.
 
+![Laravel Bootstrap Table List](https://raw.githubusercontent.com/Okipa/laravel-bootstrap-table-list/master/img/laravel-bootstrap-table-list.png)
+
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Important note  
