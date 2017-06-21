@@ -29,11 +29,11 @@ class TableListColumn extends Model
     /**
      * TableListColumn constructor.
      *
-     * @param TableList $table_list
-     * @param string    $attribute
+     * @param TableList     $table_list
+     * @param string|null $attribute
      *
      */
-    public function __construct(TableList $table_list, string $attribute)
+    public function __construct(TableList $table_list, string $attribute = null)
     {
         $this->attributes = [
             'table_list'   => $table_list,

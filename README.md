@@ -87,47 +87,49 @@ $table = app(TableList::class)
     });
 // we add columns
 $table->addColumn('image')
-    ->setTitle(trans('news.back.label.image'))
+    ->setTitle(trans('news.label.image'))
     ->isImage(function ($entity, $column) {
         if ($entity->{$column->attribute}) {
             return $entity->imagePath();
         }
     });
-$table->addColumn('logo')->setTitle(trans('widget_survey.back.label.logo'))
-    ->isHTMLElement(function ($entity, $column) {
-        return "<i class="fa fa-file-pdf-o" aria-hidden="true"></i> " . $entity->{$column->attribute};
-    });
 $table->addColumn('title')
-    ->setTitle(trans('news.back.label.title'))
+    ->setTitle(trans('news.label.title'))
     ->setCustomTable('news_translations')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
 $table->addColumn('content')
-    ->setTitle(trans('news.back.label.content'))
+    ->setTitle(trans('news.label.content'))
     ->setCustomTable('news_translations')
     ->setStringLimit(30);
 $table->addColumn('category_id')
-    ->setTitle(trans('news.back.label.category'))
+    ->setTitle(trans('news.label.category'))
     ->isButton('btn btn-default')
     ->isConfigurationValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
     });
+$table->addColumn()->setTitle(trans('news.label.preview'))
+    ->isHtmlElement(function ($entity, $column) {
+        $preview_route = route('news.preview', ['id' => $entity->id]);
+        $preview_label = trans('global.action.preview');
+        return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
+    });
 $table->addColumn('released_at')
-    ->setTitle(trans('news.back.label.released_at'))
+    ->setTitle(trans('news.label.released_at'))
     ->isSortable()
     ->sortByDefault('desc')
     ->formatDate('d/m/Y H:i:s');
 $table->addColumn('active')
-    ->setTitle(trans('news.back.label.activation'))
+    ->setTitle(trans('news.label.activation'))
     ->isSortable()
     ->isActivationToggle();
 $table->addColumn('created_at')
-    ->setTitle(trans('news.back.label.created_at'))
+    ->setTitle(trans('news.label.created_at'))
     ->isSortable()
     ->formatDate('d/m/Y H:i:s');
 $table->addColumn('updated_at')
-    ->setTitle(trans('news.back.label.updated_at'))
+    ->setTitle(trans('news.label.updated_at'))
     ->isSortable()
     ->formatDate('d/m/Y H:i:s');
 ```
@@ -191,9 +193,11 @@ The following routes can be defined as well :
 ### addColumn($attribute)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$attribute` | `String` | Required | Add a column that will be displayed in the table list |
+| `$attribute` | `String` or `null` | Required | Add a column that will be displayed in the table list |
 
-**Note :** at least one column must be added to the table list.
+**Notes :**
+- at least one column must be added to the table list.  
+- a column can be created without attribute specification, in case of HTML element display, for example.
 
 ------------------------------------------------------------------------------------------------------------------------
 

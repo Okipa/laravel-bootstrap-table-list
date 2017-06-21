@@ -161,12 +161,12 @@ class TableList extends Model
     /**
      * Add a column that will be displayed in the table list (required)
      *
-     * @param string $attribute
+     * @param string|null $attribute
      *
      * @return TableListColumn
      * @throws ErrorException
      */
-    public function addColumn(string $attribute)
+    public function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
         if (!$this->model instanceof Model) {
@@ -263,7 +263,7 @@ class TableList extends Model
         }
         $this->columns->map(function ($column) {
             // we check that the given column attribute is correct
-            if (!in_array($column->attribute, Schema::getColumnListing($column->column_table))) {
+            if (!is_null($column->attribute) && !in_array($column->attribute, Schema::getColumnListing($column->column_table))) {
                 // we prepare the error message
                 $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "' . $column->column_table . '" table.';
                 // we throw an exception
