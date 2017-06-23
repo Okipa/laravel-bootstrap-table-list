@@ -50,7 +50,7 @@ $('.table-list .switch-btn').click(function () {
     }).fail(function (data) {
       // we replace the loading spinner by an error icon
       $.when(switch_group.find('.switch-action-icon').remove()).then(
-        switch_group.append('<span class="switch-action-icon text-success"><i class="fa fa-ban" aria-hidden="true"></i></span>')
+        switch_group.append('<span class="switch-action-icon text-danger"><i class="fa fa-ban" aria-hidden="true"></i></span>')
       );
       // we set the checkbox at its original value
       window.setTimeout(function () {
