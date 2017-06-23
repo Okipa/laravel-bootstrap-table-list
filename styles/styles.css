@@ -1,3 +1,4 @@
+
 table.table-list thead tr td {
     padding: 0 0 20px 0;
 }
@@ -36,6 +37,10 @@ table.table-list tfoot tr td .tfoot-tab.pagination-container {
 
 table.table-list tfoot tr td .tfoot-tab.pagination-container .pagination {
     margin: 0 !important;
+}
+
+table.table-list tr th, table.table-list tr td {
+    vertical-align: middle;
 }
 
 table.table-list tr th.actions, table.table-list tr td.actions {
