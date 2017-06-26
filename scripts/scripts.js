@@ -54,7 +54,7 @@ $('.table-list .switch-btn').click(function () {
       );
       // we set the checkbox at its original value
       window.setTimeout(function () {
-        switch_group.find('input.switch').prop('checked', data.responseJSON.active ? 'checked' : '');
+        switch_group.find('input.switch').prop('checked', data.responseJSON.active);
       }, 500);
     }).always(function () {
       // we fade out the icon
