@@ -47,6 +47,10 @@ $('.table-list .switch-btn').click(function () {
       $.when(switch_group.find('.switch-action-icon').remove()).then(
         switch_group.append('<span class="switch-action-icon text-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>')
       );
+      // we show a success notification
+      if (typeof notify === "function") {
+        notify(data.messages, 'success')
+      }
     }).fail(function (data) {
       // we replace the loading spinner by an error icon
       $.when(switch_group.find('.switch-action-icon').remove()).then(
@@ -56,6 +60,10 @@ $('.table-list .switch-btn').click(function () {
       window.setTimeout(function () {
         switch_group.find('input.switch').prop('checked', data.responseJSON.active);
       }, 500);
+      // we show an error notification
+      if (typeof notify === "function") {
+        notify(data.responseJSON.messages, 'danger');
+      }
     }).always(function () {
       // we fade out the icon
       switch_group.find('.switch-action-icon').css({
