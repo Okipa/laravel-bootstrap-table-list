@@ -42,7 +42,7 @@ $('.table-list .switch-btn').click(function () {
         _token: $this.find('input[name=_token]').val(),
         active: !$this.find('input[name=active]').is(':checked')
       }
-    }).done(function () {
+    }).done(function (data) {
       // we replace the loading spinner by a success icon
       $.when(switch_group.find('.switch-action-icon').remove()).then(
         switch_group.append('<span class="switch-action-icon text-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i></span>')
