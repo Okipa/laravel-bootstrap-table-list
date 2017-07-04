@@ -21,9 +21,9 @@ class TableListColumn extends Model
         'image_path_closure',
         'string_limit',
         'is_activation_toggle',
-        'configuration_closure',
         'link_closure',
-        'html_element_closure',
+        'custom_value_closure',
+        'custom_html_element_closure',
     ];
     
     /**
@@ -216,20 +216,6 @@ class TableListColumn extends Model
     }
     
     /**
-     * Set the configuration value in the method closure (optional)
-     *
-     * @param Closure $configuration_closure
-     *
-     * @return $this
-     */
-    public function isConfigurationValue(Closure $configuration_closure)
-    {
-        $this->configuration_closure = $configuration_closure;
-        
-        return $this;
-    }
-    
-    /**
      * Set the link in the method closure (optional)
      *
      * @param Closure $link_closure
@@ -244,15 +230,29 @@ class TableListColumn extends Model
     }
     
     /**
-     * Set the HTML element to render in the method closure (optional)
+     * Set a custom value in the method closure (optional)
      *
-     * @param Closure $html_element_closure
+     * @param Closure $custom_value_closure
      *
      * @return $this
      */
-    public function isHTMLElement(Closure $html_element_closure)
+    public function isCustomValue(Closure $custom_value_closure)
     {
-        $this->html_element_closure = $html_element_closure;
+        $this->custom_value_closure = $custom_value_closure;
+        
+        return $this;
+    }
+    
+    /**
+     * Set the HTML element to render in the method closure (optional)
+     *
+     * @param Closure $custom_html_element_closure
+     *
+     * @return $this
+     */
+    public function isCustomHTMLElement(Closure $custom_html_element_closure)
+    {
+        $this->custom_html_element_closure = $custom_html_element_closure;
         
         return $this;
     }

@@ -106,11 +106,11 @@ $table->addColumn('content')
 $table->addColumn('category_id')
     ->setTitle(trans('news.label.category'))
     ->isButton('btn btn-default')
-    ->isConfigurationValue(function ($entity, $column) {
+    ->isCustomValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
     });
 $table->addColumn()->setTitle(trans('news.label.preview'))
-    ->isHtmlElement(function ($entity, $column) {
+    ->isCustomHTMLElement(function ($entity, $column) {
         $preview_route = route('news.preview', ['id' => $entity->id]);
         $preview_label = trans('global.action.preview');
         return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
@@ -266,20 +266,20 @@ The following routes can be defined as well :
 
 **Note :** the `activation` route must be defined and the activation toggle can be called only once.
 
-### isConfigurationValue($configuration_closure)
-| Parameter | Type | Required/Optional | Description |
-|-----------|-----------|-----------|-----------|
-| `$configuration_closure` | `Closure` | Optional |Set the configuration value in the method closure |
-
 ### isLink($link_closure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
 | `$link_closure` | `Closure` | Optional | Set the link in the method closure |
 
-### isHTMLElement($html_element_closure)
+### isCustomValue($custom_value_closure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$html_element_closure` | `Closure` | Optional | Set the HTML element to render in the method closure |
+| `$custom_value_closure` | `Closure` | Optional | Set a custom value in the method closure |
+
+### isCustomHTMLElement($custom_html_element_closure)
+| Parameter | Type | Required/Optional | Description |
+|-----------|-----------|-----------|-----------|
+| `$custom_html_element_closure` | `Closure` | Optional | Set a custom HTML element in the method closure |
 
 ------------------------------------------------------------------------------------------------------------------------
 

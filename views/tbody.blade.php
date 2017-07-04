@@ -33,14 +33,14 @@
                                         'active_' . $entity->id
                                     ) !!}
                                 </form>
-                            @elseif($configuration_closure = $column->configuration_closure)
-                                {{ $configuration_closure($entity, $column) }}
                             @elseif($link_closure = $column->link_closure)
                                 <a href="{{ $link_closure($entity, $column) }}" title="{{ strip_tags($entity->{$column->attribute}) }}">
                                     {!! $entity->{$column->attribute} !!}
                                 </a>
-                            @elseif($html_element_closure = $column->html_element_closure)
-                                {!! $html_element_closure($entity, $column) !!}
+                            @elseif($custom_value_closure = $column->custom_value_closure)
+                                {{ $custom_value_closure($entity, $column) }}
+                            @elseif($custom_html_element_closure = $column->html_element_closure)
+                                {!! $custom_html_element_closure($entity, $column) !!}
                             @else
                                 {!! $entity->{$column->attribute} !!}
                             @endif
