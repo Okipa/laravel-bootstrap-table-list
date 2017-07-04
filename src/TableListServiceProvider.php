@@ -38,12 +38,6 @@ class TableListServiceProvider extends ServiceProvider
             __DIR__.'/../config/tablelist.php', 'tablelist'
         );
         
-        // laravel toggle switch button
-        // https://github.com/Okipa/laravel-toggle-switch-button
-        $this->app->register(ToggleSwitchButtonServiceProvider::class);
-        $loader = AliasLoader::getInstance();
-        $loader->alias('ToggleSwitchButton', ToggleSwitchButton::class);
-        
         $this->app->singleton('Okipa\TableList', function ($app) {
             $tableList = $app->make(TableList::class);
             

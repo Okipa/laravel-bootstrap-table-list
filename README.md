@@ -6,10 +6,49 @@ A Laravel entities table list generator, that simply builds your table HTML dire
 
 ------------------------------------------------------------------------------------------------------------------------
 
-## Important note  
-This package includes the [laravel-toggle-switch-button](https://github.com/Okipa/laravel-toggle-switch-button) package.  
-So, using this package will enable you to use the laravel-toggle-switch-button package as well.  
-To check how to use it, please refer to its documentation [here](https://github.com/Okipa/laravel-toggle-switch-button#usage) (skip the installation part).
+### Important : requirements
+ This package requires the following packages to work properly :
+ - [laravel-toggle-switch-button](https://github.com/Okipa/laravel-toggle-switch-button) package (installation with `composer`).
+ - [Bootstrap notify](http://bootstrap-notify.remabledesigns.com/) (installation with `bower`) : to make sure to get advantage of the package notifications, make sure that you have a JavaScript `notify()` method, like the following example :
+ ```
+ function notify(messages, type) {
+   if (messages) {
+     // we set the icon to show
+     var icon;
+     switch(type){
+       case 'success':
+         icon = 'your_success_icon_html';
+         break;
+       case 'danger':
+         icon = 'your_error_icon_html';
+         break;
+       [...]
+       default:
+         icon = 'your_info_icon_html';
+         break;
+     }
+
+     _.each(messages, function (message) {
+       $.notify({
+         // options
+         icon: icon,
+         message: message
+       }, {
+         // settings
+         type: type,
+         delay: 6000,
+         allow_dismiss: false,
+         showProgressbar: true,
+         animate: {
+           enter: 'animated bounceInDown',
+           exit: 'animated bounceOutUp'
+         }
+       });
+     });
+   }
+ }
+ ```
+ If you do not have a `notify()` method, no notifications will be shown.
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -264,7 +303,21 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 |  |  | Optional | Displays an activation toggle to activate / deactivate the entity |
 
-**Note :** the `activation` route must be defined and the activation toggle can be called only once.
+**Notes :**
+- the `activation` route must be defined and the activation toggle can be called only once.
+- the controller treatment must send back the following json response :
+```
+{
+    "active":true (or false),
+    "messages":[
+        "your first message",
+        "your second message",
+        ...
+    ]
+}
+```
+In case of error (exception, permission, ...), the `active` value will be used to set back the toggle to its database value.
+The `messages` array will be used to display your activation notifications messages.
 
 ### isLink($link_closure)
 | Parameter | Type | Required/Optional | Description |
