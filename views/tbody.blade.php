@@ -39,7 +39,7 @@
                                 </a>
                             @elseif($custom_value_closure = $column->custom_value_closure)
                                 {{ $custom_value_closure($entity, $column) }}
-                            @elseif($custom_html_element_closure = $column->html_element_closure)
+                            @elseif($custom_html_element_closure = $column->custom_html_element_closure)
                                 {!! $custom_html_element_closure($entity, $column) !!}
                             @else
                                 {!! $entity->{$column->attribute} !!}
