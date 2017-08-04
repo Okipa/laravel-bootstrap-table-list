@@ -16,7 +16,7 @@ use View;
 class TableList extends Model
 {
     protected $fillable = [
-        'model',
+        'table_model',
         'rows_number',
         'rows_number_selector_enabled',
         'sortable_columns',
@@ -51,13 +51,13 @@ class TableList extends Model
     /**
      * Set the model used for the table list generation (required)
      *
-     * @param string $model
+     * @param string $table_model
      *
      * @return $this
      */
-    function setModel(string $model)
+    function setModel(string $table_model)
     {
-        $this->model = app()->make($model);
+        $this->table_model = app()->make($table_model);
         
         return $this;
     }
@@ -86,15 +86,15 @@ class TableList extends Model
     function setRoutes(array $routes)
     {
         // we set the authorized array keys and values
-        $requested_routes_keys = ['index'];
-        $authorized_routes_keys = array_merge($requested_routes_keys, ['create', 'edit', 'destroy', 'activation']);
+        $required_routes_keys = ['index'];
+        $authorized_routes_keys = array_merge($required_routes_keys, ['create', 'edit', 'destroy', 'activation']);
         $authorized_route_params = ['alias', 'parameters'];
         
-        // we check the requested routes are given
+        // we check the required routes are given
         $routes_keys = array_keys($routes);
-        foreach ($requested_routes_keys as $requested_route_key) {
-            if (!in_array($requested_route_key, $routes_keys)) {
-                throw new InvalidArgumentException('Invalid argument for routes method. Missing requested "' . $requested_route_key . '" array key.');
+        foreach ($required_routes_keys as $required_route_key) {
+            if (!in_array($required_route_key, $routes_keys)) {
+                throw new InvalidArgumentException('Invalid argument for routes method. Missing required "' . $required_route_key . '" array key.');
             };
         }
         
@@ -104,7 +104,7 @@ class TableList extends Model
                 throw new InvalidArgumentException('Invalid argument for routes method. The "' . $route_key . '" route key must be one the following keys : ' . implode(', ', $authorized_routes_keys));
             }
             foreach ($authorized_route_params as $authorized_route_param) {
-                if (!in_array($authorized_route_param, array_keys($routes[$route_key]))) {
+                if (!in_array($authorized_route_param, array_keys($routes[ $route_key ]))) {
                     throw new InvalidArgumentException('Invalid routes argument for $routes() method. The key "' . $authorized_route_param . '" is missing from the "' . $route_key . '" route definition. Each route must contain an array with a "alias" (string) key and a "parameters" (array) key. Check the following example : ["index" => ["alias" => "news.index","parameters" => []]');
                 }
             }
@@ -169,7 +169,7 @@ class TableList extends Model
     public function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
-        if (!$this->model instanceof Model) {
+        if (!$this->table_model instanceof Model) {
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
@@ -208,17 +208,17 @@ class TableList extends Model
      * Get the route from its key
      *
      * @param string $routeKey
-     * @param array $params
+     * @param array  $params
      *
      * @return string
      */
     public function getRoute(string $routeKey, array $params = [])
     {
-        if (!isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
+        if (!isset($this->routes[ $routeKey ]) || empty($this->routes[ $routeKey ])) {
             throw new InvalidArgumentException('Invalid $routeKey argument for the route() method. The route key «' . $routeKey . '» has not been found in the routes stack.');
         }
         
-        return route($this->routes[$routeKey]['alias'], array_merge($this->routes[$routeKey]['parameters'], $params));
+        return route($this->routes[ $routeKey ]['alias'], array_merge($this->routes[ $routeKey ]['parameters'], $params));
     }
     
     /**
@@ -230,7 +230,7 @@ class TableList extends Model
      */
     public function isRouteDefined(string $routeKey)
     {
-        return (isset($this->routes[$routeKey]) || !empty($this->routes[$routeKey]));
+        return (isset($this->routes[ $routeKey ]) || !empty($this->routes[ $routeKey ]));
     }
     
     /**
@@ -263,9 +263,9 @@ class TableList extends Model
         }
         $this->columns->map(function ($column) {
             // we check that the given column attribute is correct
-            if (!is_null($column->attribute) && !in_array($column->attribute, Schema::getColumnListing($column->column_table))) {
+            if (!is_null($column->attribute) && !in_array($column->attribute, Schema::getColumnListing($column->custom_column_table))) {
                 // we prepare the error message
-                $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "' . $column->column_table . '" table.';
+                $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "' . $column->custom_column_table . '" table.';
                 // we throw an exception
                 throw new ErrorException($errorMessage);
             }
@@ -332,7 +332,7 @@ class TableList extends Model
     protected function generateEntitiesListFromQuery()
     {
         // we instantiate the query
-        $query = $this->model->query();
+        $query = $this->table_model->query();
         // closure treatment
         if ($closure = $this->query_closure) {
             // we execute the given closure
@@ -342,7 +342,7 @@ class TableList extends Model
         if ($searched = $this->request->search) {
             $this->searchable_columns->map(function ($column, $key) use (&$query, $searched) {
                 // we set the attribute to query
-                $attribute = $column->column_table . '.' . $column->attribute;
+                $attribute = $column->custom_column_table . '.' . $column->attribute;
                 // we add the search query
                 if ($key > 0) {
                     $query->orWhere($attribute, 'like', '%' . $searched . '%');

@@ -11,14 +11,12 @@ class TableListColumn extends Model
 {
     protected $fillable = [
         'table_list',
-        'column_table',
-        'has_custom_table',
+        'custom_column_table',
         'attribute',
         'is_sortable',
         'title',
         'date_format',
         'button_class',
-        'image_path_closure',
         'string_limit',
         'is_activation_toggle',
         'link_closure',
@@ -29,16 +27,16 @@ class TableListColumn extends Model
     /**
      * TableListColumn constructor.
      *
-     * @param TableList     $table_list
+     * @param TableList   $table_list
      * @param string|null $attribute
      *
      */
     public function __construct(TableList $table_list, string $attribute = null)
     {
         $this->attributes = [
-            'table_list'   => $table_list,
-            'column_table' => $table_list->model->getTable(),
-            'attribute'    => $attribute,
+            'table_list'          => $table_list,
+            'custom_column_table' => $table_list->table_model->getTable(),
+            'attribute'           => $attribute,
         ];
         
         return parent::__construct();
@@ -51,7 +49,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    function setTitle(string $title = null)
+    public function setTitle(string $title = null)
     {
         $this->title = $title;
         
@@ -66,7 +64,7 @@ class TableListColumn extends Model
      * @return $this
      * @throws ErrorException
      */
-    function sortByDefault(string $direction)
+    public function sortByDefault(string $direction)
     {
         // we check if the method has already been called
         if ($this->table_list->sortBy || $this->table_list->sortDir) {
@@ -91,7 +89,7 @@ class TableListColumn extends Model
      * @throws ErrorException
      *
      */
-    function useForDestroyConfirmation()
+    public function useForDestroyConfirmation()
     {
         if ($this->table_list->destroyAttribute) {
             $errorMessage = 'The useForDestroyConfirmation() method has already been called. You can define a column attribute for the destroy confirmation only once.';
@@ -108,7 +106,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    function isSortable()
+    public function isSortable()
     {
         $this->table_list->sortable_columns->add($this);
         $this->is_sortable = true;
@@ -121,7 +119,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    function isSearchable()
+    public function isSearchable()
     {
         $this->table_list->searchable_columns->add($this);
         
@@ -132,13 +130,13 @@ class TableListColumn extends Model
      * Set a custom table for the column (optional)
      * Calling this method can be useful if the column attribute does not directly belong to the table list model
      *
-     * @param string $custom_table
+     * @param string $custom_column_table
      *
      * @return $this|mixed
      */
-    function setCustomTable(string $custom_table)
+    public function setCustomTable(string $custom_column_table)
     {
-        $this->column_table = $custom_table;
+        $this->custom_column_table = $custom_column_table;
         
         return $this;
     }
@@ -170,20 +168,6 @@ class TableListColumn extends Model
     public function isButton(string $button_class)
     {
         $this->button_class = $button_class;
-        
-        return $this;
-    }
-    
-    /**
-     * Set the image path in the method closure (optional)
-     *
-     * @param Closure $image_path_closure
-     *
-     * @return $this
-     */
-    public function isImage(Closure $image_path_closure)
-    {
-        $this->image_path_closure = $image_path_closure;
         
         return $this;
     }

@@ -74,7 +74,7 @@ In your controller, simply call the package like the following example to genera
 ```
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
-    ->setModel(News::class)
+    ->setTableModel(News::class)
     ->setRequest($request)
     ->setRoutes([
         'index' => ['alias' => 'news.index', 'parameters' => []],
@@ -108,7 +108,7 @@ If you need your table list for a more advanced usage, with a multilingual proje
 ```
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
-    ->setModel(News::class)
+    ->setTableModel(News::class)
     ->setRequest($request)
     ->setRoutes([
         'index'      => ['alias' => 'news.index', 'parameters' => []],
@@ -127,9 +127,12 @@ $table = app(TableList::class)
 // we add columns
 $table->addColumn('image')
     ->setTitle(trans('news.label.image'))
-    ->isImage(function ($entity, $column) {
-        if ($entity->{$column->attribute}) {
-            return $entity->imagePath();
+    ->isCustomHTMLElement(function ($entity, $column) {
+        if ($src = $entity->{$column->attribute}) {
+            $image_zoom_src = $entity->imagePath($src, $column->attribute, 'zoom');
+            $image_thumbnail_src = $entity->imagePath($src, $column->attribute, 'thumbnail');
+            
+            return "<a href='$image_zoom_src' title='Image title' target="blank"><img class='thumbnail' src='$image_thumbnail_src' alt='Image alt'></a>";
         }
     });
 $table->addColumn('title')
@@ -177,10 +180,10 @@ $table->addColumn('updated_at')
 
 ## TableList object API
 
-### setModel($model)
+### setTableModel($table_model)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$model` | `String` | Required | Set the model used for the table list generation |
+| `$table_model` | `String` | Required | Set the model used for the table list generation |
 
 ### setRequest($request)
 | Parameter | Type | Required/Optional | Description |
@@ -271,10 +274,10 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 |  |  | Optional | Make the column searchable |
 
-### setCustomTable($custom_table)
+### setCustomTable($custom_column_table)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$custom_table` | `String` | Optional | Set a custom table for the column. Calling this method can be useful if the column attribute does not directly belong to the table list model |
+| `$custom_column_table` | `String` | Optional | Set a custom table for the column. Calling this method can be useful if the column attribute does not directly belong to the table list model |
 
 ### formatDate($date_format)
 | Parameter | Type | Required/Optional | Description |
@@ -285,13 +288,6 @@ The following routes can be defined as well :
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
 | `$button_class` | `String` | Optional | Set the column button class. The attribute is wrapped into a button |
-
-### isImage($image_path_closure)
-| Parameter | Type | Required/Optional | Description |
-|-----------|-----------|-----------|-----------|
-| `$image_path_closure` | `Closure` | Optional | Set the image path in the method closure |
-
-**Note :** use the `$entity` and `$column` parameters in the closure to return the relative path of your image.
 
 ### setStringLimit($string_limit)
 | Parameter | Type | Required/Optional | Description |

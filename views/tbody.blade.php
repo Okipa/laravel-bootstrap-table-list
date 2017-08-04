@@ -15,36 +15,34 @@
                 <td>
                     @if($button_class = $column->button_class)
                         <button class="{{ $button_class }} {{ str_slug(strip_tags($entity->{$column->attribute})) }}">
-                            @endif
-                            @if($image_path_closure = $column->image_path_closure)
-                                <img class="img-thumbnail" src="{{ $image_path_closure($entity, $column) }}" alt="{{ strip_tags($entity->{$column->attribute}) }}">
-                            @elseif($string_limit = $column->string_limit)
-                                {{ str_limit(strip_tags($entity->{$column->attribute}, $string_limit)) }}
-                            @elseif($date_format = $column->date_format)
-                                {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $entity->{$column->attribute})->format($date_format) : null }}
-                            @elseif($column->is_activation_toggle)
-                                <form role="form" method="POST" action="{{ $table->getRoute('activation', ['id' => $entity->id]) }}">
-                                    {!! csrf_field() !!}
-                                    {!! ToggleSwitchButton::render(
-                                        'active',
-                                        old('active') ? old('active') : $entity->{$column->attribute},
-                                        null,
-                                        null,
-                                        'active_' . $entity->id
-                                    ) !!}
-                                </form>
-                            @elseif($link_closure = $column->link_closure)
-                                <a href="{{ $link_closure($entity, $column) }}" title="{{ strip_tags($entity->{$column->attribute}) }}">
-                                    {!! $entity->{$column->attribute} !!}
-                                </a>
-                            @elseif($custom_value_closure = $column->custom_value_closure)
-                                {{ $custom_value_closure($entity, $column) }}
-                            @elseif($custom_html_element_closure = $column->custom_html_element_closure)
-                                {!! $custom_html_element_closure($entity, $column) !!}
-                            @else
+                    @endif
+                        @if($string_limit = $column->string_limit)
+                            {{ str_limit(strip_tags($entity->{$column->attribute}, $string_limit)) }}
+                        @elseif($date_format = $column->date_format)
+                            {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $entity->{$column->attribute})->format($date_format) : null }}
+                        @elseif($column->is_activation_toggle)
+                            <form role="form" method="POST" action="{{ $table->getRoute('activation', ['id' => $entity->id]) }}">
+                                {!! csrf_field() !!}
+                                {!! ToggleSwitchButton::render(
+                                    'active',
+                                    old('active') ? old('active') : $entity->{$column->attribute},
+                                    null,
+                                    null,
+                                    'active_' . $entity->id
+                                ) !!}
+                            </form>
+                        @elseif($link_closure = $column->link_closure)
+                            <a href="{{ $link_closure($entity, $column) }}" title="{{ strip_tags($entity->{$column->attribute}) }}">
                                 {!! $entity->{$column->attribute} !!}
-                            @endif
-                            @if($button_class)
+                            </a>
+                        @elseif($custom_value_closure = $column->custom_value_closure)
+                            {{ $custom_value_closure($entity, $column) }}
+                        @elseif($custom_html_element_closure = $column->custom_html_element_closure)
+                            {!! $custom_html_element_closure($entity, $column) !!}
+                        @else
+                            {!! $entity->{$column->attribute} !!}
+                        @endif
+                    @if($button_class)
                         </button>
                     @endif
                 </td>
