@@ -9,7 +9,7 @@ A Laravel entities table list generator, that simply builds your table HTML dire
 ### Important : requirements
  This package requires the following packages to work properly :
  - [laravel-toggle-switch-button](https://github.com/Okipa/laravel-toggle-switch-button) package (installation with `composer`).
- - [Bootstrap notify](http://bootstrap-notify.remabledesigns.com/) (installation with `bower`) : to make sure to get advantage of the package notifications, make sure that you have a JavaScript `notify()` method, like the following example :
+ - [Bootstrap notify](http://bootstrap-notify.remabledesigns.com/) : to make sure to get advantage of the package notifications, make sure that you have a JavaScript `notify()` method, like the following example :
  ```
  function notify(messages, type) {
    if (messages) {
