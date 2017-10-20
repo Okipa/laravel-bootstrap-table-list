@@ -30,7 +30,7 @@ class TableList extends Model
         'list',
         'destroyAttribute',
     ];
-    
+
     /**
      * TableList constructor.
      */
@@ -44,10 +44,10 @@ class TableList extends Model
             'columns'            => new Collection(),
             'rows_number'        => config('tablelist.default.rows_number'),
         ];
-        
+
         return parent::__construct();
     }
-    
+
     /**
      * Set the model used for the table list generation (required)
      *
@@ -58,10 +58,10 @@ class TableList extends Model
     function setModel(string $table_model)
     {
         $this->table_model = app()->make($table_model);
-        
+
         return $this;
     }
-    
+
     /**
      * Set the request used for the table list generation (required)
      *
@@ -72,10 +72,10 @@ class TableList extends Model
     function setRequest(Request $request)
     {
         $this->request = $request;
-        
+
         return $this;
     }
-    
+
     /**
      * Set the routes used for the table list generation (required)
      *
@@ -89,33 +89,46 @@ class TableList extends Model
         $required_routes_keys = ['index'];
         $authorized_routes_keys = array_merge($required_routes_keys, ['create', 'edit', 'destroy', 'activation']);
         $authorized_route_params = ['alias', 'parameters'];
-        
+
         // we check the required routes are given
         $routes_keys = array_keys($routes);
         foreach ($required_routes_keys as $required_route_key) {
             if (!in_array($required_route_key, $routes_keys)) {
-                throw new InvalidArgumentException('Invalid argument for routes method. Missing required "' . $required_route_key . '" array key.');
+                throw new InvalidArgumentException(
+                    'Invalid argument for routes method. Missing required "'
+                    . $required_route_key . '" array key.'
+                );
             };
         }
-        
+
         // we check if the given optional routes structure is correct
         foreach ($routes as $route_key => $route) {
             if (!in_array($route_key, $authorized_routes_keys)) {
-                throw new InvalidArgumentException('Invalid argument for routes method. The "' . $route_key . '" route key must be one the following keys : ' . implode(', ', $authorized_routes_keys));
+                throw new InvalidArgumentException(
+                    'Invalid argument for routes method. The "' . $route_key
+                    . '" route key must be one the following keys : ' . implode(', ', $authorized_routes_keys)
+                );
             }
             foreach ($authorized_route_params as $authorized_route_param) {
-                if (!in_array($authorized_route_param, array_keys($routes[ $route_key ]))) {
-                    throw new InvalidArgumentException('Invalid routes argument for $routes() method. The key "' . $authorized_route_param . '" is missing from the "' . $route_key . '" route definition. Each route must contain an array with a "alias" (string) key and a "parameters" (array) key. Check the following example : ["index" => ["alias" => "news.index","parameters" => []]');
+                if (!in_array($authorized_route_param, array_keys($routes[$route_key]))) {
+                    throw new InvalidArgumentException(
+                        'Invalid routes argument for $routes() method. The key "'
+                        . $authorized_route_param . '" is missing from the "'
+                        . $route_key
+                        . '" route definition. Each route must contain an array with a "alias" (string) key and a '
+                        . '"parameters" (array) key. Check the following example : '
+                        . '["index" => ["alias" => "news.index","parameters" => []]'
+                    );
                 }
             }
         }
-        
+
         // we set the routes
         $this->routes = $routes;
-        
+
         return $this;
     }
-    
+
     /**
      * Set a custom number of rows for the table list (optional)
      *
@@ -126,23 +139,22 @@ class TableList extends Model
     function setRowsNumber(int $rows_number)
     {
         $this->rows_number = $rows_number;
-        
+
         return $this;
     }
-    
+
     /**
      * Enables the rows number selection in the table list (optional)
      *
      * @return $this|mixed
-     *
      */
     function enableRowsNumberSelector()
     {
         $this->rows_number_selector_enabled = true;
-        
+
         return $this;
     }
-    
+
     /**
      * Set the query closure that will be used during the table list generation (optional)
      * For example, you can define your joined tables here
@@ -154,10 +166,10 @@ class TableList extends Model
     public function addQueryInstructions(Closure $query_closure)
     {
         $this->query_closure = $query_closure;
-        
+
         return $this;
     }
-    
+
     /**
      * Add a column that will be displayed in the table list (required)
      *
@@ -175,15 +187,16 @@ class TableList extends Model
         }
         // we check if the request has correctly been defined
         if (!$this->request instanceof Request) {
-            $errorMessage = 'The table list request has not been defined or is not an instance of ' . Request::class . '.';
+            $errorMessage =
+                'The table list request has not been defined or is not an instance of ' . Request::class . '.';
             throw new ErrorException($errorMessage);
         }
         $column = new TableListColumn($this, $attribute);
         $this->columns[] = $column;
-        
+
         return $column;
     }
-    
+
     /**
      * Get the searchable columns titles
      *
@@ -193,7 +206,7 @@ class TableList extends Model
     {
         return $this->searchable_columns->implode('title', ', ');
     }
-    
+
     /**
      * Get the columns count
      *
@@ -203,7 +216,7 @@ class TableList extends Model
     {
         return count($this->columns);
     }
-    
+
     /**
      * Get the route from its key
      *
@@ -214,13 +227,16 @@ class TableList extends Model
      */
     public function getRoute(string $routeKey, array $params = [])
     {
-        if (!isset($this->routes[ $routeKey ]) || empty($this->routes[ $routeKey ])) {
-            throw new InvalidArgumentException('Invalid $routeKey argument for the route() method. The route key «' . $routeKey . '» has not been found in the routes stack.');
+        if (!isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
+            throw new InvalidArgumentException(
+                'Invalid $routeKey argument for the route() method. The route key «'
+                . $routeKey . '» has not been found in the routes stack.'
+            );
         }
-        
-        return route($this->routes[ $routeKey ]['alias'], array_merge($this->routes[ $routeKey ]['parameters'], $params));
+
+        return route($this->routes[$routeKey]['alias'], array_merge($this->routes[$routeKey]['parameters'], $params));
     }
-    
+
     /**
      * Check if a route is defined from its key
      *
@@ -230,9 +246,9 @@ class TableList extends Model
      */
     public function isRouteDefined(string $routeKey)
     {
-        return (isset($this->routes[ $routeKey ]) || !empty($this->routes[ $routeKey ]));
+        return (isset($this->routes[$routeKey]) || !empty($this->routes[$routeKey]));
     }
-    
+
     /**
      * Get the navigation status from the table list
      *
@@ -246,7 +262,7 @@ class TableList extends Model
             'total' => $this->list->total(),
         ]);
     }
-    
+
     /**
      * Check the given attributes validity in each table list column
      *
@@ -257,22 +273,27 @@ class TableList extends Model
         // check if at least one column has been declared
         if (!count($this->columns)) {
             // we prepare the error message
-            $errorMessage = 'No column has been added to the table list. Please add at least one column by using the "addColumn" method on the table list object.';
+            $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
+                            . '"addColumn" method on the table list object.';
             // we throw an exception
             throw new ErrorException($errorMessage);
         }
         $this->columns->map(function ($column) {
             // we check that the given column attribute is correct
-            if (!is_null($column->attribute) && !in_array($column->attribute, Schema::getColumnListing($column->custom_column_table))) {
+            if (!is_null($column->attribute)
+                && !in_array($column->attribute, Schema::getColumnListing($column->custom_column_table))) {
                 // we prepare the error message
-                $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "' . $column->custom_column_table . '" table.';
+                $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "'
+                                . $column->custom_column_table . '" table.';
                 // we throw an exception
                 throw new ErrorException($errorMessage);
             }
             // we check if a title has been defined
             if (!$column->title) {
                 // we prepare the error message
-                $errorMessage = 'The given column "' . $column->attribute . '" has no defined title. Please define a title by using the "setTitle()" method on the column object.';
+                $errorMessage = 'The given column "' . $column->attribute
+                                . '" has no defined title. Please define a title by using the "setTitle()" '
+                                . 'method on the column object.';
                 // we throw an exception
                 throw new ErrorException($errorMessage);
             }
@@ -280,7 +301,10 @@ class TableList extends Model
             if ($column->is_activation_toggle) {
                 if (!$this->isRouteDefined('activation')) {
                     // we prepare the error message
-                    $errorMessage = 'The given column "' . $column->attribute . '" has been defined as an activation toggle. No "activation" route has been defined. Please define one in the "setRoutes()" method on the table list object.';
+                    $errorMessage = 'The given column "' . $column->attribute
+                                    . '" has been defined as an activation toggle. No "activation" '
+                                    . 'route has been defined. Please define one in the "setRoutes()" '
+                                    . 'method on the table list object.';
                     // we throw an exception
                     throw new ErrorException($errorMessage);
                 }
@@ -288,12 +312,14 @@ class TableList extends Model
         });
         if (!$this->destroyAttribute) {
             // we prepare the error message
-            $errorMessage = 'No column attribute has been choosed for the destroy confirmation. Please define an attribute by using the "useForDestroyConfirmation()" method on a column object.';
+            $errorMessage =
+                'No column attribute has been choosed for the destroy confirmation. '
+                . 'Please define an attribute by using the "useForDestroyConfirmation()" method on a column object.';
             // we throw an exception
             throw new ErrorException($errorMessage);
         }
     }
-    
+
     /**
      * Handle the request treatments
      */
@@ -323,7 +349,7 @@ class TableList extends Model
             $this->search = $this->request->search;
         }
     }
-    
+
     /**
      * Generate the entities list
      *
@@ -352,10 +378,13 @@ class TableList extends Model
             });
         }
         // sort treatment
-        if (($sortBy = $this->request->get('sortBy', $this->sortBy)) && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
+        if (($sortBy = $this->request->get('sortBy', $this->sortBy))
+            && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
             $query->orderBy($this->request->sortBy, $this->request->sortDir);
         } else {
-            $errorMessage = 'No default column has been selected for the table sort. Please define a column sorted by default by using the "sortByDefault()" method.';
+            $errorMessage =
+                'No default column has been selected for the table sort. '
+                . 'Please define a column sorted by default by using the "sortByDefault()" method.';
             throw new ErrorException($errorMessage);
         }
         // pagination treatment
@@ -367,7 +396,7 @@ class TableList extends Model
             'sortDir'     => $this->sortDir,
         ]);
     }
-    
+
     /**
      * Generate the table list html
      *
@@ -381,7 +410,7 @@ class TableList extends Model
         $this->handleRequest();
         // we generate the list
         $this->generateEntitiesListFromQuery();
-        
+
         return View::make('tablelist::table', ['table' => $this])->render();
     }
 }

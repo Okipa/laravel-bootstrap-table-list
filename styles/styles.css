@@ -1,3 +1,6 @@
+table.table-list {
+    padding: 15px;
+}
 
 table.table-list thead tr td {
     padding: 0 0 20px 0;
