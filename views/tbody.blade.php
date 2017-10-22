@@ -15,49 +15,35 @@
                 @foreach($table->columns as $column)
                     <td>
                         {{-- button start--}}
-                        @if($button_class = $column->button_class)
-                            <button class="{{ $button_class }} {{ str_slug(strip_tags($entity->{$column->attribute})) }}">
+                        @if($buttonClass = $column->buttonClass)
+                            <button class="{{ $buttonClass }} {{ str_slug(strip_tags($entity->{$column->attribute})) }}">
                         @endif
                             {{-- string limit --}}
-                            @if($string_limit = $column->string_limit)
-                                {{ str_limit(strip_tags($entity->{$column->attribute}, $string_limit)) }}
-                                {{-- date format --}}
-                            @elseif($date_format = $column->date_format)
+                            @if($stringLimit = $column->stringLimit)
+                                {{ str_limit(strip_tags($entity->{$column->attribute}, $stringLimit)) }}
+                            {{-- date format --}}
+                            @elseif($dateFormat = $column->dateFormat)
                                 {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
                                     'Y-m-d H:i:s', $entity->{$column->attribute}
-                                )->format($date_format) : null }}
-                                {{-- activation toggle --}}
-                            @elseif($column->is_activation_toggle)
-                                <form role="form"
-                                      method="POST"
-                                      action="{{ $table->getRoute('activation', ['id' => $entity->id]) }}">
-                                    {!! csrf_field() !!}
-                                    {!! ToggleSwitchButton::render(
-                                        'active',
-                                        old('active') ? old('active') : $entity->{$column->attribute},
-                                        null,
-                                        null,
-                                        'active_' . $entity->id
-                                    ) !!}
-                                </form>
-                                {{-- link --}}
-                            @elseif($link_closure = $column->link_closure)
-                                <a href="{{ $link_closure($entity, $column) }}"
+                                )->format($dateFormat) : null }}
+                            {{-- link --}}
+                            @elseif($linkClosure = $column->linkClosure)
+                                <a href="{{ $linkClosure($entity, $column) }}"
                                    title="{{ strip_tags($entity->{$column->attribute}) }}">
                                     {!! $entity->{$column->attribute} !!}
                                 </a>
-                                {{-- custom value --}}
-                            @elseif($custom_value_closure = $column->custom_value_closure)
-                                {{ $custom_value_closure($entity, $column) }}
-                                {{-- custom html element --}}
-                            @elseif($custom_html_element_closure = $column->custom_html_element_closure)
-                                {!! $custom_html_element_closure($entity, $column) !!}
+                            {{-- custom value --}}
+                            @elseif($customValueClosure = $column->customValueClosure)
+                                {{ $customValueClosure($entity, $column) }}
+                            {{-- custom html element --}}
+                            @elseif($customHtmlElementClosure = $column->customHtmlElementClosure)
+                                {!! $customHtmlElementClosure($entity, $column) !!}
                                 {{-- basic value --}}
                             @else
                                 {!! $entity->{$column->attribute} !!}
                             @endif
                         {{-- button end --}}
-                        @if($button_class)
+                        @if($buttonClass)
                             </button>
                         @endif
                     </td>
@@ -66,36 +52,13 @@
                 {{-- actions --}}
                 @if($table->isRouteDefined('edit') || $table->isRouteDefined('destroy'))
                     <td class="actions">
-
-                        {{-- edit --}}
+                        {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
-                            <form role="form"
-                                  method="GET"
-                                  action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
-                                <button class="btn btn-primary btn-rounded"
-                                        type="submit"
-                                        title="{{ trans('tablelist::tablelist.tbody.action.edit') }}">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </button>
-                            </form>
+                            @include('tablelist::components.edit-button')
                         @endif
-
-                        {{-- delete --}}
+                        {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
-                            <form role="form"
-                                  method="POST"
-                                  action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
-                                {!! csrf_field() !!}
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="button"
-                                        class="btn btn-danger btn-rounded"
-                                        data-toggle="modal"
-                                        data-target=".destroy-confirm-modal-{{ $entity->id }}"
-                                        title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                </button>
-                                @include('tablelist::destroy-confirm-modal')
-                            </form>
+                            @include('tablelist::components.destroy-button')
                         @endif
                     </td>
                 @endif

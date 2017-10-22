@@ -63,17 +63,6 @@
     display: table-cell;
 }
 
-.table-list table tr td .switch-group {
-    position: relative;
-}
-
-.table-list table tr td .switch-group .switch-action-icon {
-    position: absolute;
-    right: -20px;
-    top: -1px;
-    font-size: 18px;
-}
-
 .table-list table tr td.actions form {
     display: inline-block;
 }

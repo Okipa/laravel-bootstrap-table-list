@@ -16,17 +16,17 @@ use View;
 class TableList extends Model
 {
     protected $fillable = [
-        'table_model',
-        'rows_number',
-        'rows_number_selector_enabled',
-        'sortable_columns',
+        'tableModel',
+        'rowsNumber',
+        'rowsNumberSelectorEnabled',
+        'sortableColumns',
         'sortBy',
         'sortDir',
-        'searchable_columns',
+        'searchableColumns',
         'request',
         'routes',
         'columns',
-        'query_closure',
+        'queryClosure',
         'list',
         'destroyAttribute',
     ];
@@ -38,11 +38,11 @@ class TableList extends Model
     {
         // we set the default attribute values
         $this->attributes = [
-            'sortable_columns'   => new Collection(),
-            'searchable_columns' => new Collection(),
-            'routes'             => new Collection(),
-            'columns'            => new Collection(),
-            'rows_number'        => config('tablelist.default.rows_number'),
+            'sortableColumns'   => new Collection(),
+            'searchableColumns' => new Collection(),
+            'routes'            => new Collection(),
+            'columns'           => new Collection(),
+            'rowsNumber'        => config('tablelist.default.rows_number'),
         ];
 
         return parent::__construct();
@@ -51,13 +51,13 @@ class TableList extends Model
     /**
      * Set the model used for the table list generation (required)
      *
-     * @param string $table_model
+     * @param string $tableModel
      *
      * @return $this
      */
-    function setModel(string $table_model)
+    function setModel(string $tableModel)
     {
-        $this->table_model = app()->make($table_model);
+        $this->tableModel = app()->make($tableModel);
 
         return $this;
     }
@@ -87,7 +87,7 @@ class TableList extends Model
     {
         // we set the authorized array keys and values
         $required_routes_keys = ['index'];
-        $authorized_routes_keys = array_merge($required_routes_keys, ['create', 'edit', 'destroy', 'activation']);
+        $authorized_routes_keys = array_merge($required_routes_keys, ['create', 'edit', 'destroy']);
         $authorized_route_params = ['alias', 'parameters'];
 
         // we check the required routes are given
@@ -138,7 +138,7 @@ class TableList extends Model
      */
     function setRowsNumber(int $rows_number)
     {
-        $this->rows_number = $rows_number;
+        $this->rowsNumber = $rows_number;
 
         return $this;
     }
@@ -150,7 +150,7 @@ class TableList extends Model
      */
     function enableRowsNumberSelector()
     {
-        $this->rows_number_selector_enabled = true;
+        $this->rowsNumberSelectorEnabled = true;
 
         return $this;
     }
@@ -159,13 +159,13 @@ class TableList extends Model
      * Set the query closure that will be used during the table list generation (optional)
      * For example, you can define your joined tables here
      *
-     * @param Closure $query_closure
+     * @param Closure $queryClosure
      *
      * @return $this
      */
-    public function addQueryInstructions(Closure $query_closure)
+    public function addQueryInstructions(Closure $queryClosure)
     {
-        $this->query_closure = $query_closure;
+        $this->queryClosure = $queryClosure;
 
         return $this;
     }
@@ -181,7 +181,7 @@ class TableList extends Model
     public function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
-        if (!$this->table_model instanceof Model) {
+        if (!$this->tableModel instanceof Model) {
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
@@ -204,7 +204,7 @@ class TableList extends Model
      */
     public function getSearchableTitles()
     {
-        return $this->searchable_columns->implode('title', ', ');
+        return $this->searchableColumns->implode('title', ', ');
     }
 
     /**
@@ -281,10 +281,13 @@ class TableList extends Model
         $this->columns->map(function ($column) {
             // we check that the given column attribute is correct
             if (!is_null($column->attribute)
-                && !in_array($column->attribute, Schema::getColumnListing($column->custom_column_table))) {
+                && !in_array(
+                    $column->attribute,
+                    Schema::getColumnListing($column->customColumnTable)
+                )) {
                 // we prepare the error message
                 $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "'
-                                . $column->custom_column_table . '" table.';
+                                . $column->customColumnTable . '" table.';
                 // we throw an exception
                 throw new ErrorException($errorMessage);
             }
@@ -296,18 +299,6 @@ class TableList extends Model
                                 . 'method on the column object.';
                 // we throw an exception
                 throw new ErrorException($errorMessage);
-            }
-            // if the column is an activation toggle, we check that the activation has been defined
-            if ($column->is_activation_toggle) {
-                if (!$this->isRouteDefined('activation')) {
-                    // we prepare the error message
-                    $errorMessage = 'The given column "' . $column->attribute
-                                    . '" has been defined as an activation toggle. No "activation" '
-                                    . 'route has been defined. Please define one in the "setRoutes()" '
-                                    . 'method on the table list object.';
-                    // we throw an exception
-                    throw new ErrorException($errorMessage);
-                }
             }
         });
         if (!$this->destroyAttribute) {
@@ -326,11 +317,11 @@ class TableList extends Model
     protected function handleRequest()
     {
         // we check the inputs validity
-        $validator = Validator::make($this->request->only('rows_number', 'search', 'sortBy', 'sortDir'), [
-            'rows_number' => 'required|numeric',
-            'search'      => 'nullable|string',
-            'sortBy'      => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
-            'sortDir'     => 'nullable|string|in:asc,desc',
+        $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+            'rowsNumber' => 'required|numeric',
+            'search'     => 'nullable|string',
+            'sortBy'     => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
+            'sortDir'    => 'nullable|string|in:asc,desc',
         ]);
         // if errors are found
         if ($validator->fails()) {
@@ -338,14 +329,14 @@ class TableList extends Model
             Log::error($validator->errors());
             // we set back the default values
             $this->request->merge([
-                'rows_number' => $this->rows_number ? $this->rows_number : config('tablelist.default.rows_number'),
-                'search'      => null,
-                'sortBy'      => $this->sortBy,
-                'sortDir'     => $this->sortDir,
+                'rowsNumber' => $this->rowsNumber ? $this->rowsNumber : config('tablelist.default.rows_number'),
+                'search'     => null,
+                'sortBy'     => $this->sortBy,
+                'sortDir'    => $this->sortDir,
             ]);
         } else {
             // we save the request values
-            $this->rows_number = $this->request->rows_number;
+            $this->rowsNumber = $this->request->rowsNumber;
             $this->search = $this->request->search;
         }
     }
@@ -358,17 +349,17 @@ class TableList extends Model
     protected function generateEntitiesListFromQuery()
     {
         // we instantiate the query
-        $query = $this->table_model->query();
+        $query = $this->tableModel->query();
         // closure treatment
-        if ($closure = $this->query_closure) {
+        if ($closure = $this->queryClosure) {
             // we execute the given closure
             $closure($query);
         }
         // search treatment
         if ($searched = $this->request->search) {
-            $this->searchable_columns->map(function ($column, $key) use (&$query, $searched) {
+            $this->searchableColumns->map(function ($column, $key) use (&$query, $searched) {
                 // we set the attribute to query
-                $attribute = $column->custom_column_table . '.' . $column->attribute;
+                $attribute = $column->customColumnTable . '.' . $column->attribute;
                 // we add the search query
                 if ($key > 0) {
                     $query->orWhere($attribute, 'like', '%' . $searched . '%');
@@ -388,12 +379,12 @@ class TableList extends Model
             throw new ErrorException($errorMessage);
         }
         // pagination treatment
-        $this->list = $query->paginate($this->rows_number);
+        $this->list = $query->paginate($this->rowsNumber);
         $this->list->appends([
-            'rows_number' => $this->rows_number,
-            'search'      => $this->search,
-            'sortBy'      => $this->sortBy,
-            'sortDir'     => $this->sortDir,
+            'rowsNumber' => $this->rowsNumber,
+            'search'     => $this->search,
+            'sortBy'     => $this->sortBy,
+            'sortDir'    => $this->sortDir,
         ]);
     }
 

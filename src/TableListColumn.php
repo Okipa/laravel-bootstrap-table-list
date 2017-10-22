@@ -10,32 +10,31 @@ use InvalidArgumentException;
 class TableListColumn extends Model
 {
     protected $fillable = [
-        'table_list',
-        'custom_column_table',
+        'tableList',
+        'customColumnTable',
         'attribute',
-        'is_sortable',
+        'isSortable',
         'title',
-        'date_format',
-        'button_class',
-        'string_limit',
-        'is_activation_toggle',
-        'link_closure',
-        'custom_value_closure',
-        'custom_html_element_closure',
+        'dateFormat',
+        'buttonClass',
+        'stringLimit',
+        'linkClosure',
+        'customValueClosure',
+        'customHtmlElementClosure',
     ];
 
     /**
      * TableListColumn constructor.
      *
-     * @param TableList   $table_list
+     * @param TableList   $tableList
      * @param string|null $attribute
      */
-    public function __construct(TableList $table_list, string $attribute = null)
+    public function __construct(TableList $tableList, string $attribute = null)
     {
         $this->attributes = [
-            'table_list'          => $table_list,
-            'custom_column_table' => $table_list->table_model->getTable(),
-            'attribute'           => $attribute,
+            'tableList'         => $tableList,
+            'customColumnTable' => $tableList->tableModel->getTable(),
+            'attribute'         => $attribute,
         ];
 
         return parent::__construct();
@@ -66,13 +65,13 @@ class TableListColumn extends Model
     public function sortByDefault(string $direction)
     {
         // we check if the method has already been called
-        if ($this->table_list->sortBy || $this->table_list->sortDir) {
+        if ($this->tableList->sortBy || $this->tableList->sortDir) {
             $errorMessage = 'The sortByDefault() method has already been called. '
                             . 'You can sort a column by default only once.';
             throw new ErrorException($errorMessage);
         }
         // we set the sort attribute
-        $this->table_list->sortBy = $this->attribute;
+        $this->tableList->sortBy = $this->attribute;
         // we set the sort direction
         $acceptedDirections = ['asc', 'desc'];
         $errorMessage =
@@ -80,7 +79,7 @@ class TableListColumn extends Model
             . $direction . '" given.';
         if (!in_array($direction, $acceptedDirections))
             throw new InvalidArgumentException($errorMessage);
-        $this->table_list->sortDir = $direction;
+        $this->tableList->sortDir = $direction;
 
         return $this;
     }
@@ -93,14 +92,14 @@ class TableListColumn extends Model
      */
     public function useForDestroyConfirmation()
     {
-        if ($this->table_list->destroyAttribute) {
+        if ($this->tableList->destroyAttribute) {
             $errorMessage =
                 'The useForDestroyConfirmation() method has already been called. '
                 . 'You can define a column attribute for the destroy confirmation only once.';
             throw new ErrorException($errorMessage);
         }
 
-        $this->table_list->destroyAttribute = $this->attribute;
+        $this->tableList->destroyAttribute = $this->attribute;
 
         return $this;
     }
@@ -112,8 +111,8 @@ class TableListColumn extends Model
      */
     public function isSortable()
     {
-        $this->table_list->sortable_columns->add($this);
-        $this->is_sortable = true;
+        $this->tableList->sortableColumns->add($this);
+        $this->isSortable = true;
 
         return $this;
     }
@@ -125,7 +124,7 @@ class TableListColumn extends Model
      */
     public function isSearchable()
     {
-        $this->table_list->searchable_columns->add($this);
+        $this->tableList->searchableColumns->add($this);
 
         return $this;
     }
@@ -134,13 +133,13 @@ class TableListColumn extends Model
      * Set a custom table for the column (optional)
      * Calling this method can be useful if the column attribute does not directly belong to the table list model
      *
-     * @param string $custom_column_table
+     * @param string $customColumnTable
      *
      * @return $this|mixed
      */
-    public function setCustomTable(string $custom_column_table)
+    public function setCustomTable(string $customColumnTable)
     {
-        $this->custom_column_table = $custom_column_table;
+        $this->customColumnTable = $customColumnTable;
 
         return $this;
     }
@@ -149,13 +148,13 @@ class TableListColumn extends Model
      * Set the format for a date (optional)
      * (Carbon is used for formatting the date)
      *
-     * @param string|null $date_format
+     * @param string|null $dateFormat
      *
      * @return $this|string
      */
-    public function formatDate(string $date_format)
+    public function formatDate(string $dateFormat)
     {
-        $this->date_format = $date_format;
+        $this->dateFormat = $dateFormat;
 
         return $this;
     }
@@ -164,13 +163,13 @@ class TableListColumn extends Model
      * Set the column button class (optional)
      * The attribute is wrapped into a button
      *
-     * @param string $button_class
+     * @param string $buttonClass
      *
      * @return $this|mixed
      */
-    public function isButton(string $button_class)
+    public function isButton(string $buttonClass)
     {
-        $this->button_class = $button_class;
+        $this->buttonClass = $buttonClass;
 
         return $this;
     }
@@ -179,25 +178,13 @@ class TableListColumn extends Model
      * Set the string value display limitation (optional)
      * Shows "..." when the limit is reached
      *
-     * @param int $string_limit
+     * @param int $stringLimit
      *
      * @return $this
      */
-    public function setStringLimit(int $string_limit)
+    public function setStringLimit(int $stringLimit)
     {
-        $this->string_limit = $string_limit;
-
-        return $this;
-    }
-
-    /**
-     * Displays an activation toggle to activate / deactivate the entity (optional)
-     *
-     * @return $this
-     */
-    public function isActivationToggle()
-    {
-        $this->is_activation_toggle = true;
+        $this->stringLimit = $stringLimit;
 
         return $this;
     }
@@ -205,13 +192,13 @@ class TableListColumn extends Model
     /**
      * Set the link in the method closure (optional)
      *
-     * @param Closure $link_closure
+     * @param Closure $linkClosure
      *
      * @return $this
      */
-    public function isLink(Closure $link_closure)
+    public function isLink(Closure $linkClosure)
     {
-        $this->link_closure = $link_closure;
+        $this->linkClosure = $linkClosure;
 
         return $this;
     }
@@ -219,13 +206,13 @@ class TableListColumn extends Model
     /**
      * Set a custom value in the method closure (optional)
      *
-     * @param Closure $custom_value_closure
+     * @param Closure $customValueClosure
      *
      * @return $this
      */
-    public function isCustomValue(Closure $custom_value_closure)
+    public function isCustomValue(Closure $customValueClosure)
     {
-        $this->custom_value_closure = $custom_value_closure;
+        $this->customValueClosure = $customValueClosure;
 
         return $this;
     }
@@ -233,13 +220,13 @@ class TableListColumn extends Model
     /**
      * Set the HTML element to render in the method closure (optional)
      *
-     * @param Closure $custom_html_element_closure
+     * @param Closure $customHtmlElementClosure
      *
      * @return $this
      */
-    public function isCustomHTMLElement(Closure $custom_html_element_closure)
+    public function isCustomHTMLElement(Closure $customHtmlElementClosure)
     {
-        $this->custom_html_element_closure = $custom_html_element_closure;
+        $this->customHtmlElementClosure = $customHtmlElementClosure;
 
         return $this;
     }

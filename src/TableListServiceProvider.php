@@ -4,8 +4,6 @@ namespace Okipa\LaravelBootstrapTableList;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use Okipa\LaravelToggleSwitchButton\Facades\ToggleSwitchButton;
-use Okipa\LaravelToggleSwitchButton\ToggleSwitchButtonServiceProvider;
 
 class TableListServiceProvider extends ServiceProvider
 {

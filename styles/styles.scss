@@ -1,11 +1,3 @@
-$toggle_switch_button_label_background_color: $input-group-addon-bg;
-$toggle_switch_button_label_border-color: $input-group-addon-border-color;
-$toggle_switch_button_label_font-size: $font-size-small;
-$toggle_switch_button_unchecked_background-color: $input-group-addon-border-color;
-$toggle_switch_button_checked_background-color: $brand-primary;
-$toggle_switch_button_border_radius: $btn-border-radius-base;
-@import "../../laravel-toggle-switch-button/styles/styles";
-
 .table-list {
     padding: 15px;
 
@@ -104,17 +96,6 @@ $toggle_switch_button_border_radius: $btn-border-radius-base;
 
             td {
                 @extend th;
-
-                .switch-group {
-                    position: relative;
-
-                    .switch-action-icon {
-                        position: absolute;
-                        right: -20px;
-                        top: -1px;
-                        font-size: 18px;
-                    }
-                }
 
                 &.actions {
 

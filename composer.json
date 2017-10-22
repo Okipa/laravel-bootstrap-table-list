@@ -23,8 +23,7 @@
   ],
   "require": {
     "php": ">=7.0",
-    "laravel/framework": "~5.0",
-    "okipa/laravel-toggle-switch-button": "^1.0"
+    "laravel/framework": "~5.0"
   },
   "require-dev": {
   },
