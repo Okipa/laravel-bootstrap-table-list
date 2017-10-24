@@ -95,7 +95,7 @@ class TableList extends Model
         foreach ($required_routes_keys as $required_route_key) {
             if (!in_array($required_route_key, $routes_keys)) {
                 throw new InvalidArgumentException(
-                    'Invalid argument for routes method. Missing required "'
+                    'Invalid $routes argument for the setRoutes() method. Missing required "'
                     . $required_route_key . '" array key.'
                 );
             };
@@ -105,8 +105,8 @@ class TableList extends Model
         foreach ($routes as $route_key => $route) {
             if (!in_array($route_key, $authorized_routes_keys)) {
                 throw new InvalidArgumentException(
-                    'Invalid argument for routes method. The "' . $route_key
-                    . '" route key must be one the following keys : ' . implode(', ', $authorized_routes_keys)
+                    'Invalid $routes argument for the setRoutes() method. The "' . $route_key
+                    . '" route key is not an authorized keys (' . implode(', ', $authorized_routes_keys) . ')'
                 );
             }
             foreach ($authorized_route_params as $authorized_route_param) {
