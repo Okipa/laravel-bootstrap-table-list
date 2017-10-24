@@ -13,7 +13,7 @@ class TableListColumn extends Model
         'tableList',
         'customColumnTable',
         'attribute',
-        'isSortable',
+        'isSortableColumn',
         'title',
         'dateFormat',
         'buttonClass',
@@ -112,7 +112,7 @@ class TableListColumn extends Model
     public function isSortable()
     {
         $this->tableList->sortableColumns->add($this);
-        $this->isSortable = true;
+        $this->isSortableColumn = true;
 
         return $this;
     }

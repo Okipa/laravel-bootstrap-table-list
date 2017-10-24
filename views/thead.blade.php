@@ -90,7 +90,7 @@
     <tr>
         @foreach($table->columns as $column)
             <th>
-                @if($column->isSortable)
+                @if($column->isSortableColumn)
                     <a href="{{ $table->getRoute('index', [
                         'sortBy' => $column->attribute,
                         'sortDir' => $table->request->sortDir === 'asc' ? 'desc' : 'asc',
