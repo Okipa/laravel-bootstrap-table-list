@@ -106,7 +106,7 @@ class TableList extends Model
             if (!in_array($route_key, $authorized_routes_keys)) {
                 throw new InvalidArgumentException(
                     'Invalid $routes argument for the setRoutes() method. The "' . $route_key
-                    . '" route key is not an authorized keys (' . implode(', ', $authorized_routes_keys) . ')'
+                    . '" route key is not an authorized keys (' . implode(', ', $authorized_routes_keys) . ').'
                 );
             }
             foreach ($authorized_route_params as $authorized_route_param) {
@@ -117,7 +117,7 @@ class TableList extends Model
                         . $route_key
                         . '" route definition. Each route must contain an array with a "alias" (string) key and a '
                         . '"parameters" (array) key. Check the following example : '
-                        . '["index" => ["alias" => "news.index","parameters" => []]'
+                        . '["index" => ["alias" => "news.index","parameters" => []].'
                     );
                 }
             }

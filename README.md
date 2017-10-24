@@ -79,7 +79,7 @@ $table = app(TableList::class)
 // we add columns
 $table->addColumn('image')
     ->setTitle(trans('news.label.image'))
-    ->isCustomHTMLElement(function ($entity, $column) {
+    ->isCustomHtmlElement(function ($entity, $column) {
         if ($src = $entity->{$column->attribute}) {
             $image_zoom_src = $entity->imagePath($src, $column->attribute, 'zoom');
             $image_thumbnail_src = $entity->imagePath($src, $column->attribute, 'thumbnail');
@@ -104,7 +104,7 @@ $table->addColumn('category_id')
         return config('news.category.' . $entity->{$column->attribute});
     });
 $table->addColumn()->setTitle(trans('news.label.preview'))
-    ->isCustomHTMLElement(function ($entity, $column) {
+    ->isCustomHtmlElement(function ($entity, $column) {
         $preview_route = route('news.preview', ['id' => $entity->id]);
         $preview_label = trans('global.action.preview');
         return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
@@ -251,7 +251,7 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 | `$customValueClosure` | `Closure` | Optional | Set a custom value in the method closure |
 
-### isCustomHTMLElement($customHtmlElementClosure)
+### isCustomHtmlElement($customHtmlElementClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
 | `$customHtmlElementClosure` | `Closure` | Optional | Set a custom HTML element in the method closure |

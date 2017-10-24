@@ -224,7 +224,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function isCustomHTMLElement(Closure $customHtmlElementClosure)
+    public function isCustomHtmlElement(Closure $customHtmlElementClosure)
     {
         $this->customHtmlElementClosure = $customHtmlElementClosure;
 
