@@ -1,9 +1,9 @@
 <form role="form"
       method="GET"
       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
-    <button class="{!! config('tablelist.design.edit.class') !!}"
+    <button class="{!! config('tablelist.template.edit.class') !!}"
             type="submit"
             title="{{ trans('tablelist::tablelist.tbody.action.edit') }}">
-        {!! config('tablelist.design.edit.icon') !!}
+        {!! config('tablelist.template.edit.icon') !!}
     </button>
 </form>
