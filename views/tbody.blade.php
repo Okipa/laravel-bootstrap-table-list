@@ -54,11 +54,22 @@
                     <td class="actions">
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
-                            @include('tablelist::components.edit-button')
+                            <form role="form"
+                                  method="GET"
+                                  action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
+                                @include('tablelist::components.buttons.edit')
+                            </form>
                         @endif
                         {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
-                            @include('tablelist::components.destroy-button')
+                            <form role="form"
+                                  method="POST"
+                                  action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
+                                {!! csrf_field() !!}
+                                <input type="hidden" name="_method" value="DELETE">
+                                @include('tablelist::components.buttons.destroy')
+                                @include('tablelist::components.modals.destroy-confirmation')
+                            </form>
                         @endif
                     </td>
                 @endif
