@@ -55,7 +55,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    function setModel(string $tableModel)
+    protected function setModel(string $tableModel)
     {
         $this->tableModel = app()->make($tableModel);
 
@@ -69,7 +69,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    function setRequest(Request $request)
+    protected function setRequest(Request $request)
     {
         $this->request = $request;
 
@@ -83,7 +83,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    function setRoutes(array $routes)
+    protected function setRoutes(array $routes)
     {
         // we set the authorized array keys and values
         $required_routes_keys = ['index'];
@@ -136,7 +136,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    function setRowsNumber(int $rows_number)
+    protected function setRowsNumber(int $rows_number)
     {
         $this->rowsNumber = $rows_number;
 
@@ -148,7 +148,7 @@ class TableList extends Model
      *
      * @return $this|mixed
      */
-    function enableRowsNumberSelector()
+    protected function enableRowsNumberSelector()
     {
         $this->rowsNumberSelectorEnabled = true;
 
@@ -163,7 +163,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    public function addQueryInstructions(Closure $queryClosure)
+    protected function addQueryInstructions(Closure $queryClosure)
     {
         $this->queryClosure = $queryClosure;
 
@@ -178,7 +178,7 @@ class TableList extends Model
      * @return TableListColumn
      * @throws ErrorException
      */
-    public function addColumn(string $attribute = null)
+    protected function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
         if (!$this->tableModel instanceof Model) {
@@ -202,7 +202,7 @@ class TableList extends Model
      *
      * @return mixed
      */
-    public function getSearchableTitles()
+    protected function getSearchableTitles()
     {
         return $this->searchableColumns->implode('title', ', ');
     }
@@ -212,7 +212,7 @@ class TableList extends Model
      *
      * @return int
      */
-    public function getColumnsCount()
+    protected function getColumnsCount()
     {
         return count($this->columns);
     }
@@ -225,7 +225,7 @@ class TableList extends Model
      *
      * @return string
      */
-    public function getRoute(string $routeKey, array $params = [])
+    protected function getRoute(string $routeKey, array $params = [])
     {
         if (!isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
             throw new InvalidArgumentException(
@@ -244,7 +244,7 @@ class TableList extends Model
      *
      * @return bool
      */
-    public function isRouteDefined(string $routeKey)
+    protected function isRouteDefined(string $routeKey)
     {
         return (isset($this->routes[$routeKey]) || !empty($this->routes[$routeKey]));
     }
@@ -254,7 +254,7 @@ class TableList extends Model
      *
      * @return \Illuminate\Contracts\Translation\Translator|string
      */
-    public function navigationStatus()
+    protected function navigationStatus()
     {
         return trans('tablelist::tablelist.tfoot.nav', [
             'start' => ($this->list->perPage() * ($this->list->currentPage() - 1)) + 1,
@@ -393,7 +393,7 @@ class TableList extends Model
      *
      * @return string
      */
-    public function render()
+    protected function render()
     {
         // we check the columns validity
         $this->checkColumnsValidity();

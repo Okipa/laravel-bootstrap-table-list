@@ -47,7 +47,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    public function setTitle(string $title = null)
+    protected function setTitle(string $title = null)
     {
         $this->title = $title;
 
@@ -62,7 +62,7 @@ class TableListColumn extends Model
      * @return $this
      * @throws ErrorException
      */
-    public function sortByDefault(string $direction)
+    protected function sortByDefault(string $direction)
     {
         // we check if the method has already been called
         if ($this->tableList->sortBy || $this->tableList->sortDir) {
@@ -90,7 +90,7 @@ class TableListColumn extends Model
      * @return $this
      * @throws ErrorException
      */
-    public function useForDestroyConfirmation()
+    protected function useForDestroyConfirmation()
     {
         if ($this->tableList->destroyAttribute) {
             $errorMessage =
@@ -109,7 +109,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function isSortable()
+    protected function isSortable()
     {
         $this->tableList->sortableColumns->add($this);
         $this->isSortableColumn = true;
@@ -122,7 +122,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    public function isSearchable()
+    protected function isSearchable()
     {
         $this->tableList->searchableColumns->add($this);
 
@@ -137,7 +137,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    public function setCustomTable(string $customColumnTable)
+    protected function setCustomTable(string $customColumnTable)
     {
         $this->customColumnTable = $customColumnTable;
 
@@ -152,7 +152,7 @@ class TableListColumn extends Model
      *
      * @return $this|string
      */
-    public function formatDate(string $dateFormat)
+    protected function formatDate(string $dateFormat)
     {
         $this->dateFormat = $dateFormat;
 
@@ -167,7 +167,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    public function isButton(string $buttonClass)
+    protected function isButton(string $buttonClass)
     {
         $this->buttonClass = $buttonClass;
 
@@ -182,7 +182,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function setStringLimit(int $stringLimit)
+    protected function setStringLimit(int $stringLimit)
     {
         $this->stringLimit = $stringLimit;
 
@@ -196,7 +196,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function isLink(Closure $linkClosure)
+    protected function isLink(Closure $linkClosure)
     {
         $this->linkClosure = $linkClosure;
 
@@ -210,7 +210,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function isCustomValue(Closure $customValueClosure)
+    protected function isCustomValue(Closure $customValueClosure)
     {
         $this->customValueClosure = $customValueClosure;
 
@@ -224,7 +224,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    public function isCustomHtmlElement(Closure $customHtmlElementClosure)
+    protected function isCustomHtmlElement(Closure $customHtmlElementClosure)
     {
         $this->customHtmlElementClosure = $customHtmlElementClosure;
 
