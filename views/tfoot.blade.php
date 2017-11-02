@@ -8,7 +8,7 @@
 
                 @if($table->isRouteDefined('create'))
                     <div class="tfoot-tab col-sm-4 create-button">
-                        @include('components.buttons.create', ['route' => $table->getRoute('create')])
+                        @include('tablelist::components.buttons.create', ['route' => $table->getRoute('create')])
                     </div>
                 @endif
 
