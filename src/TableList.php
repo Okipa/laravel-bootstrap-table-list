@@ -55,7 +55,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    protected function setModel(string $tableModel)
+    public function setModel(string $tableModel)
     {
         $this->tableModel = app()->make($tableModel);
 
@@ -69,7 +69,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    protected function setRequest(Request $request)
+    public function setRequest(Request $request)
     {
         $this->request = $request;
 
@@ -83,38 +83,36 @@ class TableList extends Model
      *
      * @return $this
      */
-    protected function setRoutes(array $routes)
+    public function setRoutes(array $routes)
     {
         // we set the authorized array keys and values
-        $required_routes_keys = ['index'];
-        $authorized_routes_keys = array_merge($required_routes_keys, ['create', 'edit', 'destroy']);
-        $authorized_route_params = ['alias', 'parameters'];
-
+        $requiredRouteKeys = ['index'];
+        $authorizedRouteKeys = array_merge($requiredRouteKeys, ['create', 'edit', 'destroy']);
+        $authorizedRouteParams = ['alias', 'parameters'];
         // we check the required routes are given
-        $routes_keys = array_keys($routes);
-        foreach ($required_routes_keys as $required_route_key) {
-            if (!in_array($required_route_key, $routes_keys)) {
+        $routeKeys = array_keys($routes);
+        foreach ($requiredRouteKeys as $requiredRouteKey) {
+            if (!in_array($requiredRouteKey, $routeKeys)) {
                 throw new InvalidArgumentException(
                     'Invalid $routes argument for the setRoutes() method. Missing required "'
-                    . $required_route_key . '" array key.'
+                    . $requiredRouteKey . '" array key.'
                 );
             };
         }
-
         // we check if the given optional routes structure is correct
-        foreach ($routes as $route_key => $route) {
-            if (!in_array($route_key, $authorized_routes_keys)) {
+        foreach ($routes as $routeKey => $route) {
+            if (!in_array($routeKey, $authorizedRouteKeys)) {
                 throw new InvalidArgumentException(
-                    'Invalid $routes argument for the setRoutes() method. The "' . $route_key
-                    . '" route key is not an authorized keys (' . implode(', ', $authorized_routes_keys) . ').'
+                    'Invalid $routes argument for the setRoutes() method. The "' . $routeKey
+                    . '" route key is not an authorized keys (' . implode(', ', $authorizedRouteKeys) . ').'
                 );
             }
-            foreach ($authorized_route_params as $authorized_route_param) {
-                if (!in_array($authorized_route_param, array_keys($routes[$route_key]))) {
+            foreach ($authorizedRouteParams as $authorizedRouteParam) {
+                if (!in_array($authorizedRouteParam, array_keys($routes[$routeKey]))) {
                     throw new InvalidArgumentException(
                         'Invalid routes argument for $routes() method. The key "'
-                        . $authorized_route_param . '" is missing from the "'
-                        . $route_key
+                        . $authorizedRouteParam . '" is missing from the "'
+                        . $routeKey
                         . '" route definition. Each route must contain an array with a "alias" (string) key and a '
                         . '"parameters" (array) key. Check the following example : '
                         . '["index" => ["alias" => "news.index","parameters" => []].'
@@ -122,7 +120,6 @@ class TableList extends Model
                 }
             }
         }
-
         // we set the routes
         $this->routes = $routes;
 
@@ -136,7 +133,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    protected function setRowsNumber(int $rows_number)
+    public function setRowsNumber(int $rows_number)
     {
         $this->rowsNumber = $rows_number;
 
@@ -148,7 +145,7 @@ class TableList extends Model
      *
      * @return $this|mixed
      */
-    protected function enableRowsNumberSelector()
+    public function enableRowsNumberSelector()
     {
         $this->rowsNumberSelectorEnabled = true;
 
@@ -163,7 +160,7 @@ class TableList extends Model
      *
      * @return $this
      */
-    protected function addQueryInstructions(Closure $queryClosure)
+    public function addQueryInstructions(Closure $queryClosure)
     {
         $this->queryClosure = $queryClosure;
 
@@ -178,7 +175,7 @@ class TableList extends Model
      * @return TableListColumn
      * @throws ErrorException
      */
-    protected function addColumn(string $attribute = null)
+    public function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
         if (!$this->tableModel instanceof Model) {
@@ -202,7 +199,7 @@ class TableList extends Model
      *
      * @return mixed
      */
-    protected function getSearchableTitles()
+    public function getSearchableTitles()
     {
         return $this->searchableColumns->implode('title', ', ');
     }
@@ -212,7 +209,7 @@ class TableList extends Model
      *
      * @return int
      */
-    protected function getColumnsCount()
+    public function getColumnsCount()
     {
         return count($this->columns);
     }
@@ -225,7 +222,7 @@ class TableList extends Model
      *
      * @return string
      */
-    protected function getRoute(string $routeKey, array $params = [])
+    public function getRoute(string $routeKey, array $params = [])
     {
         if (!isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
             throw new InvalidArgumentException(
@@ -244,7 +241,7 @@ class TableList extends Model
      *
      * @return bool
      */
-    protected function isRouteDefined(string $routeKey)
+    public function isRouteDefined(string $routeKey)
     {
         return (isset($this->routes[$routeKey]) || !empty($this->routes[$routeKey]));
     }
@@ -254,7 +251,7 @@ class TableList extends Model
      *
      * @return \Illuminate\Contracts\Translation\Translator|string
      */
-    protected function navigationStatus()
+    public function navigationStatus()
     {
         return trans('tablelist::tablelist.tfoot.nav', [
             'start' => ($this->list->perPage() * ($this->list->currentPage() - 1)) + 1,
@@ -264,11 +261,28 @@ class TableList extends Model
     }
 
     /**
+     * Generate the table list html
+     *
+     * @return string
+     */
+    public function render()
+    {
+        // we check the columns validity
+        $this->checkColumnsValidity();
+        // we handle the request values
+        $this->handleRequest();
+        // we generate the list
+        $this->generateEntitiesListFromQuery();
+
+        return View::make('tablelist::table', ['table' => $this])->render();
+    }
+
+    /**
      * Check the given attributes validity in each table list column
      *
      * @throws ErrorException
      */
-    protected function checkColumnsValidity()
+    private function checkColumnsValidity()
     {
         // check if at least one column has been declared
         if (!count($this->columns)) {
@@ -314,7 +328,7 @@ class TableList extends Model
     /**
      * Handle the request treatments
      */
-    protected function handleRequest()
+    private function handleRequest()
     {
         // we check the inputs validity
         $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
@@ -346,7 +360,7 @@ class TableList extends Model
      *
      * @throws ErrorException
      */
-    protected function generateEntitiesListFromQuery()
+    private function generateEntitiesListFromQuery()
     {
         // we instantiate the query
         $query = $this->tableModel->query();
@@ -373,9 +387,8 @@ class TableList extends Model
             && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
             $query->orderBy($this->request->sortBy, $this->request->sortDir);
         } else {
-            $errorMessage =
-                'No default column has been selected for the table sort. '
-                . 'Please define a column sorted by default by using the "sortByDefault()" method.';
+            $errorMessage = 'No default column has been selected for the table sort. '
+                            . 'Please define a column sorted by default by using the "sortByDefault()" method.';
             throw new ErrorException($errorMessage);
         }
         // pagination treatment
@@ -386,22 +399,5 @@ class TableList extends Model
             'sortBy'     => $this->sortBy,
             'sortDir'    => $this->sortDir,
         ]);
-    }
-
-    /**
-     * Generate the table list html
-     *
-     * @return string
-     */
-    protected function render()
-    {
-        // we check the columns validity
-        $this->checkColumnsValidity();
-        // we handle the request values
-        $this->handleRequest();
-        // we generate the list
-        $this->generateEntitiesListFromQuery();
-
-        return View::make('tablelist::table', ['table' => $this])->render();
     }
 }

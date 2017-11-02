@@ -47,7 +47,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    protected function setTitle(string $title = null)
+    public function setTitle(string $title = null)
     {
         $this->title = $title;
 
@@ -62,7 +62,7 @@ class TableListColumn extends Model
      * @return $this
      * @throws ErrorException
      */
-    protected function sortByDefault(string $direction)
+    public function sortByDefault(string $direction)
     {
         // we check if the method has already been called
         if ($this->tableList->sortBy || $this->tableList->sortDir) {
@@ -74,9 +74,8 @@ class TableListColumn extends Model
         $this->tableList->sortBy = $this->attribute;
         // we set the sort direction
         $acceptedDirections = ['asc', 'desc'];
-        $errorMessage =
-            'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
-            . $direction . '" given.';
+        $errorMessage = 'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
+                        . $direction . '" given.';
         if (!in_array($direction, $acceptedDirections))
             throw new InvalidArgumentException($errorMessage);
         $this->tableList->sortDir = $direction;
@@ -90,12 +89,11 @@ class TableListColumn extends Model
      * @return $this
      * @throws ErrorException
      */
-    protected function useForDestroyConfirmation()
+    public function useForDestroyConfirmation()
     {
         if ($this->tableList->destroyAttribute) {
-            $errorMessage =
-                'The useForDestroyConfirmation() method has already been called. '
-                . 'You can define a column attribute for the destroy confirmation only once.';
+            $errorMessage = 'The useForDestroyConfirmation() method has already been called. '
+                            . 'You can define a column attribute for the destroy confirmation only once.';
             throw new ErrorException($errorMessage);
         }
 
@@ -109,7 +107,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    protected function isSortable()
+    public function isSortable()
     {
         $this->tableList->sortableColumns->add($this);
         $this->isSortableColumn = true;
@@ -122,7 +120,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    protected function isSearchable()
+    public function isSearchable()
     {
         $this->tableList->searchableColumns->add($this);
 
@@ -137,7 +135,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    protected function setCustomTable(string $customColumnTable)
+    public function setCustomTable(string $customColumnTable)
     {
         $this->customColumnTable = $customColumnTable;
 
@@ -152,7 +150,7 @@ class TableListColumn extends Model
      *
      * @return $this|string
      */
-    protected function formatDate(string $dateFormat)
+    public function formatDate(string $dateFormat)
     {
         $this->dateFormat = $dateFormat;
 
@@ -167,7 +165,7 @@ class TableListColumn extends Model
      *
      * @return $this|mixed
      */
-    protected function isButton(string $buttonClass)
+    public function isButton(string $buttonClass)
     {
         $this->buttonClass = $buttonClass;
 
@@ -182,7 +180,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    protected function setStringLimit(int $stringLimit)
+    public function setStringLimit(int $stringLimit)
     {
         $this->stringLimit = $stringLimit;
 
@@ -196,7 +194,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    protected function isLink(Closure $linkClosure)
+    public function isLink(Closure $linkClosure)
     {
         $this->linkClosure = $linkClosure;
 
@@ -210,7 +208,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    protected function isCustomValue(Closure $customValueClosure)
+    public function isCustomValue(Closure $customValueClosure)
     {
         $this->customValueClosure = $customValueClosure;
 
@@ -224,7 +222,7 @@ class TableListColumn extends Model
      *
      * @return $this
      */
-    protected function isCustomHtmlElement(Closure $customHtmlElementClosure)
+    public function isCustomHtmlElement(Closure $customHtmlElementClosure)
     {
         $this->customHtmlElementClosure = $customHtmlElementClosure;
 
