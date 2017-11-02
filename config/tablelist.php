@@ -7,6 +7,10 @@ return [
     ],
     'template' => [
         'button' => [
+            'create' => [
+                'class' => 'btn btn-success spin-on-click',
+                'icon'  => '<i class="fa fa-plus-circle" aria-hidden="true"></i>',
+            ],
             'edit'    => [
                 'class' => 'btn btn-primary btn-rounded spin-on-click',
                 'icon'  => '<i class="fa fa-pencil" aria-hidden="true"></i>',

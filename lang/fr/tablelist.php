@@ -15,13 +15,17 @@ return [
         ],
     ],
     "tfoot" => [
-        "add" => "Ajouter",
-        "nav" => "Résultats <b>:start</b> à <b>:stop</b> sur un total de <b>:total</b>",
+        "action" => [
+            "create" => "Ajouter",
+        ],
+        "nav"    => "Résultats <b>:start</b> à <b>:stop</b> sur un total de <b>:total</b>",
     ],
     "modal" => [
         "title"    => "Demande de confirmation",
         'question' => "Confirmez-vous la suppression de la ligne <b>:entity</b> ?",
-        "cancel"   => "Annuler",
-        "confirm"  => "Confirmer",
+        "action"   => [
+            "confirm" => "Confirmer",
+            "cancel"  => "Annuler",
+        ],
     ],
 ];

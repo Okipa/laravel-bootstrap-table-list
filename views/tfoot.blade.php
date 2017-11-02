@@ -8,9 +8,7 @@
 
                 @if($table->isRouteDefined('create'))
                     <div class="tfoot-tab col-sm-4 create-button">
-                        <a href="{{ $table->getRoute('create') }}">
-                            <button class="btn btn-success"><i class="fa fa-plus-circle"></i> {{ trans('tablelist::tablelist.tfoot.add') }}</button>
-                        </a>
+                        @include('components.buttons.create', ['route' => $table->getRoute('create')])
                     </div>
                 @endif
 
