@@ -1,14 +1,9 @@
 <thead>
-
     {{-- commands --}}
     @if(count($table->sortableColumns) || count($table->searchableColumns))
-
         <tr>
-
             <td colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
-
                 <div class="row">
-
                     {{-- row number selector --}}
                     <div class="col-sm-4 col-xs-12 rows-number-selector">
                         @if($table->rowsNumberSelectorEnabled)
@@ -36,11 +31,9 @@
                             </form>
                         @endif
                     </div>
-
                     {{-- empty column --}}
                     <div class="col-sm-2 hidden-xs">
                     </div>
-
                     {{-- search input --}}
                     <div class="col-sm-6 col-xs-12 search-bar">
                         @if(count($table->searchableColumns))
@@ -85,7 +78,6 @@
             </td>
         </tr>
     @endif
-
     {{-- titles --}}
     <tr>
         @foreach($table->columns as $column)
@@ -96,13 +88,15 @@
                         'sortDir' => $table->request->sortDir === 'asc' ? 'desc' : 'asc',
                         'search'   => $table->request->search,
                         'rowsNumber'    => $table->request->rowsNumber,
-                    ]) }}" title="{{ $column->title }}" class="sort">
+                    ]) }}"
+                       title="{{ $column->title }}"
+                       class="sort {{ config('tablelist.template.indicator.sort.class') }}">
                         @if($table->request->sortBy === $column->attribute && $table->request->sortDir === 'asc')
-                            <i class="fa fa-sort-asc"></i>
+                            {!! config('tablelist.template.indicator.icon.asc') !!}
                         @elseif($table->request->sortBy === $column->attribute && $table->request->sortDir === 'desc')
-                            <i class="fa fa-sort-desc"></i>
+                            {!! config('tablelist.template.indicator.icon.desc') !!}
                         @else
-                            <i class="fa fa-sort"></i>
+                            {!! config('tablelist.template.indicator.icon.unsorted') !!}
                         @endif
                         <span>
                             &nbsp{!! str_replace(' ', '&nbsp;', $column->title) !!}

@@ -6,8 +6,18 @@ return [
         'rows_number' => 20,
     ],
     'template' => [
-        'button' => [
-            'create' => [
+        'indicator' => [
+            'sort' => [
+                'class' => 'spin-on-click',
+                'icon' => [
+                    'asc'      => '<i class="fa fa-sort-asc"></i>',
+                    'desc' => '<i class="fa fa-sort-desc"></i>',
+                    'unsorted' => '<i class="fa fa-sort"></i>'
+                ],
+            ],
+        ],
+        'button'     => [
+            'create'  => [
                 'class' => 'btn btn-success spin-on-click',
                 'icon'  => '<i class="fa fa-plus-circle" aria-hidden="true"></i>',
             ],
@@ -27,6 +37,6 @@ return [
                 'class' => 'btn btn-danger',
                 'icon'  => '<i class="fa fa-ban" aria-hidden="true"></i>',
             ],
-        ]
+        ],
     ],
 ];

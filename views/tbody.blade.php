@@ -48,7 +48,6 @@
                         @endif
                     </td>
                 @endforeach
-
                 {{-- actions --}}
                 @if($table->isRouteDefined('edit') || $table->isRouteDefined('destroy'))
                     <td class="actions">
