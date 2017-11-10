@@ -92,11 +92,11 @@
                        title="{{ $column->title }}"
                        class="sort {{ config('tablelist.template.indicator.sort.class') }}">
                         @if($table->request->sortBy === $column->attribute && $table->request->sortDir === 'asc')
-                            {!! config('tablelist.template.indicator.icon.asc') !!}
+                            {!! config('tablelist.template.indicator.sort.icon.asc') !!}
                         @elseif($table->request->sortBy === $column->attribute && $table->request->sortDir === 'desc')
-                            {!! config('tablelist.template.indicator.icon.desc') !!}
+                            {!! config('tablelist.template.indicator.sort.icon.desc') !!}
                         @else
-                            {!! config('tablelist.template.indicator.icon.unsorted') !!}
+                            {!! config('tablelist.template.indicator.sort.icon.unsorted') !!}
                         @endif
                         <span>
                             &nbsp{!! str_replace(' ', '&nbsp;', $column->title) !!}
