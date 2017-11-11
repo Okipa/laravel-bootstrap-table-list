@@ -292,7 +292,7 @@ class TableList extends Model
             // we throw an exception
             throw new ErrorException($errorMessage);
         }
-        $this->columns->map(function ($column) {
+        $this->columns->map(function (TableListColumn $column) {
             // we check that the given column attribute is correct
             if (!is_null($column->attribute)
                 && !in_array(
@@ -371,7 +371,7 @@ class TableList extends Model
         }
         // search treatment
         if ($searched = $this->request->search) {
-            $this->searchableColumns->map(function ($column, $key) use (&$query, $searched) {
+            $this->searchableColumns->map(function (TableListColumn $column, int $key) use (&$query, $searched) {
                 // we set the attribute to query
                 $attribute = $column->customColumnTable . '.' . $column->attribute;
                 // we add the search query
@@ -385,7 +385,7 @@ class TableList extends Model
         // sort treatment
         if (($sortBy = $this->request->get('sortBy', $this->sortBy))
             && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
-            $query->orderBy($this->request->sortBy, $this->request->sortDir);
+            $query->orderBy($sortBy, $sortDir);
         } else {
             $errorMessage = 'No default column has been selected for the table sort. '
                             . 'Please define a column sorted by default by using the "sortByDefault()" method.';

@@ -2,7 +2,7 @@
 
 namespace Okipa\LaravelBootstrapTableList;
 
-use Illuminate\Foundation\AliasLoader;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 class TableListServiceProvider extends ServiceProvider
@@ -22,16 +22,13 @@ class TableListServiceProvider extends ServiceProvider
             __DIR__ . '/../views' => resource_path('views/vendor/tablelist'),
         ], 'tablelist::views');
     }
-
-    /**
-     * {@inheritDoc}
-     */
+    
     public function register()
     {
         $this->mergeConfigFrom(
             __DIR__.'/../config/tablelist.php', 'tablelist'
         );
-        $this->app->singleton('Okipa\TableList', function ($app) {
+        $this->app->singleton('Okipa\TableList', function (Application $app) {
             $tableList = $app->make(TableList::class);
 
             return $tableList;

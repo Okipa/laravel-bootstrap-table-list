@@ -1,36 +1,45 @@
 {
-  "name": "okipa/laravel-bootstrap-table-list",
-  "description": "A Laravel entities table list generator, that simply builds your table HTML directly from your controller.",
-  "keywords": [
-    "okipa",
-    "laravel",
-    "bootstrap",
-    "php",
-    "table",
-    "list",
-    "entities",
-    "generate",
-    "generation"
-  ],
-  "homepage": "https://github.com/Okipa/table-list",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Arthur LORENT",
-      "email": "arthur.lorent@gmail.com",
-      "role": "Developer"
-    }
-  ],
-  "require": {
-    "php": ">=7.0",
-    "laravel/framework": "~5.0"
-  },
-  "require-dev": {
-  },
-  "autoload": {
-    "psr-4": {
-      "Okipa\\LaravelBootstrapTableList\\": "src/"
-    }
-  },
-  "minimum-stability": "stable"
+    "name": "okipa/laravel-bootstrap-table-list",
+    "description": "Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.",
+    "keywords": [
+        "okipa",
+        "laravel",
+        "bootstrap",
+        "php",
+        "table",
+        "list",
+        "entities",
+        "generate",
+        "generator",
+        "generation",
+        "html"
+    ],
+    "homepage": "https://github.com/Okipa/table-list",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arthur LORENT",
+            "email": "arthur.lorent@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "laravel/framework": "~5.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Okipa\\LaravelBootstrapTableList\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Okipa\\LaravelBootstrapTableList\\TableListServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
 }

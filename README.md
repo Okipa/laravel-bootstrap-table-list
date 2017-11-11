@@ -1,30 +1,37 @@
 # Laravel Bootstrap Table List
 
-A Laravel model-based and highly customizable php table list generator, that simply builds your table HTML directly from your controller.
+[![Source Code](https://img.shields.io/badge/source-okipa/laravel--bootstrap--table--list-blue.svg)](https://github.com/Okipa/laravel-bootstrap-table-list)
+[![Latest Version](https://img.shields.io/github/release/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://github.com/ACID-Solutions/input-sanitizer/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://packagist.org/packages/ACID-Solutions/input-sanitizer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.
 
 ![Laravel Bootstrap Table List](https://raw.githubusercontent.com/Okipa/laravel-bootstrap-table-list/master/img/laravel-bootstrap-table-list.png)
 
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Installation
-1. Install the package with composer :
-```
+- Install the package with composer :
+```bash
 composer require okipa/laravel-bootstrap-table-list
 ```
-2. Add the package service provider in the `register()` method from your `app/Providers/AppServiceProvider.php` :
-```
+
+- Laravel 5.5+ uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
+If you don't use auto-discovery or if you use a Laravel 5.4- version, add the package service provider in the `register()` method from your `app/Providers/AppServiceProvider.php` :
+```php
 // laravel bootstrap table list
 // https://github.com/Okipa/laravel-bootstrap-table-list
 $this->app->register(Okipa\LaravelBootstrapTableList\TableListServiceProvider::class);
 ```
-3. Load the package `CSS` or `SASS` file from the `[path/to/composer/vendor]/okipa/laravel-bootstrap-table-list/styles` directory to your project.
+- Load the package `CSS` or `SASS` file from the `[path/to/composer/vendor]/okipa/laravel-bootstrap-table-list/styles` directory to your project.
 
 ------------------------------------------------------------------------------------------------------------------------
 ## Package usage
 
 ### Basic usage
 In your controller, simply call the package like the following example to generate your table list :
-```
+```php
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
     ->setTableModel(News::class)
@@ -51,14 +58,14 @@ $table->addColumn('updated_at')
     ->formatDate('d/m/Y H:i:s');
 ```
 Then, send your `$table` object in your view and render your table list :
-```
+```php
 {!! $table->render() !!}
 ```
 That's it !
 
 ### Advanced usage
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
-```
+```php
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
     ->setTableModel(News::class)
@@ -144,7 +151,7 @@ $table->addColumn('updated_at')
 | `$routes` | `Array` | Required | Set the routes used for the table list generation |
 
 Each route have to be defined with the following structure :
-```
+```php
 'index' => [
     'alias' => 'news.index',
     'parameters' => [
@@ -260,7 +267,7 @@ The following routes can be defined as well :
 
 ## Configuration
 To personalize the package configuration, you have to publish it first with the following script :
-```
+```bash
 php artisan vendor:publish --tag=tablelist::config
 ```
 Then, open the published package configuration file (`config/tablelist.php`) and override the default table list configuration by setting your own values for the following items :
@@ -276,7 +283,7 @@ Simply override the `CSS` or `SASS` to customize the package styles.
 
 ## Customize templates
 Publish the package blade templates file in your project :
-```
+```bash
 php artisan vendor:publish --tag=tablelist::views
 ```
 Then, change the content from the package templates in your `resources/views/vendor/tablelist` directory.
