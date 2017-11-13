@@ -65,7 +65,7 @@ Then, send your `$table` object in your view and render your table list :
 That's it !
 
 ### Notes :
-- **Request** : No need to transmit the request to the TableList : it systematically uses the current request to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method. 
+- **Request** : No need to transmit the request to the TableList : it systematically uses the current request given by the `request()` helper to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method. 
 
 ### Advanced usage
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :

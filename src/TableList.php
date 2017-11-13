@@ -245,7 +245,7 @@ class TableList extends Model
     }
 
     /**
-     * Get the navigation statusF from the table list
+     * Get the navigation status from the table list
      *
      * @return \Illuminate\Contracts\Translation\Translator|string
      */
