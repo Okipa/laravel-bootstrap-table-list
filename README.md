@@ -65,7 +65,7 @@ Then, send your `$table` object in your view and render your table list :
 That's it !
 
 ### Notes :
-- **Request** : No need to transmit the request to the TableList : it systematically uses the current request to get the number of lines to show and the searching, sorting or pagination data.
+- **Request** : No need to transmit the request to the TableList : it systematically uses the current request to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method. 
 
 ### Advanced usage
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
@@ -73,6 +73,7 @@ If you need your table list for a more advanced usage, with a multilingual proje
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
     ->setTableModel(News::class)
+    ->setRequest($request)
     ->setRoutes([
         'index'      => ['alias' => 'news.index', 'parameters' => []],
         'create'     => ['alias' => 'news.create', 'parameters' => []],
@@ -142,6 +143,11 @@ $table->addColumn('updated_at')
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
 | `$tableModel` | `String` | Required | Set the model used for the table list generation |
+
+### setRequest($request)
+| Parameter | Type | Required/Optional | Description |
+|-----------|-----------|-----------|-----------|
+| `$request` | `Illuminate\Http\Request` | Optional | Set the request used for the table list generation 
 
 ### setRoutes($routes)
 | Parameter | Type | Required/Optional | Description |

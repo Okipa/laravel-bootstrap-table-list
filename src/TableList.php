@@ -6,6 +6,7 @@ use Closure;
 use ErrorException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Log;
 use Schema;
@@ -22,6 +23,7 @@ class TableList extends Model
         'sortBy',
         'sortDir',
         'searchableColumns',
+        'request',
         'routes',
         'columns',
         'queryClosure',
@@ -38,6 +40,7 @@ class TableList extends Model
             'rowsNumber'        => config('tablelist.default.rows_number'),
             'sortableColumns'   => new Collection(),
             'searchableColumns' => new Collection(),
+            'request'           => request(),
             'routes'            => new Collection(),
             'columns'           => new Collection(),
         ]);
@@ -53,6 +56,20 @@ class TableList extends Model
     public function setModel(string $tableModel)
     {
         $this->tableModel = app()->make($tableModel);
+
+        return $this;
+    }
+
+    /**
+     * Set the request used for the table list generation (required)
+     *
+     * @param Request $request
+     *
+     * @return $this
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
 
         return $this;
     }
@@ -163,6 +180,12 @@ class TableList extends Model
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
+        // we check if the request has correctly been defined		
+        if (!$this->request instanceof Request) {
+            $errorMessage = 'The table list request has not been defined or is not an instance of '
+                            . Request::class . '.';
+            throw new ErrorException($errorMessage);
+        }
         $column = new TableListColumn($this, $attribute);
         $this->columns[] = $column;
 
@@ -222,7 +245,7 @@ class TableList extends Model
     }
 
     /**
-     * Get the navigation status from the table list
+     * Get the navigation statusF from the table list
      *
      * @return \Illuminate\Contracts\Translation\Translator|string
      */
@@ -306,7 +329,7 @@ class TableList extends Model
     private function handleRequest()
     {
         // we check the inputs validity
-        $validator = Validator::make(request()->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+        $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
             'rowsNumber' => 'required|numeric',
             'search'     => 'nullable|string',
             'sortBy'     => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
@@ -317,7 +340,7 @@ class TableList extends Model
             // we log the errors
             Log::error($validator->errors());
             // we set back the default values
-            request()->merge([
+            $this->request->merge([
                 'rowsNumber' => $this->rowsNumber ? $this->rowsNumber : config('tablelist.default.rows_number'),
                 'search'     => null,
                 'sortBy'     => $this->sortBy,
@@ -325,8 +348,8 @@ class TableList extends Model
             ]);
         } else {
             // we save the request values
-            $this->rowsNumber = request()->rowsNumber;
-            $this->search = request()->search;
+            $this->rowsNumber = $this->request->rowsNumber;
+            $this->search = $this->request->search;
         }
     }
 
@@ -345,7 +368,7 @@ class TableList extends Model
             $closure($query);
         }
         // search treatment
-        if ($searched = request()->search) {
+        if ($searched = $this->request->search) {
             $this->searchableColumns->map(function (TableListColumn $column, int $key) use (&$query, $searched) {
                 // we set the attribute to query
                 $attribute = $column->customColumnTable . '.' . $column->attribute;
@@ -358,8 +381,8 @@ class TableList extends Model
             });
         }
         // sort treatment
-        if (($sortBy = request()->get('sortBy', $this->sortBy))
-            && ($sortDir = request()->get('sortDir', $this->sortDir))) {
+        if (($sortBy = $this->request->get('sortBy', $this->sortBy))
+            && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
             $query->orderBy($sortBy, $sortDir);
         } else {
             $errorMessage = 'No default column has been selected for the table sort. '
