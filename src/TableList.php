@@ -36,16 +36,13 @@ class TableList extends Model
      */
     public function __construct()
     {
-        // we set the default attribute values
-        $this->attributes = [
+        return parent::__construct([
             'sortableColumns'   => new Collection(),
             'searchableColumns' => new Collection(),
             'routes'            => new Collection(),
             'columns'           => new Collection(),
             'rowsNumber'        => config('tablelist.default.rows_number'),
-        ];
-
-        return parent::__construct();
+        ]);
     }
 
     /**

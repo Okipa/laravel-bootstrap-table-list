@@ -31,13 +31,11 @@ class TableListColumn extends Model
      */
     public function __construct(TableList $tableList, string $attribute = null)
     {
-        $this->attributes = [
+        return parent::__construct([
             'tableList'         => $tableList,
             'customColumnTable' => $tableList->tableModel->getTable(),
             'attribute'         => $attribute,
-        ];
-
-        return parent::__construct();
+        ]);
     }
 
     /**
