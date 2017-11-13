@@ -22,7 +22,6 @@ class TableList extends Model
         'sortBy',
         'sortDir',
         'searchableColumns',
-        'request',
         'routes',
         'columns',
         'queryClosure',
@@ -41,7 +40,6 @@ class TableList extends Model
             'searchableColumns' => new Collection(),
             'routes'            => new Collection(),
             'columns'           => new Collection(),
-            'request'           => request(),
         ]);
     }
 
@@ -308,7 +306,7 @@ class TableList extends Model
     private function handleRequest()
     {
         // we check the inputs validity
-        $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+        $validator = Validator::make(request()->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
             'rowsNumber' => 'required|numeric',
             'search'     => 'nullable|string',
             'sortBy'     => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
@@ -319,7 +317,7 @@ class TableList extends Model
             // we log the errors
             Log::error($validator->errors());
             // we set back the default values
-            $this->request->merge([
+            request()->merge([
                 'rowsNumber' => $this->rowsNumber ? $this->rowsNumber : config('tablelist.default.rows_number'),
                 'search'     => null,
                 'sortBy'     => $this->sortBy,
@@ -327,8 +325,8 @@ class TableList extends Model
             ]);
         } else {
             // we save the request values
-            $this->rowsNumber = $this->request->rowsNumber;
-            $this->search = $this->request->search;
+            $this->rowsNumber = request()->rowsNumber;
+            $this->search = request()->search;
         }
     }
 
@@ -347,7 +345,7 @@ class TableList extends Model
             $closure($query);
         }
         // search treatment
-        if ($searched = $this->request->search) {
+        if ($searched = request()->search) {
             $this->searchableColumns->map(function (TableListColumn $column, int $key) use (&$query, $searched) {
                 // we set the attribute to query
                 $attribute = $column->customColumnTable . '.' . $column->attribute;
@@ -360,8 +358,8 @@ class TableList extends Model
             });
         }
         // sort treatment
-        if (($sortBy = $this->request->get('sortBy', $this->sortBy))
-            && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
+        if (($sortBy = request()->get('sortBy', $this->sortBy))
+            && ($sortDir = request()->get('sortDir', $this->sortDir))) {
             $query->orderBy($sortBy, $sortDir);
         } else {
             $errorMessage = 'No default column has been selected for the table sort. '
