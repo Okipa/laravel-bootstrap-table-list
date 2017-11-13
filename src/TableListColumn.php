@@ -31,7 +31,7 @@ class TableListColumn extends Model
      */
     public function __construct(TableList $tableList, string $attribute = null)
     {
-        return parent::__construct([
+        parent::__construct([
             'tableList'         => $tableList,
             'customColumnTable' => $tableList->tableModel->getTable(),
             'attribute'         => $attribute,
