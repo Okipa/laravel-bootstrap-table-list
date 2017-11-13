@@ -6,7 +6,6 @@ use Closure;
 use ErrorException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Log;
 use Schema;
@@ -37,11 +36,12 @@ class TableList extends Model
     public function __construct()
     {
         parent::__construct([
+            'rowsNumber'        => config('tablelist.default.rows_number'),
             'sortableColumns'   => new Collection(),
             'searchableColumns' => new Collection(),
             'routes'            => new Collection(),
             'columns'           => new Collection(),
-            'rowsNumber'        => config('tablelist.default.rows_number'),
+            'request'           => request(),
         ]);
     }
 
@@ -55,20 +55,6 @@ class TableList extends Model
     public function setModel(string $tableModel)
     {
         $this->tableModel = app()->make($tableModel);
-
-        return $this;
-    }
-
-    /**
-     * Set the request used for the table list generation (required)
-     *
-     * @param Request $request
-     *
-     * @return $this
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
 
         return $this;
     }
@@ -140,7 +126,7 @@ class TableList extends Model
     /**
      * Enables the rows number selection in the table list (optional)
      *
-     * @return $this|mixed
+     * @return TableList
      */
     public function enableRowsNumberSelector()
     {
@@ -179,12 +165,6 @@ class TableList extends Model
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
-        // we check if the request has correctly been defined
-        if (!$this->request instanceof Request) {
-            $errorMessage =
-                'The table list request has not been defined or is not an instance of ' . Request::class . '.';
-            throw new ErrorException($errorMessage);
-        }
         $column = new TableListColumn($this, $attribute);
         $this->columns[] = $column;
 
@@ -194,7 +174,7 @@ class TableList extends Model
     /**
      * Get the searchable columns titles
      *
-     * @return mixed
+     * @return string
      */
     public function getSearchableTitles()
     {

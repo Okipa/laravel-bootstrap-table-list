@@ -43,7 +43,7 @@ class TableListColumn extends Model
      *
      * @param string|null $title
      *
-     * @return $this|mixed
+     * @return TableListColumn
      */
     public function setTitle(string $title = null)
     {
@@ -116,7 +116,7 @@ class TableListColumn extends Model
     /**
      * Make the column searchable (optional)
      *
-     * @return $this|mixed
+     * @return TableListColumn
      */
     public function isSearchable()
     {
@@ -131,7 +131,7 @@ class TableListColumn extends Model
      *
      * @param string $customColumnTable
      *
-     * @return $this|mixed
+     * @return TableListColumn
      */
     public function setCustomTable(string $customColumnTable)
     {
@@ -161,7 +161,7 @@ class TableListColumn extends Model
      *
      * @param string $buttonClass
      *
-     * @return $this|mixed
+     * @return TableListColumn
      */
     public function isButton(string $buttonClass)
     {

@@ -4,6 +4,7 @@
 [![Latest Version](https://img.shields.io/github/release/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://github.com/ACID-Solutions/input-sanitizer/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://packagist.org/packages/ACID-Solutions/input-sanitizer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17/small.png)](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17)
 
 Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.
@@ -36,7 +37,6 @@ In your controller, simply call the package like the following example to genera
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
     ->setTableModel(News::class)
-    ->setRequest($request)
     ->setRoutes([
         'index' => ['alias' => 'news.index', 'parameters' => []],
     ]);
@@ -64,13 +64,15 @@ Then, send your `$table` object in your view and render your table list :
 ```
 That's it !
 
+### Notes :
+- **Request** : No need to transmit the request to the TableList : it systematically uses the current request to get the number of lines to show and the searching, sorting or pagination data.
+
 ### Advanced usage
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
 ```php
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
     ->setTableModel(News::class)
-    ->setRequest($request)
     ->setRoutes([
         'index'      => ['alias' => 'news.index', 'parameters' => []],
         'create'     => ['alias' => 'news.create', 'parameters' => []],
@@ -140,11 +142,6 @@ $table->addColumn('updated_at')
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
 | `$tableModel` | `String` | Required | Set the model used for the table list generation |
-
-### setRequest($request)
-| Parameter | Type | Required/Optional | Description |
-|-----------|-----------|-----------|-----------|
-| `$request` | `Illuminate\Http\Request` | Required | Set the request used for the table list generation |
 
 ### setRoutes($routes)
 | Parameter | Type | Required/Optional | Description |
