@@ -55,7 +55,7 @@ class TableList extends Model
      */
     public function setModel(string $tableModel)
     {
-        $this->tableModel = app()->make($tableModel);
+        $this->tableModel = $tableModel instanceof  Model ? $tableModel : app($tableModel);
 
         return $this;
     }
