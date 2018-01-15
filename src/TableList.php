@@ -127,13 +127,13 @@ class TableList extends Model
     /**
      * Set a custom number of rows for the table list (optional)
      *
-     * @param int $rows_number
+     * @param int $rowsNumber
      *
      * @return $this
      */
-    public function setRowsNumber(int $rows_number)
+    public function setRowsNumber(int $rowsNumber)
     {
-        $this->rowsNumber = $rows_number;
+        $this->rowsNumber = $rowsNumber;
 
         return $this;
     }
@@ -180,7 +180,7 @@ class TableList extends Model
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
-        // we check if the request has correctly been defined		
+        // we check if the request has correctly been defined
         if (!$this->request instanceof Request) {
             $errorMessage = 'The table list request has not been defined or is not an instance of '
                             . Request::class . '.';
@@ -262,6 +262,7 @@ class TableList extends Model
      * Generate the table list html
      *
      * @return string
+     * @throws ErrorException
      */
     public function render()
     {

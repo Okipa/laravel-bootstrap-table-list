@@ -171,10 +171,10 @@ The following routes can be defined as well :
 - `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.  
 - `destroy` : must be used to destroy a table list line. Displays a `Remove` icon on each table list line if defined.
 
-### setRowsNumber($rows_number)
+### setRowsNumber($rowsNumber)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$rows_number` | `Integer` | Optional | Set a custom number of rows for the table list |
+| `$rowsNumber` | `Integer` | Optional | Set a custom number of rows for the table list |
 
 ### enableRowsNumberSelector()
 | Parameter | Type | Required/Optional | Description |
