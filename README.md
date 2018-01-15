@@ -1,8 +1,8 @@
 # Laravel Bootstrap Table List
 
 [![Source Code](https://img.shields.io/badge/source-okipa/laravel--bootstrap--table--list-blue.svg)](https://github.com/Okipa/laravel-bootstrap-table-list)
-[![Latest Version](https://img.shields.io/github/release/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://github.com/ACID-Solutions/input-sanitizer/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://packagist.org/packages/ACID-Solutions/input-sanitizer)
+[![Latest Version](https://img.shields.io/github/release/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://github.com/Okipa/laravel-bootstrap-table-list/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/okipa/laravel-bootstrap-table-list.svg?style=flat-square)](https://packagist.org/packages/okipa/laravel-bootstrap-table-list)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17/small.png)](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17)
