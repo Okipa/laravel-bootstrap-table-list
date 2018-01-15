@@ -262,10 +262,10 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 | `$customValueClosure` | `Closure` | Optional | Set a custom value in the method closure |
 
-### isCustomHtmlElement($customHtmlElementClosure)
+### isCustomHtmlElement($customHtmlEltClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$customHtmlElementClosure` | `Closure` | Optional | Set a custom HTML element in the method closure |
+| `$customHtmlEltClosure` | `Closure` | Optional | Set a custom HTML element in the method closure |
 
 ------------------------------------------------------------------------------------------------------------------------
 

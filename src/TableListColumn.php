@@ -20,7 +20,7 @@ class TableListColumn extends Model
         'stringLimit',
         'linkClosure',
         'customValueClosure',
-        'customHtmlElementClosure',
+        'customHtmlEltClosure',
     ];
 
     /**
@@ -216,13 +216,13 @@ class TableListColumn extends Model
     /**
      * Set the HTML element to render in the method closure (optional)
      *
-     * @param Closure $customHtmlElementClosure
+     * @param Closure $customHtmlEltClosure
      *
      * @return $this
      */
-    public function isCustomHtmlElement(Closure $customHtmlElementClosure)
+    public function isCustomHtmlElement(Closure $customHtmlEltClosure)
     {
-        $this->customHtmlElementClosure = $customHtmlElementClosure;
+        $this->customHtmlEltClosure = $customHtmlEltClosure;
 
         return $this;
     }

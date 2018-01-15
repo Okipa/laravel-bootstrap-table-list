@@ -36,8 +36,8 @@
                             @elseif($customValueClosure = $column->customValueClosure)
                                 {{ $customValueClosure($entity, $column) }}
                             {{-- custom html element --}}
-                            @elseif($customHtmlElementClosure = $column->customHtmlElementClosure)
-                                {!! $customHtmlElementClosure($entity, $column) !!}
+                            @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
+                                {!! $customHtmlEltClosure($entity, $column) !!}
                                 {{-- basic value --}}
                             @else
                                 {!! $entity->{$column->attribute} !!}
