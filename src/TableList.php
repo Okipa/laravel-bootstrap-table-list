@@ -85,8 +85,8 @@ class TableList extends Model
     {
         // we set the authorized array keys and values
         $requiredRouteKeys = ['index'];
-        $authorizedRouteKeys = array_merge($requiredRouteKeys, ['create', 'edit', 'destroy']);
-        $authorizedRouteParams = ['alias', 'parameters'];
+        $allowedRouteKeys = array_merge($requiredRouteKeys, ['create', 'edit', 'destroy']);
+        $allowedRouteParams = ['alias', 'parameters'];
         // we check the required routes are given
         $routeKeys = array_keys($routes);
         foreach ($requiredRouteKeys as $requiredRouteKey) {
@@ -99,13 +99,13 @@ class TableList extends Model
         }
         // we check if the given optional routes structure is correct
         foreach ($routes as $routeKey => $route) {
-            if (!in_array($routeKey, $authorizedRouteKeys)) {
+            if (!in_array($routeKey, $allowedRouteKeys)) {
                 throw new InvalidArgumentException(
                     'Invalid $routes argument for the setRoutes() method. The "' . $routeKey
-                    . '" route key is not an authorized keys (' . implode(', ', $authorizedRouteKeys) . ').'
+                    . '" route key is not an authorized keys (' . implode(', ', $allowedRouteKeys) . ').'
                 );
             }
-            foreach ($authorizedRouteParams as $authorizedRouteParam) {
+            foreach ($allowedRouteParams as $authorizedRouteParam) {
                 if (!in_array($authorizedRouteParam, array_keys($routes[$routeKey]))) {
                     throw new InvalidArgumentException(
                         'Invalid routes argument for $routes() method. The key "'
@@ -247,7 +247,7 @@ class TableList extends Model
     /**
      * Get the navigation status from the table list
      *
-     * @return \Illuminate\Contracts\Translation\Translator|string
+     * @return string
      */
     public function navigationStatus()
     {
