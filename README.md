@@ -36,7 +36,7 @@ In your controller, simply call the package like the following example to genera
 ```php
 // we instantiate a table list in the news controller
 $table = app(TableList::class)
-    ->setTableModel(News::class)
+    ->setModel(News::class)
     ->setRoutes([
         'index' => ['alias' => 'news.index', 'parameters' => []],
     ]);

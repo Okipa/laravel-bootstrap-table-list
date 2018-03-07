@@ -28,10 +28,16 @@
         "laravel/framework": "~5.0"
     },
     "require-dev": {
+        "orchestra/testbench": "~3.0"
     },
     "autoload": {
         "psr-4": {
             "Okipa\\LaravelBootstrapTableList\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Okipa\\LaravelBootstrapTableList\\Test\\": "tests"
         }
     },
     "extra": {

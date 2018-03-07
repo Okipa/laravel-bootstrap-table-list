@@ -90,7 +90,7 @@ class TableList extends Model
         // we check the required routes are given
         $routeKeys = array_keys($routes);
         foreach ($requiredRouteKeys as $requiredRouteKey) {
-            if (!in_array($requiredRouteKey, $routeKeys)) {
+            if (! in_array($requiredRouteKey, $routeKeys)) {
                 throw new InvalidArgumentException(
                     'Invalid $routes argument for the setRoutes() method. Missing required "'
                     . $requiredRouteKey . '" array key.'
@@ -99,14 +99,14 @@ class TableList extends Model
         }
         // we check if the given optional routes structure is correct
         foreach ($routes as $routeKey => $route) {
-            if (!in_array($routeKey, $allowedRouteKeys)) {
+            if (! in_array($routeKey, $allowedRouteKeys)) {
                 throw new InvalidArgumentException(
                     'Invalid $routes argument for the setRoutes() method. The "' . $routeKey
-                    . '" route key is not an authorized keys (' . implode(', ', $allowedRouteKeys) . ').'
+                    . '" route key is not an authorized key (' . implode(', ', $allowedRouteKeys) . ').'
                 );
             }
             foreach ($allowedRouteParams as $authorizedRouteParam) {
-                if (!in_array($authorizedRouteParam, array_keys($routes[$routeKey]))) {
+                if (! in_array($authorizedRouteParam, array_keys($routes[$routeKey]))) {
                     throw new InvalidArgumentException(
                         'Invalid routes argument for $routes() method. The key "'
                         . $authorizedRouteParam . '" is missing from the "'
@@ -176,14 +176,8 @@ class TableList extends Model
     public function addColumn(string $attribute = null)
     {
         // we check if the model has correctly been defined
-        if (!$this->tableModel instanceof Model) {
+        if (! $this->tableModel instanceof Model) {
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
-            throw new ErrorException($errorMessage);
-        }
-        // we check if the request has correctly been defined
-        if (!$this->request instanceof Request) {
-            $errorMessage = 'The table list request has not been defined or is not an instance of '
-                            . Request::class . '.';
             throw new ErrorException($errorMessage);
         }
         $column = new TableListColumn($this, $attribute);
@@ -222,7 +216,7 @@ class TableList extends Model
      */
     public function getRoute(string $routeKey, array $params = [])
     {
-        if (!isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
+        if (! isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
             throw new InvalidArgumentException(
                 'Invalid $routeKey argument for the route() method. The route key «'
                 . $routeKey . '» has not been found in the routes stack.'
@@ -241,7 +235,7 @@ class TableList extends Model
      */
     public function isRouteDefined(string $routeKey)
     {
-        return (isset($this->routes[$routeKey]) || !empty($this->routes[$routeKey]));
+        return (isset($this->routes[$routeKey]) || ! empty($this->routes[$routeKey]));
     }
 
     /**
@@ -284,17 +278,17 @@ class TableList extends Model
     private function checkColumnsValidity()
     {
         // check if at least one column has been declared
-        if (!count($this->columns)) {
+        if (! count($this->columns)) {
             // we prepare the error message
             $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
                             . '"addColumn" method on the table list object.';
             // we throw an exception
             throw new ErrorException($errorMessage);
         }
-        $this->columns->map(function (TableListColumn $column) {
+        $this->columns->map(function(TableListColumn $column) {
             // we check that the given column attribute is correct
-            if (!is_null($column->attribute)
-                && !in_array(
+            if (! is_null($column->attribute)
+                && ! in_array(
                     $column->attribute,
                     Schema::getColumnListing($column->customColumnTable)
                 )) {
@@ -305,7 +299,7 @@ class TableList extends Model
                 throw new ErrorException($errorMessage);
             }
             // we check if a title has been defined
-            if (!$column->title) {
+            if (! $column->title) {
                 // we prepare the error message
                 $errorMessage = 'The given column "' . $column->attribute
                                 . '" has no defined title. Please define a title by using the "setTitle()" '
@@ -314,7 +308,7 @@ class TableList extends Model
                 throw new ErrorException($errorMessage);
             }
         });
-        if (!$this->destroyAttribute) {
+        if (! $this->destroyAttribute) {
             // we prepare the error message
             $errorMessage =
                 'No column attribute has been choosed for the destroy confirmation. '
@@ -370,7 +364,7 @@ class TableList extends Model
         }
         // search treatment
         if ($searched = $this->request->search) {
-            $this->searchableColumns->map(function (TableListColumn $column, int $key) use (&$query, $searched) {
+            $this->searchableColumns->map(function(TableListColumn $column, int $key) use (&$query, $searched) {
                 // we set the attribute to query
                 $attribute = $column->customColumnTable . '.' . $column->attribute;
                 // we add the search query
