@@ -69,18 +69,18 @@ class TableListTest extends TableListTestCase
         app(TableList::class)->setRoutes($routes);
     }
 
-    public function testGetRoute()
-    {
-        $routes = [
-            'index'   => ['alias' => 'users.index', 'parameters' => []],
-            'create'  => ['alias' => 'users.create', 'parameters' => []],
-            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
-            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
-        ];
-        $table = app(TableList::class)->setRoutes($routes);
-//        dd($table->routes);
-        dd($table->getRoute('index'));
-    }
+//    public function testGetRoute()
+//    {
+//        $routes = [
+//            'index'   => ['alias' => 'users.index', 'parameters' => []],
+//            'create'  => ['alias' => 'users.create', 'parameters' => []],
+//            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+//            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+//        ];
+//        $table = app(TableList::class)->setRoutes($routes);
+////        dd($table->routes);
+//        dd($table->getRoute('index'));
+//    }
 
     public function testSetRowsNumber()
     {
