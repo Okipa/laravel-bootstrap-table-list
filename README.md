@@ -215,7 +215,7 @@ The following routes can be defined as well :
 |-----------|-----------|-----------|-----------|
 | `$direction` | `String` | Required | Set the default sorted column |
 
-**Note :** `asc` or `desc` are the only accepted values.
+**Note :** `asc` is set by default. `asc` or `desc` are the only accepted values.
 
 ### useForDestroyConfirmation()
 | Parameter | Type | Required/Optional | Description |

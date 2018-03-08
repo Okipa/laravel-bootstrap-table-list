@@ -35,6 +35,7 @@ abstract class TableListTestCase extends TestCase
     {
         return [
             'Okipa\LaravelBootstrapTableList\TableListServiceProvider',
+            'Orchestra\Database\ConsoleServiceProvider'
         ];
     }
 
@@ -44,9 +45,9 @@ abstract class TableListTestCase extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->artisan('migrate', [
+        $this->loadMigrationsFrom([
             '--database' => 'testing',
-            '--path'     => realpath(__DIR__ . '/database/migrations'),
+            '--realpath' => realpath(__DIR__.'/database/migrations'),
         ]);
     }
 }

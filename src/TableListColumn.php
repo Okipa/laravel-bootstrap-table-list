@@ -39,7 +39,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the column title (required)
+     * Set the column title (required).
      *
      * @param string|null $title
      *
@@ -53,14 +53,14 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the default sorted column (required)
+     * Set the default sorted column (required).
      *
-     * @param string $direction (accepts "asc" or "desc")
+     * @param string $direction (default: "asc", accepts "asc" or "desc")
      *
      * @return $this
      * @throws ErrorException
      */
-    public function sortByDefault(string $direction)
+    public function sortByDefault(string $direction = 'asc')
     {
         // we check if the method has already been called
         if ($this->tableList->sortBy || $this->tableList->sortDir) {
@@ -82,7 +82,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Use the column attribute for the destroy confirmation message generation (required)
+     * Use the column attribute for the destroy confirmation message generation (required).
      *
      * @return $this
      * @throws ErrorException
@@ -101,7 +101,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Make the column sortable (optional)
+     * Make the column sortable (optional).
      *
      * @return $this
      */
@@ -114,7 +114,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Make the column searchable (optional)
+     * Make the column searchable (optional).
      *
      * @return TableListColumn
      */
@@ -126,8 +126,8 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set a custom table for the column (optional)
-     * Calling this method can be useful if the column attribute does not directly belong to the table list model
+     * Set a custom table for the column (optional).
+     * Calling this method can be useful if the column attribute does not directly belong to the table list model.
      *
      * @param string $customColumnTable
      *
@@ -141,8 +141,8 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the format for a date (optional)
-     * (Carbon is used for formatting the date)
+     * Set the format for a date (optional).
+     * (Carbon is used for formatting the date).
      *
      * @param string|null $dateFormat
      *
@@ -156,8 +156,8 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the column button class (optional)
-     * The attribute is wrapped into a button
+     * Set the column button class (optional).
+     * The attribute is wrapped into a button.
      *
      * @param string $buttonClass
      *
@@ -171,8 +171,8 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the string value display limitation (optional)
-     * Shows "..." when the limit is reached
+     * Set the string value display limitation (optional).
+     * Shows "..." when the limit is reached.
      *
      * @param int $stringLimit
      *
@@ -186,7 +186,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the link in the method closure (optional)
+     * Set the link in the method closure (optional).
      *
      * @param Closure $linkClosure
      *
@@ -200,7 +200,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set a custom value in the method closure (optional)
+     * Set a custom value in the method closure (optional).
      *
      * @param Closure $customValueClosure
      *
@@ -214,7 +214,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the HTML element to render in the method closure (optional)
+     * Set the HTML element to render in the method closure (optional).
      *
      * @param Closure $customHtmlEltClosure
      *
