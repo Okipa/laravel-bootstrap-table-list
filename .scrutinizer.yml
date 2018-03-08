@@ -37,15 +37,3 @@ build:
     environment:
         php:
             version: "7.1"
-#build:
-#    php:
-#        environment:
-#            php:
-#                version: 7.1
-#        tests:
-#            override:
-#                -
-#                    command: 'vendor/bin/phpunit --coverage-clover=code-coverage'
-#                    coverage:
-#                        file: 'code-coverage'
-#                        format: 'clover'

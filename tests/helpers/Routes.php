@@ -8,7 +8,7 @@ trait Routes
     {
         foreach ($entities as $entity) {
             foreach ($routes as $route){
-                app('router')->get('/' . $entity, [
+                app('router')->get('/' . $entity . '/' . $route, [
                     'as' => $entity . '.' . $route, function() use ($entity, $route) {
                         return $entity . '.' . $route . ' route.';
                     },
