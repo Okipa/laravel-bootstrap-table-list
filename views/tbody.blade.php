@@ -22,10 +22,10 @@
                             @if($stringLimit = $column->stringLimit)
                                 {{ str_limit(strip_tags($entity->{$column->attribute}, $stringLimit)) }}
                             {{-- date format --}}
-                            @elseif($dateFormat = $column->dateFormat)
+                            @elseif($columnDateFormat = $column->columnDateFormat)
                                 {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
                                     'Y-m-d H:i:s', $entity->{$column->attribute}
-                                )->format($dateFormat) : null }}
+                                )->format($columnDateFormat) : null }}
                             {{-- link --}}
                             @elseif($linkClosure = $column->linkClosure)
                                 <a href="{{ $linkClosure($entity, $column) }}"

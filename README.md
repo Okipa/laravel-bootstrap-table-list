@@ -54,11 +54,11 @@ $table->addColumn('content')
 $table->addColumn('created_at')
     ->setTitle('Creation date')
     ->isSortable()
-    ->formatDate('d/m/Y H:i:s');
+    ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('updated_at')
     ->setTitle('Update date')
     ->isSortable()
-    ->formatDate('d/m/Y H:i:s');
+    ->setColumnDateFormat('d/m/Y H:i:s');
 ```
 Then, send your `$table` object in your view and render your table list :
 ```php
@@ -126,15 +126,15 @@ $table->addColumn('released_at')
     ->setTitle(trans('news.label.released_at'))
     ->isSortable()
     ->sortByDefault('desc')
-    ->formatDate('d/m/Y H:i:s');
+    ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('created_at')
     ->setTitle(trans('news.label.created_at'))
     ->isSortable()
-    ->formatDate('d/m/Y H:i:s');
+    ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('updated_at')
     ->setTitle(trans('news.label.updated_at'))
     ->isSortable()
-    ->formatDate('d/m/Y H:i:s');
+    ->setColumnDateFormat('d/m/Y H:i:s');
 ```
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -176,26 +176,26 @@ The following routes can be defined as well :
 ### setRowsNumber($rowsNumber)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$rowsNumber` | `Integer` | Optional | Set a custom number of rows for the table list |
+| `$rowsNumber` | `Integer` | Optional | Set a custom number of rows for the table list. |
 
 ### enableRowsNumberSelector()
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| | | Optional | Enables the rows number selection in the table list |
+| | | Optional | Enables the rows number selection in the table list. |
 
 **Note :** calling this method displays a rows number input that enable the user to choose how much rows to show.
 
 ### addQueryInstructions($queryClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$queryClosure` | `Closure` | Optional | Set the query closure that will be used during the table list generation. For example, you can define your joined tables here (check usage example above) |
+| `$queryClosure` | `Closure` | Optional | Set the query closure that will be used during the table list generation. For example, you can define your joined tables here. The closure let you manipulate the following attribute : $query. |
 
 **Note :** use the `$query` parameter in the closure to add your custom instructions.
 
 ### addColumn($attribute)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$attribute` | `String` or `null` | Required | Add a column that will be displayed in the table list |
+| `$attribute` | `String` or `null` | Required | Add a column that will be displayed in the table list. |
 
 **Notes :**
 - at least one column must be added to the table list.  
@@ -208,66 +208,66 @@ The following routes can be defined as well :
 ### setTitle($title)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$title` | `String` | Required | Set the column title |
+| `$title` | `String` | Required | Set the column title. |
 
 ### sortByDefault($direction)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$direction` | `String` | Required | Set the default sorted column |
+| `$direction` | `String` | Required | Set the default sorted column. |
 
 **Note :** `asc` is set by default. `asc` or `desc` are the only accepted values.
 
 ### useForDestroyConfirmation()
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-|  | | Required | Use the column attribute for the destroy confirmation message generation |
+|  | | Required | Use the column attribute for the destroy confirmation message generation. |
 
 **Note :** this method has to be called on one column and can be called only once.
 
 ### isSortable()
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-|  |  | Optional | Make the column sortable |
+|  |  | Optional | Make the column sortable. |
 
 ### isSearchable()
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-|  |  | Optional | Make the column searchable |
+|  |  | Optional | Make the column searchable. |
 
 ### setCustomTable($customColumnTable)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$customColumnTable` | `String` | Optional | Set a custom table for the column. Calling this method can be useful if the column attribute does not directly belong to the table list model |
+| `$customColumnTable` | `String` | Optional | Set a custom table for the column. Calling this method can be useful if the column attribute does not directly belong to the table list model. |
 
-### formatDate($dateFormat)
+### setColumnDateFormat($columnDateFormat)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$dateFormat` | `String` | Optional | Set the format for a date (Carbon is used for formatting the date) |
+| `$columnDateFormat` | `String` | Optional | Set the format for a date (Carbon is used for formatting the date). |
 
 ### isButton($buttonClass)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$buttonClass` | `String` | Optional | Set the column button class. The attribute is wrapped into a button |
+| `$buttonClass` | `String` | Optional | Set the column button class. The attribute is wrapped into a button. |
 
 ### setStringLimit($stringLimit)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$stringLimit` | `Integer` | Optional | Set the string value display limitation. Shows `...` when the limit is reached |
+| `$stringLimit` | `Integer` | Optional | Set the string value display limitation. Shows `...` when the limit is reached. |
 
 ### isLink($linkClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$linkClosure` | `Closure` | Optional | Set the link in the method closure |
+| `$linkClosure` | `Closure` | Optional | Set the link in the method closure. The closure let you manipulate the following attributes : $entity, $column. |
 
 ### isCustomValue($customValueClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$customValueClosure` | `Closure` | Optional | Set a custom value in the method closure |
+| `$customValueClosure` | `Closure` | Optional | Set a custom value in the method closure. The closure let you manipulate the following attributes : $entity, $column. |
 
 ### isCustomHtmlElement($customHtmlEltClosure)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$customHtmlEltClosure` | `Closure` | Optional | Set a custom HTML element in the method closure |
+| `$customHtmlEltClosure` | `Closure` | Optional | Set a custom HTML element in the method closure. The closure let you manipulate the following attributes : $entity, $column. |
 
 ------------------------------------------------------------------------------------------------------------------------
 

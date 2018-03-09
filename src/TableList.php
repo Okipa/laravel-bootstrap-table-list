@@ -56,7 +56,7 @@ class TableList extends Model
      */
     public function setModel(string $tableModel)
     {
-        $this->tableModel = app()->make($tableModel);
+        $this->setAttribute('tableModel', app()->make($tableModel));
 
         return $this;
     }
@@ -70,7 +70,7 @@ class TableList extends Model
      */
     public function setRequest(Request $request)
     {
-        $this->request = $request;
+        $this->setAttribute('request', $request);
 
         return $this;
     }
@@ -86,7 +86,7 @@ class TableList extends Model
     public function setRoutes(array $routes)
     {
         $this->checkRoutesValidity($routes);
-        $this->routes = $routes;
+        $this->setAttribute('routes', $routes);
 
         return $this;
     }
@@ -183,7 +183,7 @@ class TableList extends Model
      */
     public function setRowsNumber(int $rowsNumber)
     {
-        $this->rowsNumber = $rowsNumber;
+        $this->setAttribute('rowsNumber', $rowsNumber);
 
         return $this;
     }
@@ -195,14 +195,15 @@ class TableList extends Model
      */
     public function enableRowsNumberSelector()
     {
-        $this->rowsNumberSelectorEnabled = true;
+        $this->setAttribute('rowsNumberSelectorEnabled', true);
 
         return $this;
     }
 
     /**
-     * Set the query closure that will be used during the table list generation (optional)
+     * Set the query closure that will be used during the table list generation (optional).
      * For example, you can define your joined tables here.
+     * The closure let you manipulate the following attribute : $query.
      *
      * @param Closure $queryClosure
      *
@@ -210,7 +211,7 @@ class TableList extends Model
      */
     public function addQueryInstructions(Closure $queryClosure)
     {
-        $this->queryClosure = $queryClosure;
+        $this->setAttribute('queryClosure', $queryClosure);
 
         return $this;
     }
@@ -434,8 +435,8 @@ class TableList extends Model
             ]);
         } else {
             // we save the request values
-            $this->rowsNumber = $this->request->rowsNumber;
-            $this->search = $this->request->search;
+            $this->setAttribute('rowsNumber', $this->request->rowsNumber);
+            $this->setAttribute('search', $this->request->search);
         }
     }
 
@@ -512,7 +513,7 @@ class TableList extends Model
      */
     private function paginateList(Builder $query)
     {
-        $this->list = $query->paginate($this->rowsNumber);
+        $this->setAttribute('list', $query->paginate($this->rowsNumber));
         $this->list->appends([
             'rowsNumber' => $this->rowsNumber,
             'search'     => $this->search,

@@ -15,7 +15,7 @@ class TableListColumn extends Model
         'attribute',
         'isSortableColumn',
         'title',
-        'dateFormat',
+        'columnDateFormat',
         'buttonClass',
         'stringLimit',
         'linkClosure',
@@ -47,7 +47,7 @@ class TableListColumn extends Model
      */
     public function setTitle(string $title = null)
     {
-        $this->title = $title;
+        $this->setAttribute('title', $title);
 
         return $this;
     }
@@ -76,7 +76,7 @@ class TableListColumn extends Model
                         . $direction . '" given.';
         if (!in_array($direction, $acceptedDirections))
             throw new InvalidArgumentException($errorMessage);
-        $this->tableList->sortDir = $direction;
+        $this->tableList->setAttribute('sortDir', $direction);
 
         return $this;
     }
@@ -94,8 +94,7 @@ class TableListColumn extends Model
                             . 'You can define a column attribute for the destroy confirmation only once.';
             throw new ErrorException($errorMessage);
         }
-
-        $this->tableList->destroyAttribute = $this->attribute;
+        $this->tableList->setAttribute('destroyAttribute', $this->attribute);
 
         return $this;
     }
@@ -108,7 +107,7 @@ class TableListColumn extends Model
     public function isSortable()
     {
         $this->tableList->sortableColumns->add($this);
-        $this->isSortableColumn = true;
+        $this->setAttribute('isSortableColumn', true);
 
         return $this;
     }
@@ -135,7 +134,7 @@ class TableListColumn extends Model
      */
     public function setCustomTable(string $customColumnTable)
     {
-        $this->customColumnTable = $customColumnTable;
+        $this->setAttribute('customColumnTable', $customColumnTable);
 
         return $this;
     }
@@ -144,13 +143,13 @@ class TableListColumn extends Model
      * Set the format for a date (optional).
      * (Carbon is used for formatting the date).
      *
-     * @param string|null $dateFormat
+     * @param string|null $columnDateFormat
      *
      * @return $this|string
      */
-    public function formatDate(string $dateFormat)
+    public function setColumnDateFormat(string $columnDateFormat)
     {
-        $this->dateFormat = $dateFormat;
+        $this->setAttribute('columnDateFormat', $columnDateFormat);
 
         return $this;
     }
@@ -165,7 +164,7 @@ class TableListColumn extends Model
      */
     public function isButton(string $buttonClass)
     {
-        $this->buttonClass = $buttonClass;
+        $this->setAttribute('buttonClass', $buttonClass);
 
         return $this;
     }
@@ -180,13 +179,14 @@ class TableListColumn extends Model
      */
     public function setStringLimit(int $stringLimit)
     {
-        $this->stringLimit = $stringLimit;
+        $this->setAttribute('stringLimit', $stringLimit);
 
         return $this;
     }
 
     /**
      * Set the link in the method closure (optional).
+     * The closure let you manipulate the following attributes : $entity, $column.
      *
      * @param Closure $linkClosure
      *
@@ -194,13 +194,14 @@ class TableListColumn extends Model
      */
     public function isLink(Closure $linkClosure)
     {
-        $this->linkClosure = $linkClosure;
+        $this->setAttribute('linkClosure', $linkClosure);
 
         return $this;
     }
 
     /**
      * Set a custom value in the method closure (optional).
+     * The closure let you manipulate the following attributes : $entity, $column.
      *
      * @param Closure $customValueClosure
      *
@@ -208,13 +209,14 @@ class TableListColumn extends Model
      */
     public function isCustomValue(Closure $customValueClosure)
     {
-        $this->customValueClosure = $customValueClosure;
+        $this->setAttribute('customValueClosure', $customValueClosure);
 
         return $this;
     }
 
     /**
      * Set the HTML element to render in the method closure (optional).
+     * The closure let you manipulate the following attributes : $entity, $column.
      *
      * @param Closure $customHtmlEltClosure
      *
@@ -222,7 +224,7 @@ class TableListColumn extends Model
      */
     public function isCustomHtmlElement(Closure $customHtmlEltClosure)
     {
-        $this->customHtmlEltClosure = $customHtmlEltClosure;
+        $this->setAttribute('customHtmlEltClosure', $customHtmlEltClosure);
 
         return $this;
     }
