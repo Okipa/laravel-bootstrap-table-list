@@ -242,7 +242,7 @@ The following routes can be defined as well :
 ### setColumnDateFormat($columnDateFormat)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$columnDateFormat` | `String` | Optional | Set the format for a date (Carbon is used for formatting the date). |
+| `$columnDateFormat` | `String` | Optional | Set the format for a date (Carbon is used to format the date). |
 
 ### isButton($buttonClass)
 | Parameter | Type | Required/Optional | Description |

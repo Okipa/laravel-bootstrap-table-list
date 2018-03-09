@@ -141,7 +141,7 @@ class TableListColumn extends Model
 
     /**
      * Set the format for a date (optional).
-     * (Carbon is used for formatting the date).
+     * (Carbon is used to format the date).
      *
      * @param string|null $columnDateFormat
      *
