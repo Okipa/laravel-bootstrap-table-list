@@ -1,6 +1,6 @@
 <thead>
     {{-- commands --}}
-    @if(count($table->sortableColumns) || count($table->searchableColumns))
+    @if(count($table->sortableColumns) || count($table->searchableColumns) || $table->rowsNumberSelectorEnabled)
         <tr>
             <td colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
                 <div class="row">
@@ -19,10 +19,10 @@
                                            type="number"
                                            name="rowsNumber"
                                            value="{{ $table->request->rowsNumber }}"
-                                           placeholder="{{ trans('tablelist::tablelist.thead.rowsNumber') }}">
+                                           placeholder="{{ trans('tablelist::tablelist.thead.rows_number') }}">
                                     <span class="input-group-addon submit">
                                         <a href=""
-                                           title="{{ trans('tablelist::tablelist.thead.rowsNumber') }}"
+                                           title="{{ trans('tablelist::tablelist.thead.rows_number') }}"
                                            onclick="$(this).closest('form').submit();">
                                             <i class="fa fa-check"></i>
                                         </a>

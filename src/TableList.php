@@ -4,6 +4,7 @@ namespace Okipa\LaravelBootstrapTableList;
 
 use Closure;
 use ErrorException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -445,19 +446,35 @@ class TableList extends Model
      */
     private function generateEntitiesListFromQuery()
     {
-        // we instantiate the query
         $query = $this->tableModel->query();
-        // closure treatment
+        $this->applyQueryClosure($query);
+        $this->applySearchClauses($query);
+        $this->applySortClauses($query);
+        $this->paginateList($query);
+    }
+
+    /**
+     * Apply query closure
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     */
+    private function applyQueryClosure(Builder $query)
+    {
         if ($closure = $this->queryClosure) {
-            // we execute the given closure
             $closure($query);
         }
-        // search treatment
+    }
+
+    /**
+     * Apply search clauses
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     */
+    private function applySearchClauses(Builder $query)
+    {
         if ($searched = $this->request->search) {
             $this->searchableColumns->map(function(TableListColumn $column, int $key) use (&$query, $searched) {
-                // we set the attribute to query
                 $attribute = $column->customColumnTable . '.' . $column->attribute;
-                // we add the search query
                 if ($key > 0) {
                     $query->orWhere($attribute, 'like', '%' . $searched . '%');
                 } else {
@@ -465,16 +482,36 @@ class TableList extends Model
                 }
             });
         }
-        // sort treatment
-        if (($sortBy = $this->request->get('sortBy', $this->sortBy))
-            && ($sortDir = $this->request->get('sortDir', $this->sortDir))) {
+    }
+
+    /**
+     * Apply sort clauses
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @throws \ErrorException
+     */
+    private function applySortClauses(Builder $query)
+    {
+        if (
+            ($sortBy = $this->request->get('sortBy', $this->sortBy))
+            && ($sortDir = $this->request->get('sortDir', $this->sortDir))
+        ) {
             $query->orderBy($sortBy, $sortDir);
         } else {
             $errorMessage = 'No default column has been selected for the table sort. '
                             . 'Please define a column sorted by default by using the "sortByDefault()" method.';
             throw new ErrorException($errorMessage);
         }
-        // pagination treatment
+    }
+
+    /**
+     * Paginate the list from the query
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     */
+    private function paginateList(Builder $query)
+    {
         $this->list = $query->paginate($this->rowsNumber);
         $this->list->appends([
             'rowsNumber' => $this->rowsNumber,

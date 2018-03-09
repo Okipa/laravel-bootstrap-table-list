@@ -325,7 +325,21 @@ class TableListTest extends TableListTestCase
         $table->render();
     }
 
-    public function testRenderWithOnlyIndexRouteWithEmptyList()
+    public function testTableTitleHtml()
+    {
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains('Name', $thead);
+        $this->assertContains('Email', $thead);
+    }
+
+    public function testNavigationStatusHtml()
     {
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
@@ -333,42 +347,475 @@ class TableListTest extends TableListTestCase
         $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
         $table->addColumn('name')->setTitle('Name')->sortByDefault();
         $table->render();
-        $this->assertContains('Name', View::make('tablelist::thead', ['table' => $table])->render());
-        $this->assertContains(trans('tablelist::tablelist.tbody.empty'), View::make('tablelist::tbody', ['table' => $table])->render());
-        $this->assertContains($table->navigationStatus(), View::make('tablelist::tfoot', ['table' => $table])->render());
+        $tfoot = View::make('tablelist::tfoot', ['table' => $table])->render();
+        $this->assertContains($table->navigationStatus(), $tfoot);
     }
 
-    public function testRenderWithAllRoutesWithFilledList()
+    public function testEmptyListHtml()
     {
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains(trans('tablelist::tablelist.tbody.empty'), $tbody);
+    }
+
+    public function testFilledListHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertContains($user->name, $tbody);
+            $this->assertContains($user->email, $tbody);
+        }
+    }
+
+    public function testNoCreateActionHtml()
+    {
+        $this->setRoutes(['users'], ['create']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->render();
+        // tfoot
+        $tfoot = View::make('tablelist::tfoot', ['table' => $table])->render();
+        $this->assertNotContains('<div class="tfoot-tab col-sm-4 create-button">', $tfoot);
+        $this->assertNotContains('href="http://localhost/users/create"', $tfoot);
+        $this->assertNotContains('title="Add"', $tfoot);
+    }
+
+    public function testCreateActionHtml()
+    {
+        $this->setRoutes(['users'], ['create']);
+        $routes = [
+            'index'  => ['alias' => 'users.index', 'parameters' => []],
+            'create' => ['alias' => 'users.create', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->render();
+        // tfoot
+        $tfoot = View::make('tablelist::tfoot', ['table' => $table])->render();
+        $this->assertContains('<div class="tfoot-tab col-sm-4 create-button">', $tfoot);
+        $this->assertContains('href="http://localhost/users/create"', $tfoot);
+        $this->assertContains('title="Add"', $tfoot);
+    }
+
+    public function testNoEditActionHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertNotContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
+        }
+    }
+
+    public function testEditActionHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $this->setRoutes(['users'], ['edit']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+            'edit'  => ['alias' => 'users.edit', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
+        }
+    }
+
+    public function testNoDestroyActionHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertNotContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
+            $this->assertNotContains(trans('tablelist::tablelist.modal.question', [
+                'entity' => $user->{$table->destroyAttribute},
+            ]), $tbody);
+        }
+    }
+
+    public function testDestroyActionHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $this->setRoutes(['users'], ['destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
+            $this->assertContains(trans('tablelist::tablelist.modal.question', [
+                'entity' => $user->{$table->destroyAttribute},
+            ]), $tbody);
+        }
+    }
+
+    public function testNoSearchableHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertNotContains('div class="col-sm-6 col-xs-12 search-bar">', $thead);
+        $this->assertNotContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
+        $this->assertNotContains('<input type="hidden" name="rowsNumber" value="20">', $thead);
+        $this->assertNotContains('<input type="hidden" name="sortBy" value="name">', $thead);
+        $this->assertNotContains('<input type="hidden" name="sortDir" value="desc">', $thead);
+        $this->assertNotContains('name="search"', $thead);
+        $this->assertNotContains(
+            'placeholder="' . trans('tablelist::tablelist.thead.search') . ' ' . $table->getSearchableTitles() . '"',
+            $thead
+        );
+        $this->assertNotContains(
+            'title="' . trans('tablelist::tablelist.thead.search') . ' ' . $table->getSearchableTitles() . '"',
+            $thead
+        );
+    }
+
+    public function testSearchableHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
+        $table->addColumn('email')->setTitle('Email')->isSearchable();
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains('div class="col-sm-6 col-xs-12 search-bar">', $thead);
+        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
+        $this->assertContains('<input type="hidden" name="rowsNumber" value="20">', $thead);
+        $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
+        $this->assertContains('<input type="hidden" name="sortDir" value="desc">', $thead);
+        $this->assertContains('name="search"', $thead);
+        $this->assertContains(
+            'placeholder="' . trans('tablelist::tablelist.thead.search') . ' '
+            . $table->getSearchableTitles() . '"', $thead
+        );
+        $this->assertContains(
+            'title="' . trans('tablelist::tablelist.thead.search') . ' '
+            . $table->getSearchableTitles() . '"', $thead
+        );
+    }
+
+    public function testRowsNumberSelectionHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class)->enableRowsNumberSelector();
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains('<div class="col-sm-4 col-xs-12 rows-number-selector">', $thead);
+        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
+        $this->assertContains('<input type="hidden" name="search" value="">', $thead);
+        $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
+        $this->assertContains('<input type="hidden" name="sortDir" value="asc">', $thead);
+        $this->assertContains('type="number"', $thead);
+        $this->assertContains('name="rowsNumber"', $thead);
+        $this->assertContains('value="20"', $thead);
+        $this->assertContains('placeholder="' . trans('tablelist::tablelist.thead.rows_number') . '"', $thead);
+        $this->assertContains('title="' . trans('tablelist::tablelist.thead.rows_number') . '"', $thead);
+    }
+
+    public function testRowsNumberCustomHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)
+            ->setRoutes($routes)
+            ->setModel(User::class)
+            ->enableRowsNumberSelector()
+            ->setRowsNumber(15);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains('<div class="col-sm-4 col-xs-12 rows-number-selector">', $thead);
+        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
+        $this->assertContains('<input type="hidden" name="search" value="">', $thead);
+        $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
+        $this->assertContains('<input type="hidden" name="sortDir" value="asc">', $thead);
+        $this->assertContains('type="number"', $thead);
+        $this->assertContains('name="rowsNumber"', $thead);
+        $this->assertContains('value="15"', $thead);
+        $this->assertContains('placeholder="' . trans('tablelist::tablelist.thead.rows_number') . '"', $thead);
+        $this->assertContains('title="' . trans('tablelist::tablelist.thead.rows_number') . '"', $thead);
+    }
+
+    public function testSortableColumnHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->isSortable();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $thead = View::make('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains(
+            '<a href="http://localhost/users/index?sortBy=name&amp;sortDir=desc&amp;rowsNumber=20"',
+            $thead
+        );
+        $this->assertNotContains(
+            '<a href="http://localhost/users/index?sortBy=email&amp;sortDir=desc&amp;rowsNumber=20"',
+            $thead
+        );
+    }
+
+    public function testSortByColumnRequest()
+    {
+        $users = $this->createMultipleUsers(5);
+        $customRequest = app(Request::class);
+        $customRequest->merge([
+            'rowsNumber' => 20,
+            'sortBy'     => 'email',
+            'sortDir'    => 'desc',
+        ]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class)->setRequest($customRequest);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $this->assertEquals($users->sortByDesc('email')->values()->toArray(), $table->list->toArray()['data']);
+    }
+
+    public function testCustomRowsNumberRequest()
+    {
+        $this->createMultipleUsers(20);
+        $customRequest = app(Request::class);
+        $customRequest->merge([
+            'rowsNumber' => 10,
+        ]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class)->setRequest($customRequest);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $this->assertEquals(
+            App(User::class)->orderBy('name', 'asc')->paginate(10)->toArray()['data'],
+            $table->list->toArray()['data']
+        );
+    }
+
+    public function testSearchAccurateRequest()
+    {
+        $users = $this->createMultipleUsers(5);
+        $customRequest = app(Request::class);
+        $searchedValue = $users->sortBy('name')->values()->first()->name;
+        $customRequest->merge([
+            'rowsNumber' => 20,
+            'search'     => $searchedValue,
+        ]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class)->setRequest($customRequest);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->isSearchable();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $this->assertEquals(
+            $users->sortBy('name')->where('name', $searchedValue)->values()->toArray(),
+            $table->list->toArray()['data']
+        );
+    }
+
+    public function testSearchUnaccurateRequest()
+    {
+        $this->createMultipleUsers(10);
+        $customRequest = app(Request::class);
+        $searchedValue = 'al';
+        $customRequest->merge([
+            'rowsNumber' => 20,
+            'search'     => $searchedValue,
+        ]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class)->setRequest($customRequest);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
+        $table->addColumn('email')->setTitle('Email')->isSearchable();
+        $table->render();
+        $this->assertEquals(
+            App(User::class)
+                ->orderBy('name', 'asc')
+                ->where('email', 'like', '%' . $searchedValue . '%')
+                ->get()
+                ->toArray(),
+            $table->list->toArray()['data']
+        );
+    }
+
+    public function testCustomConfig()
+    {
+        config([
+            'tablelist' => [
+                // default values
+                'default'  => [
+                    'rows_number' => 5,
+                ],
+                'template' => [
+                    'indicator' => [
+                        'sort' => [
+                            'class' => 'templateIndicatorSortClass',
+                            'icon'  => [
+                                'asc'      => 'templateIndicatorSortIconAsc',
+                                'desc'     => 'templateIndicatorSortIconDesc',
+                                'unsorted' => 'templateIndicatorSortIconUnsorted',
+                            ],
+                        ],
+                    ],
+                    'button'    => [
+                        'create'  => [
+                            'class' => 'templateButtonCreateClass',
+                            'icon'  => 'templateButtonCreateIcon',
+                        ],
+                        'edit'    => [
+                            'class' => 'templateButtonEditClass',
+                            'icon'  => 'templateButtonEditIcon',
+                        ],
+                        'destroy' => [
+                            'class' => 'templateButtonDestroyClass',
+                            'icon'  => 'templateButtonDestroyIcon',
+                        ],
+                        'confirm' => [
+                            'class' => 'templateButtonConfirmClass',
+                            'icon'  => 'templateButtonConfirmIcon',
+                        ],
+                        'cancel'  => [
+                            'class' => 'templateButtonCancelClass',
+                            'icon'  => 'templateButtonCancelIcon',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+        $this->createMultipleUsers(10);
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
-        $users = $this->createMultipleUsers(10);
         $routes = [
             'index'   => ['alias' => 'users.index', 'parameters' => []],
             'create'  => ['alias' => 'users.create', 'parameters' => []],
             'edit'    => ['alias' => 'users.edit', 'parameters' => []],
             'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
         ];
-        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
-        $table->addColumn('email')->setTitle('Email')->isSearchable();
+        $table = app(TableList::class)
+            ->setRoutes($routes)
+            ->setModel(User::class)
+            ->enableRowsNumberSelector();
+        $table->addColumn('name')
+            ->setTitle('Name')
+            ->sortByDefault()
+            ->isSortable()
+            ->isSearchable()
+            ->useForDestroyConfirmation();;
+        $table->addColumn('email')
+            ->setTitle('Email')
+            ->isSearchable()
+            ->isSortable();
         $table->render();
-        // thead
-        $thead = View::make('tablelist::thead', ['table' => $table])->render();
-        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
-        $this->assertContains(trans('tablelist::tablelist.thead.search') . ' ' . $table->getSearchableTitles(), $thead);
-        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
-        // tbody
-        foreach ($users as $user) {
-            $this->assertContains($user->name, $tbody);
-            $this->assertContains($user->email, $tbody);
-            $this->assertContains($table->getRoute('edit', ['id' => $user->id]), $tbody);
-            $this->assertContains($table->getRoute('destroy', ['id' => $user->id]), $tbody);
-            $this->assertContains(trans('tablelist::tablelist.modal.question', [
-                'entity' => $user->{$table->destroyAttribute}
-            ]), $tbody);
-        }
-        // tfoot
-        $tfoot = View::make('tablelist::tfoot', ['table' => $table])->render();
-        $this->assertContains($table->navigationStatus(), $tfoot);
+        $html = View::make('tablelist::table', ['table' => $table])->render();
+        $this->assertContains(
+            '<input type="hidden" name="rowsNumber" value="' . config('tablelist.default.rows_number') . '"',
+            $html
+        );
+        $this->assertContains(
+            'class="sort ' . config('tablelist.template.indicator.sort.class') . '"',
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.indicator.sort.icon.asc'),
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.indicator.sort.icon.unsorted'),
+            $html
+        );
+        $this->assertContains(
+            'class="' . config('tablelist.template.button.create.class') . '"',
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.button.create.icon'),
+            $html
+        );
+        $this->assertContains(
+            'class="' . config('tablelist.template.button.edit.class') . '"',
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.button.edit.icon'),
+            $html
+        );
+        $this->assertContains(
+            'class="' . config('tablelist.template.button.destroy.class') . '"',
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.button.destroy.icon'),
+            $html
+        );
+        $this->assertContains(
+            'class="' . config('tablelist.template.button.cancel.class') . '"',
+            $html
+        );
+        $this->assertContains(
+            config('tablelist.template.button.cancel.icon'),
+            $html
+        );
     }
 }
