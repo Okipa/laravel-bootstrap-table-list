@@ -1,8 +1,8 @@
 <?php
 
-namespace Okipa\LaravelBootstrapTableList\Test\helpers;
+namespace Okipa\LaravelBootstrapTableList\Test\Fakers;
 
-trait Routes
+trait RoutesFaker
 {
     public function setRoutes(array $entities = ['users'], array $routes= ['index'])
     {

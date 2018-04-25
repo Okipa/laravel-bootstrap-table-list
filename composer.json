@@ -25,11 +25,10 @@
     ],
     "require": {
         "php": ">=7.0",
-        "laravel/framework": "~5.0"
+        "illuminate/support": "~5.0"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.0",
-        "orchestra/database": "~3.0"
+        "orchestra/testbench": "^3.6"
     },
     "autoload": {
         "psr-4": {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Okipa\LaravelBootstrapTableList\Test\helpers;
+namespace Okipa\LaravelBootstrapTableList\Test\Fakers;
 
 use Faker\Factory;
 use Hash;
-use Okipa\LaravelBootstrapTableList\Tests\Models\User;
+use Okipa\LaravelBootstrapTableList\Test\Models\User;
 
-trait Users
+trait UsersFaker
 {
     public $faker;
     public $clearPassword;

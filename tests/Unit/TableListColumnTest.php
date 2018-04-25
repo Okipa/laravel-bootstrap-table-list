@@ -1,23 +1,22 @@
 <?php
 
-namespace Okipa\LaravelBootstrapTableList\Tests\Unit;
+namespace Okipa\LaravelBootstrapTableList\Test\Unit;
 
 use ErrorException;
 use Okipa\LaravelBootstrapTableList\TableList;
-use Okipa\LaravelBootstrapTableList\Test\helpers\Routes;
-use Okipa\LaravelBootstrapTableList\Test\helpers\Users;
-use Okipa\LaravelBootstrapTableList\Tests\Models\User;
-use Tests\TableListTestCase;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\RoutesFaker;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\UsersFaker;
+use Okipa\LaravelBootstrapTableList\Test\Models\User;
+use Okipa\LaravelBootstrapTableList\Test\TableListTestCase;
 
 class TableListColumnTest extends TableListTestCase
 {
-    use Routes;
-    use Users;
+    use RoutesFaker;
+    use UsersFaker;
 
     public function setUp()
     {
         parent::setUp();
-        $this->instanciateFaker();
     }
 
     public function testSetTitle()

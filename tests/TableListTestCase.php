@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Okipa\LaravelBootstrapTableList\Test;
 
 use Orchestra\Testbench\TestCase;
 
@@ -35,7 +35,6 @@ abstract class TableListTestCase extends TestCase
     {
         return [
             'Okipa\LaravelBootstrapTableList\TableListServiceProvider',
-            'Orchestra\Database\ConsoleServiceProvider'
         ];
     }
 

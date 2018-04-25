@@ -6,16 +6,16 @@ use ErrorException;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 use Okipa\LaravelBootstrapTableList\TableList;
-use Okipa\LaravelBootstrapTableList\Test\helpers\Routes;
-use Okipa\LaravelBootstrapTableList\Test\helpers\Users;
-use Okipa\LaravelBootstrapTableList\Tests\Models\User;
-use Tests\TableListTestCase;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\RoutesFaker;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\UsersFaker;
+use Okipa\LaravelBootstrapTableList\Test\Models\User;
+use Okipa\LaravelBootstrapTableList\Test\TableListTestCase;
 use View;
 
 class TableListTest extends TableListTestCase
 {
-    use Routes;
-    use Users;
+    use RoutesFaker;
+    use UsersFaker;
 
     public function setUp()
     {
