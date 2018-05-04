@@ -3,6 +3,7 @@
     "description": "Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.",
     "keywords": [
         "okipa",
+        "package",
         "laravel",
         "bootstrap",
         "php",
