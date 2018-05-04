@@ -7,7 +7,6 @@
 [![Build Status](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17/small.png)](https://insight.sensiolabs.com/projects/d0e32355-098d-45b2-9910-07faccca5d17)
 
 Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.
 
@@ -67,7 +66,7 @@ Then, send your `$table` object in your view and render your table list :
 That's it !
 
 ### Notes :
-- **Request** : No need to transmit the request to the TableList : it systematically uses the current request given by the `request()` helper to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method. 
+- **Request** : No need to transmit the request to the TableList : it systematically uses the current request given by the `request()` helper to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method.
 
 ### Advanced usage
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
@@ -96,7 +95,7 @@ $table->addColumn('image')
         if ($src = $entity->{$column->attribute}) {
             $image_zoom_src = $entity->imagePath($src, $column->attribute, 'zoom');
             $image_thumbnail_src = $entity->imagePath($src, $column->attribute, 'thumbnail');
-            
+
             return "<a href='$image_zoom_src' title='Image title' target="blank"><img class='thumbnail' src='$image_thumbnail_src' alt='Image alt'></a>";
         }
     });
@@ -149,7 +148,7 @@ $table->addColumn('updated_at')
 ### setRequest($request)
 | Parameter | Type | Required/Optional | Description |
 |-----------|-----------|-----------|-----------|
-| `$request` | `Illuminate\Http\Request` | Optional | Set the request used for the table list generation 
+| `$request` | `Illuminate\Http\Request` | Optional | Set the request used for the table list generation
 
 ### setRoutes($routes)
 | Parameter | Type | Required/Optional | Description |
@@ -161,16 +160,16 @@ Each route have to be defined with the following structure :
 'index' => [
     'alias' => 'news.index',
     'parameters' => [
-        // set your extra parameters here or let the array empty 
+        // set your extra parameters here or let the array empty
     ]
 ]
 ```
-**Note :** each route will be generated with the line entity id. The given extra parameters will be added for the route generation.  
+**Note :** each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
 
-The `index` route is required and must be the route that will be used to display the page that contains the table list.  
+The `index` route is required and must be the route that will be used to display the page that contains the table list.
 The following routes can be defined as well :
-- `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.  
-- `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.  
+- `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.
+- `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.
 - `destroy` : must be used to destroy a table list line. Displays a `Remove` icon on each table list line if defined.
 
 ### setRowsNumber($rowsNumber)
@@ -198,7 +197,7 @@ The following routes can be defined as well :
 | `$attribute` | `String` or `null` | Required | Add a column that will be displayed in the table list. |
 
 **Notes :**
-- at least one column must be added to the table list.  
+- at least one column must be added to the table list.
 - a column can be created without attribute specification, in case of HTML element display, for example.
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -277,7 +276,7 @@ To personalize the package configuration, you have to publish it first with the 
 php artisan vendor:publish --tag=tablelist::config
 ```
 Then, open the published package configuration file (`config/tablelist.php`) and override the default table list configuration by setting your own values for the following items :
-- default number of displayed rows  
+- default number of displayed rows
 - template configurations (buttons classes, buttons icons, ...)
 
 ------------------------------------------------------------------------------------------------------------------------
