@@ -292,3 +292,9 @@ Publish the package blade templates file in your project :
 php artisan vendor:publish --tag=tablelist::views
 ```
 Then, change the content from the package templates in your `resources/views/vendor/tablelist` directory.
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Contributors
+
+- (Stephan de Souza)[https://github.com/stephandesouza]
