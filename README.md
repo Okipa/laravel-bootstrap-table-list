@@ -297,4 +297,4 @@ Then, change the content from the package templates in your `resources/views/ven
 
 ## Contributors
 
-- (Stephan de Souza)[https://github.com/stephandesouza]
+- [Stephan de Souza](https://github.com/stephandesouza)
