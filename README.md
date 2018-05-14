@@ -154,14 +154,14 @@ $table->addColumn('updated_at')
     > Set the request used for the table list generation (required).
 - `setRoutes(array $routes)`
     > Set the routes used for the table list generation (required).  
-    > **Notes :**  
-    > - Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.  
-    > - The `index` route is required and must be the route that will be used to display the page that contains the table list.  
-    > - The following routes can be defined as well :  
-    >     - `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.  
-    >     - `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.  
+    > **Notes :**
+    > - Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
+    > - The `index` route is required and must be the route that will be used to display the page that contains the table list.
+    > - The following routes can be defined as well :
+    >     - `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.
+    >     - `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.
     >     - `destroy` : must be used to destroy a table list line. Displays a `Remove` icon on each table list line if defined.
-    > - Each route have to be defined with the following structure :  
+    > - Each route have to be defined with the following structure :
 ```php
 'index' => [
     'alias' => 'news.index',
@@ -174,13 +174,13 @@ $table->addColumn('updated_at')
     > Set a custom number of rows for the table list (optional).
 - `enableRowsNumberSelector()`
     > Enables the rows number selection in the table list (optional).  
-    > **Note :** calling this method displays a rows number input that enable the user to choose how much rows to show.
+    > **Notes :**
+    > - Calling this method displays a rows number input that enable the user to choose how much rows to show.
 - `addQueryInstructions(Closure $queryClosure)`
     > Set the query closure that will be used during the table list generation (optional).  
-    > For example, you can define your joined tables here.  
-    > The closure let you manipulate the following attribute : $query.  
-    > **Note :** use the `$query` parameter in the closure to add your custom instructions.
-
+    > **Notes :**
+    > - Use the `$query` parameter provided in the closure to add your custom instructions.
+    > - For example, you use this closure to define your joined tables here.  
 - `addColumn(string $attribute = null)`
     > Add a column that will be displayed in the table list (required).  
     > **Notes :**  
