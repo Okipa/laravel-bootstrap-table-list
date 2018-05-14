@@ -177,11 +177,11 @@ $table->addColumn('updated_at')
 - `addQueryInstructions(Closure $queryClosure)`
     > Set the query closure that will be used during the table list generation (optional).  
     > For example, you can define your joined tables here.  
-    > The closure let you manipulate the following attribute : $query.
+    > The closure let you manipulate the following attribute : $query`.
 - `addColumn(string $attribute = null)`
-    > Add a column that will be displayed in the table list (required) :
-    > - at least one column must be added to the table list.  
-    > - a column can be created without attribute specification, in case of HTML element display, for example.
+    > Add a column that will be displayed in the table list (required) :`
+    > - At least one column must be added to the table list.  
+    > - A column can be created without attribute specification, in case of HTML element display, for example.
 
 ### TableListColumn public methods
 
@@ -189,9 +189,10 @@ $table->addColumn('updated_at')
     > Set the column title (required).
 - `sortByDefault(string $direction = 'asc')`
     > Set the default sorted column (required).
-- `useForDestroyConfirmation()``
-    > Use the column attribute for the destroy confirmation message generation (required).
-    > This method can be called only once.
+- `useForDestroyConfirmation()`
+    > Use the column attribute for the destroy confirmation message generation (required) :
+    > - At least one column must be selected for destroy confirmation if a destroy route is set.  
+    > - This method can be called only once.
 - `isSortable()`
     > Make the column sortable (optional).
 - `isSearchable()`
