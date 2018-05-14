@@ -83,6 +83,7 @@ class TableListColumn extends Model
 
     /**
      * Use the column attribute for the destroy confirmation message generation (required).
+     * This method can be called only once.
      *
      * @return $this
      * @throws ErrorException
