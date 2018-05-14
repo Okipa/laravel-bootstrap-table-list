@@ -175,8 +175,8 @@ $table->addColumn('updated_at')
     > Enables the rows number selection in the table list (optional) :
     > - Calling this method displays a rows number input that enable the user to choose how much rows to show.
 - `addQueryInstructions(Closure $queryClosure)`
-    > Set the query closure that will be used during the table list generation (optional).
-    > For example, you can define your joined tables here.
+    > Set the query closure that will be used during the table list generation (optional).  
+    > For example, you can define your joined tables here.  
     > The closure let you manipulate the following attribute : $query.
 - `addColumn(string $attribute = null)`
     > Add a column that will be displayed in the table list (required) :
