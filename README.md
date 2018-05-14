@@ -153,9 +153,7 @@ $table->addColumn('updated_at')
 - `setRequest(Request $request)`
     > Set the request used for the table list generation (required).
 - `setRoutes(array $routes)`
-    > Set the routes used for the table list generation (required).  
-    
-    > **Notes :**
+    > Set the routes used for the table list generation (required) :
     > - Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
     > - The `index` route is required and must be the route that will be used to display the page that contains the table list.
     > - The following routes can be defined as well :
@@ -174,20 +172,14 @@ $table->addColumn('updated_at')
 - `setRowsNumber(int $owsNumber)`
     > Set a custom number of rows for the table list (optional).
 - `enableRowsNumberSelector()`
-    > Enables the rows number selection in the table list (optional).  
-    
-    > **Notes :**
+    > Enables the rows number selection in the table list (optional) :
     > - Calling this method displays a rows number input that enable the user to choose how much rows to show.
 - `addQueryInstructions(Closure $queryClosure)`
-    > Set the query closure that will be used during the table list generation (optional).  
-    
-    > **Notes :**
-    > - Use the `$query` parameter provided in the closure to add your custom instructions.
-    > - For example, you use this closure to define your joined tables here.  
+    > Set the query closure that will be used during the table list generation (optional).
+    > For example, you can define your joined tables here.
+    > The closure let you manipulate the following attribute : $query.
 - `addColumn(string $attribute = null)`
-    > Add a column that will be displayed in the table list (required).  
-    
-    > **Notes :**  
+    > Add a column that will be displayed in the table list (required) :
     > - at least one column must be added to the table list.  
     > - a column can be created without attribute specification, in case of HTML element display, for example.
 
