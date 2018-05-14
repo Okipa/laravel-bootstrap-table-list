@@ -154,6 +154,7 @@ $table->addColumn('updated_at')
     > Set the request used for the table list generation (required).
 - `setRoutes(array $routes)`
     > Set the routes used for the table list generation (required).  
+    > **Notes :**  
     > Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.  
     > The `index` route is required and must be the route that will be used to display the page that contains the table list.  
     > The following routes can be defined as well :  
