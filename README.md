@@ -155,15 +155,15 @@ $table->addColumn('updated_at')
 - `setRoutes(array $routes)`
     > Set the routes used for the table list generation (required).  
     > Each route have to be defined with the following structure :  
-    > ```php
-    'index' => [
-        'alias' => 'news.index',
-        'parameters' => [
-            // set your extra parameters here or let the array empty
-        ]
+```php
+'index' => [
+    'alias' => 'news.index',
+    'parameters' => [
+        // set your extra parameters here or let the array empty
     ]
-    ```
-    > **Note :** each route will be generated with the line entity id. The given extra parameters will be added for the route generation.  
+]
+```
+    > Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.  
     > The `index` route is required and must be the route that will be used to display the page that contains the table list.  
     > The following routes can be defined as well :  
     > - `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.  
