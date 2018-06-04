@@ -4,6 +4,7 @@ namespace Okipa\LaravelBootstrapTableList;
 
 use Closure;
 use ErrorException;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Schema;
 use Validator;
 use View;
 
-class TableList extends Model
+class TableList extends Model implements Htmlable
 {
     protected $fillable = [
         'tableModel',
@@ -520,5 +521,16 @@ class TableList extends Model
             'sortBy'     => $this->sortBy,
             'sortDir'    => $this->sortDir,
         ]);
+    }
+
+    /**
+     * Get content as a string of HTML.
+     *
+     * @return string
+     * @throws \ErrorException
+     */
+    public function toHtml()
+    {
+        return (string) $this->render();
     }
 }

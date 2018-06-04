@@ -8,7 +8,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Okipa/laravel-bootstrap-table-list/?branch=master)
 
-Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a controller-side-configuration.
+Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a code-side-configuration.
 
 ![Laravel Bootstrap Table List](https://raw.githubusercontent.com/Okipa/laravel-bootstrap-table-list/master/img/laravel-bootstrap-table-list.png)
 
@@ -65,7 +65,7 @@ $table->addColumn('updated_at')
 ```
 Then, send your `$table` object in your view and render your table list :
 ```php
-{!! $table->render() !!}
+{{ $table }}
 ```
 That's it !
 
