@@ -964,7 +964,7 @@ class TableListTest extends TableListTestCase
             $html
         );
         $this->assertContains(
-            'class="' . config('tablelist.template.button.edit.class') . '"',
+            'class="' . config('tablelist.template.button.edit.class') . ' "',
             $html
         );
         $this->assertContains(
@@ -972,7 +972,7 @@ class TableListTest extends TableListTestCase
             $html
         );
         $this->assertContains(
-            'class="' . config('tablelist.template.button.destroy.class') . '"',
+            'class="' . config('tablelist.template.button.destroy.class') . ' "',
             $html
         );
         $this->assertContains(
