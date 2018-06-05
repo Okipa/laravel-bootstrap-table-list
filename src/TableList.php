@@ -481,7 +481,8 @@ class TableList extends Model implements Htmlable
         if ($validator->fails()) {
             Log::error($validator->errors());
             $this->getAttribute('request')->merge([
-                'rowsNumber' => $this->getAttribute('rowsNumber') ? $this->getAttribute('rowsNumber')
+                'rowsNumber' => $this->getAttribute('rowsNumber') 
+                    ? $this->getAttribute('rowsNumber')
                     : config('tablelist.default.rows_number'),
                 'search'     => null,
                 'sortBy'     => $this->getAttribute('sortBy'),
@@ -581,7 +582,7 @@ class TableList extends Model implements Htmlable
         $this->setAttribute('list', $query->paginate($this->getAttribute('rowsNumber')));
         $this->getAttribute('list')->appends([
             'rowsNumber' => $this->getAttribute('rowsNumber'),
-            'search'     => $this->search,
+            'search'     => $this->getAttribute('search'),
             'sortBy'     => $this->getAttribute('sortBy'),
             'sortDir'    => $this->getAttribute('sortDir'),
         ]);
