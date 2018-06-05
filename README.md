@@ -243,6 +243,7 @@ php artisan vendor:publish --tag=tablelist::config
 Then, open the published package configuration file (`config/tablelist.php`) and override the default table list configuration by setting your own values for the following items :
 - default number of displayed rows
 - template configurations (buttons classes, buttons icons, ...)
+- bootstrap native modal using for a line removal confirmation
 
 ------------------------------------------------------------------------------------------------------------------------
 
