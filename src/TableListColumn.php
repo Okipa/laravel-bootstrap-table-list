@@ -43,9 +43,9 @@ class TableListColumn extends Model
      *
      * @param string|null $title
      *
-     * @return TableListColumn
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setTitle(string $title = null)
+    public function setTitle(string $title = null): TableListColumn
     {
         $this->setAttribute('title', $title);
 
@@ -57,10 +57,10 @@ class TableListColumn extends Model
      *
      * @param string $direction (default: "asc", accepts "asc" or "desc")
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      * @throws ErrorException
      */
-    public function sortByDefault(string $direction = 'asc')
+    public function sortByDefault(string $direction = 'asc'): TableListColumn
     {
         // we check if the method has already been called
         if ($this->tableList->sortBy || $this->tableList->sortDir) {
@@ -74,7 +74,7 @@ class TableListColumn extends Model
         $acceptedDirections = ['asc', 'desc'];
         $errorMessage = 'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
                         . $direction . '" given.';
-        if (!in_array($direction, $acceptedDirections))
+        if (! in_array($direction, $acceptedDirections))
             throw new InvalidArgumentException($errorMessage);
         $this->tableList->setAttribute('sortDir', $direction);
 
@@ -85,10 +85,10 @@ class TableListColumn extends Model
      * Use the column attribute for the destroy confirmation message generation (required).
      * This method can be called only once.
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      * @throws ErrorException
      */
-    public function useForDestroyConfirmation()
+    public function useForDestroyConfirmation(): TableListColumn
     {
         if ($this->tableList->destroyAttribute) {
             $errorMessage = 'The useForDestroyConfirmation() method has already been called. '
@@ -103,9 +103,9 @@ class TableListColumn extends Model
     /**
      * Make the column sortable (optional).
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isSortable()
+    public function isSortable(): TableListColumn
     {
         $this->tableList->sortableColumns->add($this);
         $this->setAttribute('isSortableColumn', true);
@@ -116,9 +116,9 @@ class TableListColumn extends Model
     /**
      * Make the column searchable (optional).
      *
-     * @return TableListColumn
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isSearchable()
+    public function isSearchable(): TableListColumn
     {
         $this->tableList->searchableColumns->add($this);
 
@@ -131,9 +131,9 @@ class TableListColumn extends Model
      *
      * @param string $customColumnTable
      *
-     * @return TableListColumn
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setCustomTable(string $customColumnTable)
+    public function setCustomTable(string $customColumnTable): TableListColumn
     {
         $this->setAttribute('customColumnTable', $customColumnTable);
 
@@ -146,9 +146,9 @@ class TableListColumn extends Model
      *
      * @param string|null $columnDateFormat
      *
-     * @return $this|string
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setColumnDateFormat(string $columnDateFormat)
+    public function setColumnDateFormat(string $columnDateFormat): TableListColumn
     {
         $this->setAttribute('columnDateFormat', $columnDateFormat);
 
@@ -161,9 +161,9 @@ class TableListColumn extends Model
      *
      * @param string $buttonClass
      *
-     * @return TableListColumn
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isButton(string $buttonClass)
+    public function isButton(string $buttonClass): TableListColumn
     {
         $this->setAttribute('buttonClass', $buttonClass);
 
@@ -176,9 +176,9 @@ class TableListColumn extends Model
      *
      * @param int $stringLimit
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setStringLimit(int $stringLimit)
+    public function setStringLimit(int $stringLimit): TableListColumn
     {
         $this->setAttribute('stringLimit', $stringLimit);
 
@@ -191,9 +191,9 @@ class TableListColumn extends Model
      *
      * @param Closure $linkClosure
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isLink(Closure $linkClosure)
+    public function isLink(Closure $linkClosure): TableListColumn
     {
         $this->setAttribute('linkClosure', $linkClosure);
 
@@ -206,9 +206,9 @@ class TableListColumn extends Model
      *
      * @param Closure $customValueClosure
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isCustomValue(Closure $customValueClosure)
+    public function isCustomValue(Closure $customValueClosure): TableListColumn
     {
         $this->setAttribute('customValueClosure', $customValueClosure);
 
@@ -221,9 +221,9 @@ class TableListColumn extends Model
      *
      * @param Closure $customHtmlEltClosure
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isCustomHtmlElement(Closure $customHtmlEltClosure)
+    public function isCustomHtmlElement(Closure $customHtmlEltClosure): TableListColumn
     {
         $this->setAttribute('customHtmlEltClosure', $customHtmlEltClosure);
 

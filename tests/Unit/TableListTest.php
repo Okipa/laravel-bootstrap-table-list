@@ -165,6 +165,65 @@ class TableListTest extends TableListTestCase
         $this->assertEquals($queryClosure, $table->queryClosure);
     }
 
+    public function testAddDisableLinesInstructions()
+    {
+        $disableLinesClosure = function($model) {
+            return $model->id === 1;
+        };
+        $table = app(TableList::class)->disableLines($disableLinesClosure);
+        $this->assertEquals($disableLinesClosure, $table->disableLinesClosure);
+    }
+
+    public function testDisableLine()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $users = $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes)
+            ->disableLines(function($model) use ($users) {
+                return $model->id === 1 || $model->id === 2;
+            });
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        foreach ($table->list->getCollection() as $user) {
+            if ($user->id === 1 || $user->id === 2) {
+                $this->assertTrue($user->disabled);
+            } else {
+                $this->assertNull($user->disabled);
+            }
+        }
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains(trans('class="disabled"'), $tbody);
+    }
+
+    public function testWithNoDisableLines()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        $this->assertNotContains(trans('class="disabled"'), $tbody);
+    }
+
     /**
      * @expectedException ErrorException
      * @expectedExceptionMessage  The table list model has not been defined or is not an instance of
@@ -674,7 +733,7 @@ class TableListTest extends TableListTestCase
         );
     }
 
-    public function testSearchUnaccurateRequest()
+    public function testSearchInaccurateRequest()
     {
         $this->createMultipleUsers(10);
         $customRequest = app(Request::class);
@@ -699,6 +758,57 @@ class TableListTest extends TableListTestCase
                 ->toArray(),
             $table->list->toArray()['data']
         );
+    }
+
+    public function testUseNativeBootstrapModal()
+    {
+        $this->createMultipleUsers(10);
+        $this->setRoutes(['users'], ['index', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $table = app(TableList::class)
+            ->setRoutes($routes)
+            ->setModel(User::class)
+            ->enableRowsNumberSelector();
+        $table->addColumn('name')
+            ->setTitle('Name')
+            ->sortByDefault()
+            ->isSortable()
+            ->isSearchable()
+            ->useForDestroyConfirmation();;
+        $table->render();
+        $html = View::make('tablelist::table', ['table' => $table])->render();
+        $this->assertContains('data-toggle="modal"', $html);
+        $this->assertContains('data-target=".destroy-confirm-modal-', $html);
+        $this->assertContains('class="modal fade destroy-confirm-modal', $html);
+    }
+
+    public function testDoNotUseNativeBootstrapModal()
+    {
+        config()->set('tablelist.template.button.destroy.trigger-bootrap-native-modal', false);
+        $this->createMultipleUsers(10);
+        $this->setRoutes(['users'], ['index', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $table = app(TableList::class)
+            ->setRoutes($routes)
+            ->setModel(User::class)
+            ->enableRowsNumberSelector();
+        $table->addColumn('name')
+            ->setTitle('Name')
+            ->sortByDefault()
+            ->isSortable()
+            ->isSearchable()
+            ->useForDestroyConfirmation();;
+        $table->render();
+        $html = View::make('tablelist::table', ['table' => $table])->render();
+        $this->assertNotContains('data-toggle="modal"', $html);
+        $this->assertNotContains('data-target=".destroy-confirm-modal-', $html);
+        $this->assertNotContains('class="modal fade destroy-confirm-modal', $html);
     }
 
     public function testCustomConfig()
@@ -730,8 +840,9 @@ class TableListTest extends TableListTestCase
                             'icon'  => 'templateButtonEditIcon',
                         ],
                         'destroy' => [
-                            'class' => 'templateButtonDestroyClass',
-                            'icon'  => 'templateButtonDestroyIcon',
+                            'class'                        => 'templateButtonDestroyClass',
+                            'icon'                         => 'templateButtonDestroyIcon',
+                            'trigger-bootrap-native-modal' => true,
                         ],
                         'confirm' => [
                             'class' => 'templateButtonConfirmClass',
@@ -817,5 +928,23 @@ class TableListTest extends TableListTestCase
             config('tablelist.template.button.cancel.icon'),
             $html
         );
+    }
+
+    public function testToHtml()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $this->assertEquals($table->render(), $table->toHtml());
     }
 }

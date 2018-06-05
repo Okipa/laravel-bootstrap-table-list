@@ -9,14 +9,14 @@ return [
         'indicator' => [
             'sort' => [
                 'class' => 'spin-on-click',
-                'icon' => [
+                'icon'  => [
                     'asc'      => '<i class="fa fa-sort-asc"></i>',
-                    'desc' => '<i class="fa fa-sort-desc"></i>',
-                    'unsorted' => '<i class="fa fa-sort"></i>'
+                    'desc'     => '<i class="fa fa-sort-desc"></i>',
+                    'unsorted' => '<i class="fa fa-sort"></i>',
                 ],
             ],
         ],
-        'button'     => [
+        'button'    => [
             'create'  => [
                 'class' => 'btn btn-success spin-on-click',
                 'icon'  => '<i class="fa fa-plus-circle" aria-hidden="true"></i>',
@@ -26,8 +26,9 @@ return [
                 'icon'  => '<i class="fa fa-pencil" aria-hidden="true"></i>',
             ],
             'destroy' => [
-                'class' => 'btn btn-danger btn-rounded',
-                'icon'  => '<i class="fa fa-times" aria-hidden="true"></i>',
+                'class'                        => 'btn btn-danger btn-rounded',
+                'icon'                         => '<i class="fa fa-times" aria-hidden="true"></i>',
+                'trigger-bootrap-native-modal' => true,
             ],
             'confirm' => [
                 'class' => 'btn btn-success spin-on-click',

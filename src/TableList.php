@@ -13,7 +13,6 @@ use InvalidArgumentException;
 use Log;
 use Schema;
 use Validator;
-use View;
 
 class TableList extends Model implements Htmlable
 {
@@ -29,6 +28,7 @@ class TableList extends Model implements Htmlable
         'routes',
         'columns',
         'queryClosure',
+        'disableLinesClosure',
         'list',
         'destroyAttribute',
     ];
@@ -53,9 +53,9 @@ class TableList extends Model implements Htmlable
      *
      * @param string $tableModel
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function setModel(string $tableModel)
+    public function setModel(string $tableModel): TableList
     {
         $this->setAttribute('tableModel', app()->make($tableModel));
 
@@ -67,9 +67,9 @@ class TableList extends Model implements Htmlable
      *
      * @param Request $request
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): TableList
     {
         $this->setAttribute('request', $request);
 
@@ -81,10 +81,10 @@ class TableList extends Model implements Htmlable
      *
      * @param array $routes
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      * @throws \ErrorException
      */
-    public function setRoutes(array $routes)
+    public function setRoutes(array $routes): TableList
     {
         $this->checkRoutesValidity($routes);
         $this->setAttribute('routes', $routes);
@@ -93,13 +93,14 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Check routes validity
+     * Check routes validity.
      *
      * @param array $routes
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkRoutesValidity(array $routes)
+    private function checkRoutesValidity(array $routes): void
     {
         $requiredRouteKeys = ['index'];
         $optionalRouteKeys = ['create', 'edit', 'destroy'];
@@ -110,14 +111,15 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Check required routes validity
+     * Check required routes validity.
      *
      * @param array $routes
      * @param array $requiredRouteKeys
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkRequiredRoutesValidity(array $routes, array $requiredRouteKeys)
+    private function checkRequiredRoutesValidity(array $routes, array $requiredRouteKeys): void
     {
         $routeKeys = array_keys($routes);
         foreach ($requiredRouteKeys as $requiredRouteKey) {
@@ -131,14 +133,15 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Check allowed routes validity
+     * Check allowed routes validity.
      *
      * @param array $routes
      * @param array $allowedRouteKeys
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkAllowedRoutesValidity(array $routes, array $allowedRouteKeys)
+    private function checkAllowedRoutesValidity(array $routes, array $allowedRouteKeys): void
     {
         foreach ($routes as $routeKey => $route) {
             if (! in_array($routeKey, $allowedRouteKeys)) {
@@ -151,13 +154,14 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Check routes structure validity
+     * Check routes structure validity.
      *
      * @param array $routes
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkRoutesStructureValidity(array $routes)
+    private function checkRoutesStructureValidity(array $routes): void
     {
         $requiredRouteParams = ['alias', 'parameters'];
         foreach ($routes as $routeKey => $route) {
@@ -180,9 +184,9 @@ class TableList extends Model implements Htmlable
      *
      * @param int $rowsNumber
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableList$this
      */
-    public function setRowsNumber(int $rowsNumber)
+    public function setRowsNumber(int $rowsNumber): TableList
     {
         $this->setAttribute('rowsNumber', $rowsNumber);
 
@@ -192,9 +196,9 @@ class TableList extends Model implements Htmlable
     /**
      * Enables the rows number selection in the table list (optional).
      *
-     * @return TableList
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function enableRowsNumberSelector()
+    public function enableRowsNumberSelector(): TableList
     {
         $this->setAttribute('rowsNumberSelectorEnabled', true);
 
@@ -202,17 +206,33 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Set the query closure that will be used during the table list generation (optional).
+     * Set the query closure that will be executed during the table list generation (optional).
      * For example, you can define your joined tables here.
      * The closure let you manipulate the following attribute : $query.
      *
      * @param Closure $queryClosure
      *
-     * @return $this
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function addQueryInstructions(Closure $queryClosure)
+    public function addQueryInstructions(Closure $queryClosure): TableList
     {
         $this->setAttribute('queryClosure', $queryClosure);
+
+        return $this;
+    }
+
+    /**
+     * Set the disable lines closure that will executed during the table list generation (optional).
+     * For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
+     * The closure let you manipulate the following attribute : $query.
+     *
+     * @param \Closure $disableLinesClosure
+     *
+     * @return \Okipa\LaravelBootstrapTableList\TableList
+     */
+    public function disableLines(Closure $disableLinesClosure): TableList
+    {
+        $this->setAttribute('disableLinesClosure', $disableLinesClosure);
 
         return $this;
     }
@@ -222,10 +242,10 @@ class TableList extends Model implements Htmlable
      *
      * @param string|null $attribute
      *
-     * @return TableListColumn
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      * @throws ErrorException
      */
-    public function addColumn(string $attribute = null)
+    public function addColumn(string $attribute = null): TableListColumn
     {
         // we check if the model has correctly been defined
         if (! $this->tableModel instanceof Model) {
@@ -243,7 +263,7 @@ class TableList extends Model implements Htmlable
      *
      * @return string
      */
-    public function getSearchableTitles()
+    public function getSearchableTitles(): string
     {
         return $this->searchableColumns->implode('title', ', ');
     }
@@ -253,7 +273,7 @@ class TableList extends Model implements Htmlable
      *
      * @return int
      */
-    public function getColumnsCount()
+    public function getColumnsCount(): int
     {
         return count($this->columns);
     }
@@ -266,7 +286,7 @@ class TableList extends Model implements Htmlable
      *
      * @return string
      */
-    public function getRoute(string $routeKey, array $params = [])
+    public function getRoute(string $routeKey, array $params = []): string
     {
         if (! isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
             throw new InvalidArgumentException(
@@ -283,7 +303,7 @@ class TableList extends Model implements Htmlable
      *
      * @return string
      */
-    public function navigationStatus()
+    public function navigationStatus(): string
     {
         return trans('tablelist::tablelist.tfoot.nav', [
             'start' => ($this->list->perPage() * ($this->list->currentPage() - 1)) + 1,
@@ -293,12 +313,23 @@ class TableList extends Model implements Htmlable
     }
 
     /**
+     * Get content as a string of HTML.
+     *
+     * @return string
+     * @throws \ErrorException
+     */
+    public function toHtml(): string
+    {
+        return (string) $this->render();
+    }
+
+    /**
      * Generate the table list html.
      *
      * @return string
      * @throws ErrorException
      */
-    public function render()
+    public function render(): string
     {
         $this->checkRoutesValidity($this->routes);
         $this->checkColumnsValidity();
@@ -306,15 +337,16 @@ class TableList extends Model implements Htmlable
         $this->handleRequest();
         $this->generateEntitiesListFromQuery();
 
-        return View::make('tablelist::table', ['table' => $this])->render();
+        return view('tablelist::table', ['table' => $this]);
     }
 
     /**
      * Check the given attributes validity in each table list column.
      *
+     * @return void
      * @throws ErrorException
      */
-    private function checkColumnsValidity()
+    private function checkColumnsValidity(): void
     {
         $this->checkIfAtLeastOneColumnIsDeclared();
         $this->columns->map(function(TableListColumn $column) {
@@ -326,15 +358,14 @@ class TableList extends Model implements Htmlable
     /**
      * Check if at least one column is declared.
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkIfAtLeastOneColumnIsDeclared()
+    private function checkIfAtLeastOneColumnIsDeclared(): void
     {
         if (! count($this->columns)) {
-            // we prepare the error message
             $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
                             . '"addColumn" method on the table list object.';
-            // we throw an exception
             throw new ErrorException($errorMessage);
         }
     }
@@ -344,9 +375,10 @@ class TableList extends Model implements Htmlable
      *
      * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkColumnAttributeExistence(TableListColumn $column)
+    private function checkColumnAttributeExistence(TableListColumn $column): void
     {
         if (
             ! is_null($column->attribute)
@@ -355,10 +387,8 @@ class TableList extends Model implements Htmlable
                 Schema::getColumnListing($column->customColumnTable)
             )
         ) {
-            // we prepare the error message
             $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "'
                             . $column->customColumnTable . '" table.';
-            // we throw an exception
             throw new ErrorException($errorMessage);
         }
     }
@@ -368,16 +398,15 @@ class TableList extends Model implements Htmlable
      *
      * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkColumnTitleDefinition(TableListColumn $column)
+    private function checkColumnTitleDefinition(TableListColumn $column): void
     {
         if (! $column->title) {
-            // we prepare the error message
             $errorMessage = 'The given column "' . $column->attribute
                             . '" has no defined title. Please define a title by using the "setTitle()" '
                             . 'method on the column object.';
-            // we throw an exception
             throw new ErrorException($errorMessage);
         }
     }
@@ -385,16 +414,15 @@ class TableList extends Model implements Htmlable
     /**
      * Check that a destroy attribute has been defined.
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function checkDestroyAttributeDefinition()
+    private function checkDestroyAttributeDefinition(): void
     {
         if ($this->isRouteDefined('destroy') && ! $this->destroyAttribute) {
-            // we prepare the error message
             $errorMessage =
                 'No column attribute has been choosed for the destroy confirmation. '
                 . 'Please define an attribute by using the "useForDestroyConfirmation()" method on a column object.';
-            // we throw an exception
             throw new ErrorException($errorMessage);
         }
     }
@@ -406,28 +434,26 @@ class TableList extends Model implements Htmlable
      *
      * @return bool
      */
-    public function isRouteDefined(string $routeKey)
+    public function isRouteDefined(string $routeKey): bool
     {
         return (isset($this->routes[$routeKey]) || ! empty($this->routes[$routeKey]));
     }
 
     /**
      * Handle the request treatments.
+     *
+     * @return void
      */
-    private function handleRequest()
+    private function handleRequest(): void
     {
-        // we check the inputs validity
         $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
             'rowsNumber' => 'required|numeric',
             'search'     => 'nullable|string',
             'sortBy'     => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
             'sortDir'    => 'nullable|string|in:asc,desc',
         ]);
-        // if errors are found
         if ($validator->fails()) {
-            // we log the errors
             Log::error($validator->errors());
-            // we set back the default values
             $this->request->merge([
                 'rowsNumber' => $this->rowsNumber ? $this->rowsNumber : config('tablelist.default.rows_number'),
                 'search'     => null,
@@ -435,7 +461,6 @@ class TableList extends Model implements Htmlable
                 'sortDir'    => $this->sortDir,
             ]);
         } else {
-            // we save the request values
             $this->setAttribute('rowsNumber', $this->request->rowsNumber);
             $this->setAttribute('search', $this->request->search);
         }
@@ -445,22 +470,26 @@ class TableList extends Model implements Htmlable
      * Generate the entities list.
      *
      * @throws ErrorException
+     * @return void
      */
-    private function generateEntitiesListFromQuery()
+    private function generateEntitiesListFromQuery(): void
     {
         $query = $this->tableModel->query();
         $this->applyQueryClosure($query);
         $this->applySearchClauses($query);
         $this->applySortClauses($query);
         $this->paginateList($query);
+        $this->applyDisableLinesClosure();
     }
 
     /**
      * Apply query closure
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return void
      */
-    private function applyQueryClosure(Builder $query)
+    private function applyQueryClosure(Builder $query): void
     {
         if ($closure = $this->queryClosure) {
             $closure($query);
@@ -471,8 +500,10 @@ class TableList extends Model implements Htmlable
      * Apply search clauses
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return void
      */
-    private function applySearchClauses(Builder $query)
+    private function applySearchClauses(Builder $query): void
     {
         if ($searched = $this->request->search) {
             $this->searchableColumns->map(function(TableListColumn $column, int $key) use (&$query, $searched) {
@@ -487,13 +518,14 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Apply sort clauses
+     * Apply sort clauses.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
+     * @return void
      * @throws \ErrorException
      */
-    private function applySortClauses(Builder $query)
+    private function applySortClauses(Builder $query): void
     {
         if (
             ($sortBy = $this->request->get('sortBy', $this->sortBy))
@@ -508,11 +540,13 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Paginate the list from the query
+     * Paginate the list from the query.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return void
      */
-    private function paginateList(Builder $query)
+    private function paginateList(Builder $query): void
     {
         $this->setAttribute('list', $query->paginate($this->rowsNumber));
         $this->list->appends([
@@ -524,13 +558,20 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Get content as a string of HTML.
+     * Apply the disable lines closure.
      *
-     * @return string
-     * @throws \ErrorException
+     * @return void
      */
-    public function toHtml()
+    private function applyDisableLinesClosure(): void
     {
-        return (string) $this->render();
+        if ($closure = $this->disableLinesClosure) {
+            $this->list->getCollection()->transform(function ($model) use ($closure) {
+                if ($closure($model)) {
+                    $model->disabled = true;
+                }
+
+                return $model;
+            });
+        }
     }
 }

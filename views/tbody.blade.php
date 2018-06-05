@@ -11,7 +11,7 @@
         </tr>
     @else
         @foreach($table->list as $entity)
-            <tr>
+            <tr @if($entity->disabled)class="disabled"@endif>
                 @foreach($table->columns as $column)
                     <td>
                         {{-- button start--}}
@@ -38,7 +38,7 @@
                             {{-- custom html element --}}
                             @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
                                 {!! $customHtmlEltClosure($entity, $column) !!}
-                                {{-- basic value --}}
+                            {{-- basic value --}}
                             @else
                                 {!! $entity->{$column->attribute} !!}
                             @endif
@@ -49,26 +49,38 @@
                     </td>
                 @endforeach
                 {{-- actions --}}
-                @if($table->isRouteDefined('edit') || $table->isRouteDefined('destroy'))
+                @if(($table->isRouteDefined('edit') || $table->isRouteDefined('destroy')))
                     <td class="actions">
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
-                            <form role="form"
-                                  method="GET"
-                                  action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
-                                @include('tablelist::components.buttons.edit')
-                            </form>
+                            @if($entity->disabled)
+                                @include('tablelist::components.buttons.edit', ['class' => 'disabled'])
+                            @else
+                                <form class="edit"
+                                      role="form"
+                                      method="GET"
+                                      action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
+                                    @include('tablelist::components.buttons.edit')
+                                </form>
+                            @endif
                         @endif
                         {{-- destroy button --}}
-                        @if($table->isRouteDefined('destroy'))
-                            <form role="form"
-                                  method="POST"
-                                  action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
-                                {!! csrf_field() !!}
-                                <input type="hidden" name="_method" value="DELETE">
-                                @include('tablelist::components.buttons.destroy')
-                                @include('tablelist::components.modals.destroy-confirmation')
-                            </form>
+                        @if($table->isRouteDefined('destroy') && !$entity->disabled)
+                            @if($entity->disabled)
+                                @include('tablelist::components.buttons.destroy', ['class' => 'disabled'])
+                            @else
+                                <form class="destroy"
+                                      role="form"
+                                      method="POST"
+                                      action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
+                                    {!! csrf_field() !!}
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    @include('tablelist::components.buttons.destroy')
+                                    @if(config('tablelist.template.button.destroy.trigger-bootrap-native-modal'))
+                                        @include('tablelist::components.modals.destroy-confirmation')
+                                    @endif
+                                </form>
+                            @endif
                         @endif
                     </td>
                 @endif
