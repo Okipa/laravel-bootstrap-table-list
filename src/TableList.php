@@ -264,12 +264,12 @@ class TableList extends Model implements Htmlable
     public function addColumn(string $attribute = null): TableListColumn
     {
         // we check if the model has correctly been defined
-        if (! $this->tableModel instanceof Model) {
+        if (! $this->getAttribute('tableModel') instanceof Model) {
             $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
             throw new ErrorException($errorMessage);
         }
         $column = new TableListColumn($this, $attribute);
-        $this->columns[] = $column;
+        $this->getAttribute('columns')[] = $column;
 
         return $column;
     }
@@ -281,7 +281,7 @@ class TableList extends Model implements Htmlable
      */
     public function getSearchableTitles(): string
     {
-        return $this->searchableColumns->implode('title', ', ');
+        return $this->getAttribute('searchableColumns')->implode('title', ', ');
     }
 
     /**
@@ -291,7 +291,7 @@ class TableList extends Model implements Htmlable
      */
     public function getColumnsCount(): int
     {
-        return count($this->columns);
+        return count($this->getAttribute('columns'));
     }
 
     /**
@@ -304,14 +304,15 @@ class TableList extends Model implements Htmlable
      */
     public function getRoute(string $routeKey, array $params = []): string
     {
-        if (! isset($this->routes[$routeKey]) || empty($this->routes[$routeKey])) {
+        if (! isset($this->getAttribute('routes')[$routeKey]) || empty($this->getAttribute('routes')[$routeKey])) {
             throw new InvalidArgumentException(
                 'Invalid $routeKey argument for the route() method. The route key «'
                 . $routeKey . '» has not been found in the routes stack.'
             );
         }
 
-        return route($this->routes[$routeKey]['alias'], array_merge($this->routes[$routeKey]['parameters'], $params));
+        return route($this->getAttribute('routes')[$routeKey]['alias'],
+            array_merge($this->getAttribute('routes')[$routeKey]['parameters'], $params));
     }
 
     /**
@@ -322,9 +323,13 @@ class TableList extends Model implements Htmlable
     public function navigationStatus(): string
     {
         return trans('tablelist::tablelist.tfoot.nav', [
-            'start' => ($this->list->perPage() * ($this->list->currentPage() - 1)) + 1,
-            'stop'  => $this->list->count() + (($this->list->currentPage() - 1) * $this->list->perPage()),
-            'total' => $this->list->total(),
+            'start' => ($this->getAttribute('list')->perPage()
+                        * ($this->getAttribute('list')->currentPage() - 1))
+                       + 1,
+            'stop'  => $this->getAttribute('list')->count()
+                       + (($this->getAttribute('list')->currentPage() - 1)
+                          * $this->getAttribute('list')->perPage()),
+            'total' => $this->getAttribute('list')->total(),
         ]);
     }
 
@@ -347,7 +352,7 @@ class TableList extends Model implements Htmlable
      */
     public function render(): string
     {
-        $this->checkRoutesValidity($this->routes);
+        $this->checkRoutesValidity($this->getAttribute('routes'));
         $this->checkColumnsValidity();
         $this->checkDestroyAttributeDefinition();
         $this->handleRequest();
@@ -365,7 +370,7 @@ class TableList extends Model implements Htmlable
     private function checkColumnsValidity(): void
     {
         $this->checkIfAtLeastOneColumnIsDeclared();
-        $this->columns->map(function(TableListColumn $column) {
+        $this->getAttribute('columns')->map(function(TableListColumn $column) {
             $this->checkColumnAttributeExistence($column);
             $this->checkColumnTitleDefinition($column);
         });
@@ -379,7 +384,7 @@ class TableList extends Model implements Htmlable
      */
     private function checkIfAtLeastOneColumnIsDeclared(): void
     {
-        if (! count($this->columns)) {
+        if (! count($this->getAttribute('columns'))) {
             $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
                             . '"addColumn" method on the table list object.';
             throw new ErrorException($errorMessage);
@@ -397,14 +402,15 @@ class TableList extends Model implements Htmlable
     private function checkColumnAttributeExistence(TableListColumn $column): void
     {
         if (
-            ! is_null($column->attribute)
+            ! is_null($column->getAttribute('attribute'))
             && ! in_array(
-                $column->attribute,
-                Schema::getColumnListing($column->customColumnTable)
+                $column->getAttribute('attribute'),
+                Schema::getColumnListing($column->getAttribute('customColumnTable'))
             )
         ) {
-            $errorMessage = 'The given column attribute "' . $column->attribute . '" does not exist in the "'
-                            . $column->customColumnTable . '" table.';
+            $errorMessage =
+                'The given column attribute "' . $column->getAttribute('attribute') . '" does not exist in the "'
+                . $column->getAttribute('customColumnTable') . '" table.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -419,8 +425,8 @@ class TableList extends Model implements Htmlable
      */
     private function checkColumnTitleDefinition(TableListColumn $column): void
     {
-        if (! $column->title) {
-            $errorMessage = 'The given column "' . $column->attribute
+        if (! $column->getAttribute('title')) {
+            $errorMessage = 'The given column "' . $column->getAttribute('attribute')
                             . '" has no defined title. Please define a title by using the "setTitle()" '
                             . 'method on the column object.';
             throw new ErrorException($errorMessage);
@@ -435,10 +441,10 @@ class TableList extends Model implements Htmlable
      */
     private function checkDestroyAttributeDefinition(): void
     {
-        if ($this->isRouteDefined('destroy') && ! $this->destroyAttribute) {
-            $errorMessage =
-                'No column attribute has been choosed for the destroy confirmation. '
-                . 'Please define an attribute by using the "useForDestroyConfirmation()" method on a column object.';
+        if ($this->isRouteDefined('destroy') && ! $this->getAttribute('destroyAttribute')) {
+            $errorMessage = 'No column attribute has been choosed for the destroy confirmation. '
+                            . 'Please define an attribute by using the "useForDestroyConfirmation()" '
+                            . 'method on a column object.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -452,7 +458,10 @@ class TableList extends Model implements Htmlable
      */
     public function isRouteDefined(string $routeKey): bool
     {
-        return (isset($this->routes[$routeKey]) || ! empty($this->routes[$routeKey]));
+        return (
+            isset($this->getAttribute('routes')[$routeKey])
+            || ! empty($this->getAttribute('routes')[$routeKey])
+        );
     }
 
     /**
@@ -462,23 +471,25 @@ class TableList extends Model implements Htmlable
      */
     private function handleRequest(): void
     {
-        $validator = Validator::make($this->request->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
-            'rowsNumber' => 'required|numeric',
-            'search'     => 'nullable|string',
-            'sortBy'     => 'nullable|string|in:' . $this->columns->implode('attribute', ','),
-            'sortDir'    => 'nullable|string|in:asc,desc',
-        ]);
+        $validator =
+            Validator::make($this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+                'rowsNumber' => 'required|numeric',
+                'search'     => 'nullable|string',
+                'sortBy'     => 'nullable|string|in:' . $this->getAttribute('columns')->implode('attribute', ','),
+                'sortDir'    => 'nullable|string|in:asc,desc',
+            ]);
         if ($validator->fails()) {
             Log::error($validator->errors());
-            $this->request->merge([
-                'rowsNumber' => $this->rowsNumber ? $this->rowsNumber : config('tablelist.default.rows_number'),
+            $this->getAttribute('request')->merge([
+                'rowsNumber' => $this->getAttribute('rowsNumber') ? $this->getAttribute('rowsNumber')
+                    : config('tablelist.default.rows_number'),
                 'search'     => null,
-                'sortBy'     => $this->sortBy,
-                'sortDir'    => $this->sortDir,
+                'sortBy'     => $this->getAttribute('sortBy'),
+                'sortDir'    => $this->getAttribute('sortDir'),
             ]);
         } else {
-            $this->setAttribute('rowsNumber', $this->request->rowsNumber);
-            $this->setAttribute('search', $this->request->search);
+            $this->setAttribute('rowsNumber', $this->getAttribute('request')->rowsNumber);
+            $this->setAttribute('search', $this->getAttribute('request')->search);
         }
     }
 
@@ -490,13 +501,12 @@ class TableList extends Model implements Htmlable
      */
     private function generateEntitiesListFromQuery(): void
     {
-        $query = $this->tableModel->query();
+        $query = $this->getAttribute('tableModel')->query();
         $this->applyQueryClosure($query);
         $this->applySearchClauses($query);
         $this->applySortClauses($query);
         $this->paginateList($query);
         $this->applyClosuresOnPaginatedList();
-        //        dd($this->list->toArray());
     }
 
     /**
@@ -508,7 +518,7 @@ class TableList extends Model implements Htmlable
      */
     private function applyQueryClosure(Builder $query): void
     {
-        if ($closure = $this->queryClosure) {
+        if ($closure = $this->getAttribute('queryClosure')) {
             $closure($query);
         }
     }
@@ -522,9 +532,12 @@ class TableList extends Model implements Htmlable
      */
     private function applySearchClauses(Builder $query): void
     {
-        if ($searched = $this->request->search) {
-            $this->searchableColumns->map(function(TableListColumn $column, int $key) use (&$query, $searched) {
-                $attribute = $column->customColumnTable . '.' . $column->attribute;
+        if ($searched = $this->getAttribute('request')->search) {
+            $this->getAttribute('searchableColumns')->map(function(TableListColumn $column, int $key) use (
+                &$query,
+                $searched
+            ) {
+                $attribute = $column->getAttribute('customColumnTable') . '.' . $column->getAttribute('attribute');
                 if ($key > 0) {
                     $query->orWhere($attribute, 'like', '%' . $searched . '%');
                 } else {
@@ -545,8 +558,8 @@ class TableList extends Model implements Htmlable
     private function applySortClauses(Builder $query): void
     {
         if (
-            ($sortBy = $this->request->get('sortBy', $this->sortBy))
-            && ($sortDir = $this->request->get('sortDir', $this->sortDir))
+            ($sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy')))
+            && ($sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir')))
         ) {
             $query->orderBy($sortBy, $sortDir);
         } else {
@@ -565,12 +578,12 @@ class TableList extends Model implements Htmlable
      */
     private function paginateList(Builder $query): void
     {
-        $this->setAttribute('list', $query->paginate($this->rowsNumber));
-        $this->list->appends([
-            'rowsNumber' => $this->rowsNumber,
+        $this->setAttribute('list', $query->paginate($this->getAttribute('rowsNumber')));
+        $this->getAttribute('list')->appends([
+            'rowsNumber' => $this->getAttribute('rowsNumber'),
             'search'     => $this->search,
-            'sortBy'     => $this->sortBy,
-            'sortDir'    => $this->sortDir,
+            'sortBy'     => $this->getAttribute('sortBy'),
+            'sortDir'    => $this->getAttribute('sortDir'),
         ]);
     }
 
@@ -581,9 +594,12 @@ class TableList extends Model implements Htmlable
      */
     private function applyClosuresOnPaginatedList(): void
     {
-        $disableLinesClosure = $this->disableLinesClosure;
-        $highlightLinesClosure = $this->highlightLinesClosure;
-        $this->list->getCollection()->transform(function($model) use ($disableLinesClosure, $highlightLinesClosure) {
+        $disableLinesClosure = $this->getAttribute('disableLinesClosure');
+        $highlightLinesClosure = $this->getAttribute('highlightLinesClosure');
+        $this->getAttribute('list')->getCollection()->transform(function($model) use (
+            $disableLinesClosure,
+            $highlightLinesClosure
+        ) {
             if (isset($disableLinesClosure)) {
                 $model->setAttribute('disabled', $disableLinesClosure($model));
             }

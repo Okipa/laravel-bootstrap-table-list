@@ -63,20 +63,20 @@ class TableListColumn extends Model
     public function sortByDefault(string $direction = 'asc'): TableListColumn
     {
         // we check if the method has already been called
-        if ($this->tableList->sortBy || $this->tableList->sortDir) {
+        if ($this->getAttribute('tableList')->sortBy || $this->getAttribute('tableList')->sortDir) {
             $errorMessage = 'The sortByDefault() method has already been called. '
                             . 'You can sort a column by default only once.';
             throw new ErrorException($errorMessage);
         }
         // we set the sort attribute
-        $this->tableList->sortBy = $this->attribute;
+        $this->getAttribute('tableList')->sortBy = $this->getAttribute('attribute');
         // we set the sort direction
         $acceptedDirections = ['asc', 'desc'];
         $errorMessage = 'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
                         . $direction . '" given.';
         if (! in_array($direction, $acceptedDirections))
             throw new InvalidArgumentException($errorMessage);
-        $this->tableList->setAttribute('sortDir', $direction);
+        $this->getAttribute('tableList')->setAttribute('sortDir', $direction);
 
         return $this;
     }
@@ -90,12 +90,12 @@ class TableListColumn extends Model
      */
     public function useForDestroyConfirmation(): TableListColumn
     {
-        if ($this->tableList->destroyAttribute) {
+        if ($this->getAttribute('tableList')->destroyAttribute) {
             $errorMessage = 'The useForDestroyConfirmation() method has already been called. '
                             . 'You can define a column attribute for the destroy confirmation only once.';
             throw new ErrorException($errorMessage);
         }
-        $this->tableList->setAttribute('destroyAttribute', $this->attribute);
+        $this->getAttribute('tableList')->setAttribute('destroyAttribute', $this->getAttribute('attribute'));
 
         return $this;
     }
@@ -107,7 +107,7 @@ class TableListColumn extends Model
      */
     public function isSortable(): TableListColumn
     {
-        $this->tableList->sortableColumns->add($this);
+        $this->getAttribute('tableList')->sortableColumns->add($this);
         $this->setAttribute('isSortableColumn', true);
 
         return $this;
@@ -120,7 +120,7 @@ class TableListColumn extends Model
      */
     public function isSearchable(): TableListColumn
     {
-        $this->tableList->searchableColumns->add($this);
+        $this->getAttribute('tableList')->searchableColumns->add($this);
 
         return $this;
     }
