@@ -8,7 +8,7 @@ return [
     'template' => [
         'indicator' => [
             'sort' => [
-                'class' => 'spin-on-click',
+                'class' => '',
                 'icon'  => [
                     'asc'      => '<i class="fa fa-sort-asc"></i>',
                     'desc'     => '<i class="fa fa-sort-desc"></i>',
@@ -18,11 +18,11 @@ return [
         ],
         'button'    => [
             'create'  => [
-                'class' => 'btn btn-success spin-on-click',
+                'class' => 'btn btn-success',
                 'icon'  => '<i class="fa fa-plus-circle" aria-hidden="true"></i>',
             ],
             'edit'    => [
-                'class' => 'btn btn-primary btn-rounded spin-on-click',
+                'class' => 'btn btn-primary btn-rounded',
                 'icon'  => '<i class="fa fa-pencil" aria-hidden="true"></i>',
             ],
             'destroy' => [
@@ -31,7 +31,7 @@ return [
                 'trigger-bootrap-native-modal' => true,
             ],
             'confirm' => [
-                'class' => 'btn btn-success spin-on-click',
+                'class' => 'btn btn-success',
                 'icon'  => '<i class="fa fa-check" aria-hidden="true"></i>',
             ],
             'cancel'  => [

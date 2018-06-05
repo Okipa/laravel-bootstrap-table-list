@@ -65,7 +65,7 @@
                             @endif
                         @endif
                         {{-- destroy button --}}
-                        @if($table->isRouteDefined('destroy') && !$entity->disabled)
+                        @if($table->isRouteDefined('destroy'))
                             @if($entity->disabled)
                                 @include('tablelist::components.buttons.destroy', ['class' => 'disabled'])
                             @else
