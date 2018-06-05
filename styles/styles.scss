@@ -1,3 +1,6 @@
+$disabled-bg-color: $gray-dark;
+$disabled-color: $gray-light;
+
 .table-list {
     padding: 15px;
 
@@ -25,7 +28,16 @@
 
             tr {
 
+                &.disabled {
+                    background-color: $disabled-bg-color !important;
+                }
+
                 td {
+
+                    &.disabled {
+                        background-color: $disabled-bg-color !important;
+                        color: $disabled-color !important;
+                    }
 
                     &.empty-list {
                         text-align: center;
