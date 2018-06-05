@@ -33,7 +33,7 @@ class TableListColumn extends Model
     {
         parent::__construct([
             'tableList'         => $tableList,
-            'customColumnTable' => $tableList->tableModel->getTable(),
+            'customColumnTable' => $tableList->getAttribute('tableModel')->getTable(),
             'attribute'         => $attribute,
         ]);
     }
@@ -74,8 +74,9 @@ class TableListColumn extends Model
         $acceptedDirections = ['asc', 'desc'];
         $errorMessage = 'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
                         . $direction . '" given.';
-        if (! in_array($direction, $acceptedDirections))
+        if (! in_array($direction, $acceptedDirections)) {
             throw new InvalidArgumentException($errorMessage);
+        }
         $this->getAttribute('tableList')->setAttribute('sortDir', $direction);
 
         return $this;
