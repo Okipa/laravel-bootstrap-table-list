@@ -197,11 +197,11 @@ class TableListTest extends TableListTestCase
             if ($user->id === 1 || $user->id === 2) {
                 $this->assertTrue($user->disabled);
             } else {
-                $this->assertNull($user->disabled);
+                $this->assertFalse($user->disabled);
             }
         }
         $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
-        $this->assertContains(trans('class="disabled"'), $tbody);
+        $this->assertContains(trans('class="disabled "'), $tbody);
     }
 
     public function testWithNoDisableLines()
@@ -221,7 +221,66 @@ class TableListTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
-        $this->assertNotContains(trans('class="disabled"'), $tbody);
+        $this->assertNotContains(trans('class="disabled "'), $tbody);
+    }
+
+    public function testAddHighlightedLinesInstructions()
+    {
+        $highlightLinesClosure = function($model) {
+            return $model->id === 1;
+        };
+        $table = app(TableList::class)->highlightLines($highlightLinesClosure);
+        $this->assertEquals($highlightLinesClosure, $table->highlightLinesClosure);
+    }
+
+    public function testHighlightLine()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $users = $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes)
+            ->highlightLines(function($model) use ($users) {
+                return $model->id === 1 || $model->id === 2;
+            });
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        foreach ($table->list->getCollection() as $user) {
+            if ($user->id === 1 || $user->id === 2) {
+                $this->assertTrue($user->highlighted);
+            } else {
+                $this->assertFalse($user->highlighted);
+            }
+        }
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains(trans('class="highlighted "'), $tbody);
+    }
+
+    public function testWithNoHighlightedLines()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        $tbody = View::make('tablelist::tbody', ['table' => $table])->render();
+        $this->assertNotContains(trans('class="highlighted "'), $tbody);
     }
 
     /**

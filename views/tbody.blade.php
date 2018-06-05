@@ -11,7 +11,7 @@
         </tr>
     @else
         @foreach($table->list as $entity)
-            <tr @if($entity->disabled)class="disabled"@endif>
+            <tr class="@if($entity->disabled)disabled @endif()@if($entity->highlighted)highlighted @endif">
                 @foreach($table->columns as $column)
                     <td>
                         {{-- button start--}}

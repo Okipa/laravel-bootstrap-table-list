@@ -29,6 +29,7 @@ class TableList extends Model implements Htmlable
         'columns',
         'queryClosure',
         'disableLinesClosure',
+        'highlightLinesClosure',
         'list',
         'destroyAttribute',
     ];
@@ -222,9 +223,9 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Set the disable lines closure that will executed during the table list generation (optional).
+     * Set the disable lines closure that will be executed during the table list generation (optional).
      * For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
-     * The closure let you manipulate the following attribute : $query.
+     * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $disableLinesClosure
      *
@@ -233,6 +234,21 @@ class TableList extends Model implements Htmlable
     public function disableLines(Closure $disableLinesClosure): TableList
     {
         $this->setAttribute('disableLinesClosure', $disableLinesClosure);
+
+        return $this;
+    }
+
+    /**
+     * Set the highlight lines closure that will executed during the table list generation (optional).
+     * The closure let you manipulate the following attribute : $model.
+     *
+     * @param \Closure $highlightLinesClosure
+     *
+     * @return \Okipa\LaravelBootstrapTableList\TableList
+     */
+    public function highlightLines(Closure $highlightLinesClosure): TableList
+    {
+        $this->setAttribute('highlightLinesClosure', $highlightLinesClosure);
 
         return $this;
     }
@@ -479,7 +495,8 @@ class TableList extends Model implements Htmlable
         $this->applySearchClauses($query);
         $this->applySortClauses($query);
         $this->paginateList($query);
-        $this->applyDisableLinesClosure();
+        $this->applyClosuresOnPaginatedList();
+//        dd($this->list->toArray());
     }
 
     /**
@@ -558,20 +575,22 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Apply the disable lines closure.
+     * Apply the closures on the paginated list.
      *
      * @return void
      */
-    private function applyDisableLinesClosure(): void
+    private function applyClosuresOnPaginatedList(): void
     {
-        if ($closure = $this->disableLinesClosure) {
-            $this->list->getCollection()->transform(function ($model) use ($closure) {
-                if ($closure($model)) {
-                    $model->disabled = true;
-                }
-
-                return $model;
-            });
-        }
+        $disableLinesClosure = $this->disableLinesClosure;
+        $highlightLinesClosure = $this->highlightLinesClosure;
+        $this->list->getCollection()->transform(function($model) use ($disableLinesClosure, $highlightLinesClosure) {
+            if(isset($disableLinesClosure)){
+                $model->setAttribute('disabled', $disableLinesClosure($model));
+            }
+            if(isset($highlightLinesClosure)){
+                $model->setAttribute('highlighted', $highlightLinesClosure($model));
+            }
+            return $model;
+        });
     }
 }

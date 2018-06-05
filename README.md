@@ -93,6 +93,12 @@ $table = app(TableList::class)
         $query->select('news.*')
             ->join('news_translations', 'news.id', '=', 'news_translations.news_id')
             ->where('news_translations.locale', config('app.locale'));
+    })
+    ->disableLines(function($model){
+        return $model->id === 1 || $model->id === 2;
+    })
+    ->highlightLines(function($model){
+        return $model->id === 3;
     });
 // we add columns
 $table->addColumn('image')
@@ -178,6 +184,13 @@ $table->addColumn('updated_at')
     > Set the query closure that will be used during the table list generation (optional).  
     > For example, you can define your joined tables here.  
     > The closure let you manipulate the following attribute : $query`.
+- `public function disableLines(Closure $disableLinesClosure): TableList`
+    > Set the disable lines closure that will executed during the table list generation (optional).
+    > For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
+    > The closure let you manipulate the following attribute : $model.
+- `public function highlightLines(Closure $highlightLinesClosure): TableList`
+    > Set the highlight lines closure that will executed during the table list generation (optional).
+    > The closure let you manipulate the following attribute : $model.
 - `addColumn(string $attribute = null)`
     > Add a column that will be displayed in the table list (required) :`
     > - At least one column must be added to the table list.  
