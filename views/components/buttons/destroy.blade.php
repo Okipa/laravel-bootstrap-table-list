@@ -1,5 +1,5 @@
 <button type="button"
-        class="{!! config('tablelist.template.button.destroy.class') !!}@isset($class){{ $class }}@endisset"
+        class="{!! config('tablelist.template.button.destroy.class') !!} @isset($class){{ $class }}@endisset"
         title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}"
         @if(config('tablelist.template.button.destroy.trigger-bootrap-native-modal'))
             data-toggle="modal"
