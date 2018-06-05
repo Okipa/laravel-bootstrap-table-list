@@ -264,4 +264,5 @@ Then, change the content from the package templates in your `resources/views/ven
 
 ## Contributors
 
+- [ACID-Solutions](https://github.com/ACID-Solutions)
 - [Stephan de Souza](https://github.com/stephandesouza)
