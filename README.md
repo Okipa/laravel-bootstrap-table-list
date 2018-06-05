@@ -77,7 +77,7 @@ That's it !
 
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
 ```php
-// we instantiate a table list in the news controller
+// we instantiate a table list somewhere in the code
 $table = app(TableList::class)
     ->setModel(News::class)
     ->setRequest($request)
@@ -87,7 +87,7 @@ $table = app(TableList::class)
         'edit'       => ['alias' => 'news.edit', 'parameters' => []],
         'destroy'    => ['alias' => 'news.destroy', 'parameters' => []],
     ])
-    ->setRowsNumber(20)
+    ->setRowsNumber(50)
     ->enableRowsNumberSelector()
     ->addQueryInstructions(function ($query) {
         $query->select('news.*')
@@ -102,48 +102,48 @@ $table = app(TableList::class)
     });
 // we add columns
 $table->addColumn('image')
-    ->setTitle(trans('news.label.image'))
+    ->setTitle(__('news.label.image'))
     ->isCustomHtmlElement(function ($entity, $column) {
         if ($src = $entity->{$column->attribute}) {
-            $image_zoom_src = $entity->imagePath($src, $column->attribute, 'zoom');
-            $image_thumbnail_src = $entity->imagePath($src, $column->attribute, 'thumbnail');
+            $imageZoomSrc = $entity->imagePath($src, $column->attribute, 'zoom');
+            $imageThumbnailSrc = $entity->imagePath($src, $column->attribute, 'thumbnail');
 
-            return "<a href='$image_zoom_src' title='Image title' target="blank"><img class='thumbnail' src='$image_thumbnail_src' alt='Image alt'></a>";
+            return "<a href='$imageZoomSrc' title='Image title' target="blank"><img class='thumbnail' src='$imageThumbnailSrc' alt='Image alt'></a>";
         }
     });
 $table->addColumn('title')
-    ->setTitle(trans('news.label.title'))
+    ->setTitle(__('news.label.title'))
     ->setCustomTable('news_translations')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
 $table->addColumn('content')
-    ->setTitle(trans('news.label.content'))
+    ->setTitle(__('news.label.content'))
     ->setCustomTable('news_translations')
     ->setStringLimit(30);
 $table->addColumn('category_id')
-    ->setTitle(trans('news.label.category'))
+    ->setTitle(__('news.label.category'))
     ->isButton('btn btn-default')
     ->isCustomValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
     });
-$table->addColumn()->setTitle(trans('news.label.preview'))
+$table->addColumn()->setTitle(__('news.label.preview'))
     ->isCustomHtmlElement(function ($entity, $column) {
         $preview_route = route('news.preview', ['id' => $entity->id]);
-        $preview_label = trans('global.action.preview');
+        $preview_label = __('global.action.preview');
         return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
     });
 $table->addColumn('released_at')
-    ->setTitle(trans('news.label.released_at'))
+    ->setTitle(__('news.label.released_at'))
     ->isSortable()
     ->sortByDefault('desc')
     ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('created_at')
-    ->setTitle(trans('news.label.created_at'))
+    ->setTitle(__('news.label.created_at'))
     ->isSortable()
     ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('updated_at')
-    ->setTitle(trans('news.label.updated_at'))
+    ->setTitle(__('news.label.updated_at'))
     ->isSortable()
     ->setColumnDateFormat('d/m/Y H:i:s');
 ```
@@ -154,11 +154,11 @@ $table->addColumn('updated_at')
 
 ### TableList public methods
 
-- `setModel(string $tableModel)`
+- `public function setModel(string $tableModel): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the model used for the table list generation (required).
-- `setRequest(Request $request)`
+- `public function setRequest(Request $request): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the request used for the table list generation (required).
-- `setRoutes(array $routes)`
+- `public function setRoutes(array $routes): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the routes used for the table list generation (required) :
     > - Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
     > - The `index` route is required and must be the route that will be used to display the page that contains the table list.
@@ -175,60 +175,60 @@ $table->addColumn('updated_at')
     ]
 ]
 ```
-- `setRowsNumber(int $owsNumber)`
+- `public function setRowsNumber(int $owsNumber): \Okipa\LaravelBootstrapTableList\TableList`
     > Set a custom number of rows for the table list (optional).
-- `enableRowsNumberSelector()`
+- `public function enableRowsNumberSelector(): \Okipa\LaravelBootstrapTableList\TableList`
     > Enables the rows number selection in the table list (optional) :
     > - Calling this method displays a rows number input that enable the user to choose how much rows to show.
-- `addQueryInstructions(Closure $queryClosure)`
+- `public function addQueryInstructions(Closure $queryClosure): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the query closure that will be used during the table list generation (optional).  
     > For example, you can define your joined tables here.  
     > The closure let you manipulate the following attribute : $query`.
-- `public function disableLines(Closure $disableLinesClosure): TableList`
+- `public function disableLines(Closure $disableLinesClosure): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the disable lines closure that will executed during the table list generation (optional).
     > For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
     > The closure let you manipulate the following attribute : $model.
-- `public function highlightLines(Closure $highlightLinesClosure): TableList`
+- `public function highlightLines(Closure $highlightLinesClosure): \Okipa\LaravelBootstrapTableList\TableList`
     > Set the highlight lines closure that will executed during the table list generation (optional).
     > The closure let you manipulate the following attribute : $model.
-- `addColumn(string $attribute = null)`
+- `public function addColumn(string $attribute = null) : \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Add a column that will be displayed in the table list (required) :`
     > - At least one column must be added to the table list.  
     > - A column can be created without attribute specification, in case of HTML element display, for example.
 
 ### TableListColumn public methods
 
-- `setTitle(string $title)`
+- `public function setTitle(string $title): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the column title (required).
-- `sortByDefault(string $direction = 'asc')`
+- `public function sortByDefault(string $direction = 'asc'): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the default sorted column (required).
-- `useForDestroyConfirmation()`
+- `public function useForDestroyConfirmation(): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Use the column attribute for the destroy confirmation message generation (required) :
     > - At least one column must be selected for destroy confirmation if a destroy route is set.  
     > - This method can be called only once.
-- `isSortable()`
+- `public function isSortable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Make the column sortable (optional).
-- `isSearchable()`
+- `public function isSearchable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Make the column searchable (optional).
-- `setCustomTable(string $customColumnTable)`
+- `public function setCustomTable(string $customColumnTable): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set a custom table for the column (optional).  
     > Calling this method can be useful if the column attribute does not directly belong to the table list model.
-- `setColumnDateFormat(string $columnDateFormat)`
+- `public function setColumnDateFormat(string $columnDateFormat): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the format for a date (optional).  
     > (Carbon is used to format the date).
-- `isButton(string $buttonClass)`
+- `public function isButton(string $buttonClass): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the column button class (optional).
     > The attribute is wrapped into a button.
-- `setStringLimit(int $stringLimit)`
+- `public function setStringLimit(int $stringLimit): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the string value display limitation (optional).
     > Shows "..." when the limit is reached.
-- `isLink(Closure $linkClosure)`
+- `public function isLink(Closure $linkClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the link in the method closure (optional).
     > The closure let you manipulate the following attributes : $entity, $column.
-- `isCustomValue(Closure $customValueClosure)`
+- `public function isCustomValue(Closure $customValueClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set a custom value in the method closure (optional).
     > The closure let you manipulate the following attributes : $entity, $column.
-- `isCustomHtmlElement(Closure $customHtmlEltClosure)`
+- `public function isCustomHtmlElement(Closure $customHtmlEltClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
     > Set the HTML element to render in the method closure (optional).
     > The closure let you manipulate the following attributes : $entity, $column.
 

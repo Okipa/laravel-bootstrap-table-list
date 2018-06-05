@@ -185,7 +185,7 @@ class TableList extends Model implements Htmlable
      *
      * @param int $rowsNumber
      *
-     * @return \Okipa\LaravelBootstrapTableList\TableList$this
+     * @return \Okipa\LaravelBootstrapTableList\TableList
      */
     public function setRowsNumber(int $rowsNumber): TableList
     {
@@ -496,7 +496,7 @@ class TableList extends Model implements Htmlable
         $this->applySortClauses($query);
         $this->paginateList($query);
         $this->applyClosuresOnPaginatedList();
-//        dd($this->list->toArray());
+        //        dd($this->list->toArray());
     }
 
     /**
@@ -584,12 +584,13 @@ class TableList extends Model implements Htmlable
         $disableLinesClosure = $this->disableLinesClosure;
         $highlightLinesClosure = $this->highlightLinesClosure;
         $this->list->getCollection()->transform(function($model) use ($disableLinesClosure, $highlightLinesClosure) {
-            if(isset($disableLinesClosure)){
+            if (isset($disableLinesClosure)) {
                 $model->setAttribute('disabled', $disableLinesClosure($model));
             }
-            if(isset($highlightLinesClosure)){
+            if (isset($highlightLinesClosure)) {
                 $model->setAttribute('highlighted', $highlightLinesClosure($model));
             }
+
             return $model;
         });
     }
