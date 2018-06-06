@@ -61,6 +61,7 @@ $table->addColumn('created_at')
 $table->addColumn('updated_at')
     ->setTitle('Update date')
     ->isSortable()
+    ->sortByDefault()
     ->setColumnDateFormat('d/m/Y H:i:s');
 ```
 Then, send your `$table` object in your view and render your table list :
@@ -248,8 +249,19 @@ Then, open the published package configuration file (`config/tablelist.php`) and
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Customize styles
+If you use `CSS`, just override the package styles.
 
-Simply override the `CSS` or `SASS` to customize the package styles.
+If you use `SASS`, you can override the following variables **before** the package SASS file import. Check the following example for a bootstrap use :
+```sass
+// bootstrap 3 example
+$highlighted-bg-color: $brand-success; // default #5cb85c
+$highlighted-color: white; // default #fff
+$disabled-bg-color: $gray-dark; // default #333
+$disabled-color: $gray-light; // default #777
+$disabled-opacity: $btn-disabled-opacity; // default 0.7
+$disabled-cursor: not-allowed; // default not-allowed
+@import('[path/to/composer/vendor]/okipa/laravel-bootstrap-table-list/styles/styles')
+```
 
 ------------------------------------------------------------------------------------------------------------------------
 

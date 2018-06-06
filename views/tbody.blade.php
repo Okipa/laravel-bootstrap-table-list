@@ -53,29 +53,29 @@
                     <td class="actions">
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
-                            @if($entity->disabled)
-                                @include('tablelist::components.buttons.edit', ['class' => 'disabled'])
-                            @else
+                            @if(! $entity->disabled)
                                 <form class="edit"
                                       role="form"
                                       method="GET"
                                       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
-                                    @include('tablelist::components.buttons.edit')
+                            @endif
+                                    @include('tablelist::components.buttons.edit', ['disabled' => $entity->disabled])
+                            @if(! $entity->disabled)
                                 </form>
                             @endif
                         @endif
                         {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
-                            @if($entity->disabled)
-                                @include('tablelist::components.buttons.destroy', ['class' => 'disabled'])
-                            @else
+                            @if(! $entity->disabled)
                                 <form class="destroy"
                                       role="form"
                                       method="POST"
                                       action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="_method" value="DELETE">
-                                    @include('tablelist::components.buttons.destroy')
+                            @endif
+                                    @include('tablelist::components.buttons.destroy', ['disabled' => $entity->disabled])
+                            @if(! $entity->disabled)
                                     @if(config('tablelist.template.button.destroy.trigger-bootrap-native-modal'))
                                         @include('tablelist::components.modals.destroy-confirmation')
                                     @endif
