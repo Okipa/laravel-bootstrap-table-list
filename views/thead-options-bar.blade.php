@@ -4,7 +4,7 @@
             colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
             <div class="row">
                 {{-- rows number selector --}}
-                <div {{ classTag('rows-number-selector', config('tablelist.template.table.thead.options-bar.rows-number-selector.item.class')) }}>
+                <div {{ classTag(config('tablelist.template.table.thead.options-bar.rows-number-selector.item.class')) }}>
                     @if($table->rowsNumberSelectorEnabled)
                         <form role="form" method="GET" action="{{ $table->getRoute('index') }}">
                             <input type="hidden" name="search" value="{{ $table->request->search }}">
@@ -38,10 +38,10 @@
                     @endif
                 </div>
                 {{-- spacer --}}
-                <div {{ classTag('spacer', config('tablelist.template.table.thead.options-bar.spacer.item.class')) }}>
+                <div {{ classTag(config('tablelist.template.table.thead.options-bar.spacer.item.class')) }}>
                 </div>
                 {{-- search bar --}}
-                <div {{ classTag('search-bar', config('tablelist.template.table.thead.options-bar.search-bar.item.class')) }}>
+                <div {{ classTag(config('tablelist.template.table.thead.options-bar.search-bar.item.class')) }}>
                     @if(count($table->searchableColumns))
                         <form role="form" method="GET" action="{{ $table->getRoute('index') }}">
                             <input type="hidden" name="rowsNumber" value="{{ $table->request->rowsNumber }}">

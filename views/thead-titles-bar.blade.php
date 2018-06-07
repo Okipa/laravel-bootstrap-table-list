@@ -34,7 +34,7 @@
         </th>
     @endforeach
     @if($table->isRouteDefined('edit') || $table->isRouteDefined('destroy'))
-        <th {{ classTag('actions', 'text-right', config('tablelist.template.table.th.class'), config('tablelist.template.table.thead.titles-bar.th.class')) }}
+        <th {{ classTag('text-right', config('tablelist.template.table.th.class'), config('tablelist.template.table.thead.titles-bar.th.class')) }}
             scope="col">
             {{ trans('tablelist::tablelist.thead.actions') }}
         </th>
