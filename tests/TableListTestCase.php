@@ -2,10 +2,13 @@
 
 namespace Okipa\LaravelBootstrapTableList\Test;
 
+use Faker\Factory;
 use Orchestra\Testbench\TestCase;
 
 abstract class TableListTestCase extends TestCase
 {
+    protected $faker;
+
     /**
      * Define environment setup.
      *
@@ -46,7 +49,8 @@ abstract class TableListTestCase extends TestCase
         parent::setUp();
         $this->loadMigrationsFrom([
             '--database' => 'testing',
-            '--realpath' => realpath(__DIR__.'/database/migrations'),
+            '--realpath' => realpath(__DIR__ . '/database/migrations'),
         ]);
+        $this->faker = Factory::create();
     }
 }

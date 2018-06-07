@@ -14,11 +14,6 @@ class TableListColumnTest extends TableListTestCase
     use RoutesFaker;
     use UsersFaker;
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testSetTitle()
     {
         $table = app(TableList::class)->setModel(User::class);

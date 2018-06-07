@@ -1,6 +1,5 @@
-<div class="table-list table-responsive">
-    {{-- table list content --}}
-    <table class="table table-striped table-hover">
+<div {{ classTag('table-list-container', config('tablelist.template.table.container.class')) }}>
+    <table {{ classTag('table', config('tablelist.template.table.item.class')) }}>
         @include('tablelist::thead')
         @include('tablelist::tbody')
         @include('tablelist::tfoot')

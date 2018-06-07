@@ -17,12 +17,6 @@ class TableListTest extends TableListTestCase
     use RoutesFaker;
     use UsersFaker;
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->instanciateFaker();
-    }
-
     public function testSetModel()
     {
         $table = app(TableList::class)->setModel(User::class);
@@ -604,11 +598,8 @@ class TableListTest extends TableListTestCase
     public function testNoSearchableHtml()
     {
         $this->setRoutes(['users'], ['index']);
-        $routes = [
-            'index' => ['alias' => 'users.index', 'parameters' => []],
-        ];
-        $table = app(TableList::class)->setRoutes($routes)
-            ->setModel(User::class);
+        $routes = ['index' => ['alias' => 'users.index', 'parameters' => []]];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
         $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
         $table->addColumn('email')->setTitle('Email');
         $table->render();
@@ -632,11 +623,8 @@ class TableListTest extends TableListTestCase
     public function testSearchableHtml()
     {
         $this->setRoutes(['users'], ['index']);
-        $routes = [
-            'index' => ['alias' => 'users.index', 'parameters' => []],
-        ];
-        $table = app(TableList::class)->setRoutes($routes)
-            ->setModel(User::class);
+        $routes = ['index' => ['alias' => 'users.index', 'parameters' => []]];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
         $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
         $table->addColumn('email')->setTitle('Email')->isSearchable();
         $table->render();
@@ -868,125 +856,6 @@ class TableListTest extends TableListTestCase
         $this->assertNotContains('data-toggle="modal"', $html);
         $this->assertNotContains('data-target=".destroy-confirm-modal-', $html);
         $this->assertNotContains('class="modal fade destroy-confirm-modal', $html);
-    }
-
-    public function testCustomConfig()
-    {
-        config([
-            'tablelist' => [
-                // default values
-                'default'  => [
-                    'rows_number' => 5,
-                ],
-                'template' => [
-                    'indicator' => [
-                        'sort' => [
-                            'class' => 'templateIndicatorSortClass',
-                            'icon'  => [
-                                'asc'      => 'templateIndicatorSortIconAsc',
-                                'desc'     => 'templateIndicatorSortIconDesc',
-                                'unsorted' => 'templateIndicatorSortIconUnsorted',
-                            ],
-                        ],
-                    ],
-                    'button'    => [
-                        'create'  => [
-                            'class' => 'templateButtonCreateClass',
-                            'icon'  => 'templateButtonCreateIcon',
-                        ],
-                        'edit'    => [
-                            'class' => 'templateButtonEditClass',
-                            'icon'  => 'templateButtonEditIcon',
-                        ],
-                        'destroy' => [
-                            'class'                        => 'templateButtonDestroyClass',
-                            'icon'                         => 'templateButtonDestroyIcon',
-                            'trigger-bootrap-native-modal' => true,
-                        ],
-                        'confirm' => [
-                            'class' => 'templateButtonConfirmClass',
-                            'icon'  => 'templateButtonConfirmIcon',
-                        ],
-                        'cancel'  => [
-                            'class' => 'templateButtonCancelClass',
-                            'icon'  => 'templateButtonCancelIcon',
-                        ],
-                    ],
-                ],
-            ],
-        ]);
-        $this->createMultipleUsers(10);
-        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
-        $routes = [
-            'index'   => ['alias' => 'users.index', 'parameters' => []],
-            'create'  => ['alias' => 'users.create', 'parameters' => []],
-            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
-            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
-        ];
-        $table = app(TableList::class)
-            ->setRoutes($routes)
-            ->setModel(User::class)
-            ->enableRowsNumberSelector();
-        $table->addColumn('name')
-            ->setTitle('Name')
-            ->sortByDefault()
-            ->isSortable()
-            ->isSearchable()
-            ->useForDestroyConfirmation();;
-        $table->addColumn('email')
-            ->setTitle('Email')
-            ->isSearchable()
-            ->isSortable();
-        $table->render();
-        $html = View::make('tablelist::table', ['table' => $table])->render();
-        $this->assertContains(
-            '<input type="hidden" name="rowsNumber" value="' . config('tablelist.default.rows_number') . '"',
-            $html
-        );
-        $this->assertContains(
-            'class="sort ' . config('tablelist.template.indicator.sort.class') . '"',
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.indicator.sort.icon.asc'),
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.indicator.sort.icon.unsorted'),
-            $html
-        );
-        $this->assertContains(
-            'class="' . config('tablelist.template.button.create.class') . '"',
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.button.create.icon'),
-            $html
-        );
-        $this->assertContains(
-            'class="' . config('tablelist.template.button.edit.class') . ' "',
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.button.edit.icon'),
-            $html
-        );
-        $this->assertContains(
-            'class="' . config('tablelist.template.button.destroy.class') . ' "',
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.button.destroy.icon'),
-            $html
-        );
-        $this->assertContains(
-            'class="' . config('tablelist.template.button.cancel.class') . '"',
-            $html
-        );
-        $this->assertContains(
-            config('tablelist.template.button.cancel.icon'),
-            $html
-        );
     }
 
     public function testToHtml()

@@ -235,16 +235,22 @@ $table->addColumn('updated_at')
 
 ------------------------------------------------------------------------------------------------------------------------
 
-## Configuration
+## Configurations
 
 To personalize the package configuration, you have to publish it first with the following script :
 ```bash
 php artisan vendor:publish --tag=tablelist::config
 ```
-Then, open the published package configuration file (`config/tablelist.php`) and override the default table list configuration by setting your own values for the following items :
-- default number of displayed rows
-- template configurations (buttons classes, buttons icons, ...)
-- bootstrap native modal using for a line removal confirmation
+Then, open the published package configuration file (`config/tablelist.php`) and override the default table list configuration by setting your own values.
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Customize translations
+You can customize the table list associated translation by publishing them in your project :
+```bash
+php artisan vendor:publish --tag=tablelist::translations
+```
+Once you have published them, You will find them in your `resources/lang` directory.
 
 ------------------------------------------------------------------------------------------------------------------------
 

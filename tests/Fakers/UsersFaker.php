@@ -2,20 +2,13 @@
 
 namespace Okipa\LaravelBootstrapTableList\Test\Fakers;
 
-use Faker\Factory;
 use Hash;
 use Okipa\LaravelBootstrapTableList\Test\Models\User;
 
 trait UsersFaker
 {
-    public $faker;
     public $clearPassword;
     public $data;
-
-    public function instanciateFaker()
-    {
-        $this->faker = Factory::create();
-    }
 
     public function createMultipleUsers(int $count)
     {

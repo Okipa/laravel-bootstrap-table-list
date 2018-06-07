@@ -4,6 +4,7 @@ namespace Okipa\LaravelBootstrapTableList;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Okipa\LaravelHtmlHelper\HtmlHelperServiceProvider;
 
 class TableListServiceProvider extends ServiceProvider
 {
@@ -21,13 +22,16 @@ class TableListServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../views' => resource_path('views/vendor/tablelist'),
         ], 'tablelist::views');
+        // we load the laravel html helper package
+        // https://github.com/Okipa/laravel-html-helper
+        $this->app->register(HtmlHelperServiceProvider::class);
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/tablelist.php', 'tablelist'
+        );
     }
     
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/tablelist.php', 'tablelist'
-        );
         $this->app->singleton('Okipa\TableList', function (Application $app) {
             $tableList = $app->make(TableList::class);
 

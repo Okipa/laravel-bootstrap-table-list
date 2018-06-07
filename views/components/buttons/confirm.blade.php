@@ -1,5 +1,5 @@
 <button type="submit"
-        class="{!! config('tablelist.template.button.confirm.class') !!}">
+    {{ classTag(config('tablelist.template.button.confirm.class')) }}>
     {!! config('tablelist.template.button.confirm.icon') !!}
     {{ trans('tablelist::tablelist.modal.action.confirm') }}
 </button>

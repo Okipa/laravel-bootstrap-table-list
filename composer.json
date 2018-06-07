@@ -1,6 +1,7 @@
 {
     "name": "okipa/laravel-bootstrap-table-list",
-    "description": "Because it is sometimes convenient to build a simple backoffice without sophisticated javascript treatments, Laravel Bootstrap Table List proposes a model-based and highly customizable php table list generation, that simply render your table HTML in your view, with a code-side-configuration.",
+    "description": "Bootstrap table list generator for Laravel.",
+    "type": "library",
     "keywords": [
         "okipa",
         "package",
@@ -15,7 +16,7 @@
         "generation",
         "html"
     ],
-    "homepage": "https://github.com/Okipa/table-list",
+    "homepage": "https://github.com/Okipa/laravel-bootstrap-table-list",
     "license": "MIT",
     "authors": [
         {
@@ -26,7 +27,8 @@
     ],
     "require": {
         "php": ">=7.0",
-        "illuminate/support": "~5.0"
+        "illuminate/support": "~5.0",
+        "okipa/laravel-html-helper": "^1.0"
     },
     "require-dev": {
         "orchestra/testbench": "^3.6"

@@ -1,7 +1,7 @@
-<tbody>
+<tbody {{ classTag(config('tablelist.template.global.tbody.class')) }}>
     @if($table->list->isEmpty())
-        <tr>
-            <td class="empty-list"
+        <tr {{ classTag(config('tablelist.template.table.tr.class'), config('tablelist.template.table.tbody.tr.class')) }}>
+            <td {{ classTag('empty-list', config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}
                 colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
                 <span class="text-info">
                     <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -11,12 +11,17 @@
         </tr>
     @else
         @foreach($table->list as $entity)
-            <tr class="@if($entity->disabled)disabled @endif()@if($entity->highlighted)highlighted @endif">
+            <tr {{ classTag(
+            config('tablelist.template.table.tr.class'),
+            config('tablelist.template.table.tbody.tr.class'),
+            $entity->disabled ? 'disabled' : null,
+            $entity->highlighted ? 'highlighted' : null
+            ) }}>
                 @foreach($table->columns as $column)
-                    <td>
+                    <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
                         {{-- button start--}}
                         @if($buttonClass = $column->buttonClass)
-                            <button class="{{ $buttonClass }} {{ str_slug(strip_tags($entity->{$column->attribute})) }}">
+                            <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}))) }}>
                         @endif
                             {{-- string limit --}}
                             @if($stringLimit = $column->stringLimit)
@@ -50,11 +55,11 @@
                 @endforeach
                 {{-- actions --}}
                 @if(($table->isRouteDefined('edit') || $table->isRouteDefined('destroy')))
-                    <td class="actions">
+                    <td {{ classTag('actions', 'text-right', config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
                             @if(! $entity->disabled)
-                                <form class="edit"
+                                <form class="edit d-inline-block"
                                       role="form"
                                       method="GET"
                                       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
@@ -67,7 +72,7 @@
                         {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
                             @if(! $entity->disabled)
-                                <form class="destroy"
+                                <form class="destroy d-inline-block"
                                       role="form"
                                       method="POST"
                                       action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">

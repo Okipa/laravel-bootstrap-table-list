@@ -1,10 +1,10 @@
 <button type="button"
-        class="{!! config('tablelist.template.button.destroy.class') !!} @isset($disabled)disabled @endisset"
+        {{ classTag(config('tablelist.template.button.destroy.class'), $entity->disabled ? 'disabled' : null) }}
         title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}"
         @if(config('tablelist.template.button.destroy.trigger-bootrap-native-modal'))
             data-toggle="modal"
             data-target=".destroy-confirm-modal-{{ $entity->id }}"
         @endif
-        @isset($disabled)disabled="disabled" @endisset>
+        @if($entity->disabled)disabled="disabled" @endif>
     {!! config('tablelist.template.button.destroy.icon') !!}
 </button>

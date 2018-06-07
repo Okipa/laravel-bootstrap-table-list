@@ -40,7 +40,7 @@ class TableList extends Model implements Htmlable
     public function __construct()
     {
         parent::__construct([
-            'rowsNumber'        => config('tablelist.default.rows_number'),
+            'rowsNumber'        => config('tablelist.value.rows_number'),
             'sortableColumns'   => new Collection(),
             'searchableColumns' => new Collection(),
             'request'           => request(),
@@ -73,7 +73,7 @@ class TableList extends Model implements Htmlable
     public function setRequest(Request $request): TableList
     {
         $this->setAttribute('request', $request);
-
+        
         return $this;
     }
 
@@ -483,7 +483,7 @@ class TableList extends Model implements Htmlable
             $this->getAttribute('request')->merge([
                 'rowsNumber' => $this->getAttribute('rowsNumber') 
                     ? $this->getAttribute('rowsNumber')
-                    : config('tablelist.default.rows_number'),
+                    : config('tablelist.value.rows_number'),
                 'search'     => null,
                 'sortBy'     => $this->getAttribute('sortBy'),
                 'sortDir'    => $this->getAttribute('sortDir'),
