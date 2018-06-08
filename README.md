@@ -18,7 +18,7 @@ Because it is sometimes convenient to build a simple backoffice without sophisti
 
 - Install the package with composer :
 ```bash
-composer require okipa/laravel-bootstrap-table-list
+composer require okipa/laravel-bootstrap-table-list:^1.0
 ```
 
 - Laravel 5.5+ uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
