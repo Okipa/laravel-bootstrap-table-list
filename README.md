@@ -21,13 +21,15 @@ However, this package is deeply configurable and it is possible to easily set it
 If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.  
 If someone is up to give me a functional configuration for bootstrap 3, I will include it in the readme.
 
+For a pre-configured bootstrap 3 version of this package (with less features), see the [v1](https://github.com/Okipa/laravel-bootstrap-table-list/tree/v1).
+
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Installation
 
 - Install the package with composer :
 ```bash
-composer require okipa/laravel-bootstrap-table-list
+composer require okipa/laravel-bootstrap-table-list:^2.0
 ```
 
 - Laravel 5.5+ uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
