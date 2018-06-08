@@ -1,7 +1,7 @@
 <tbody {{ classTag(config('tablelist.template.global.tbody.class')) }}>
     @if($table->list->isEmpty())
         <tr {{ classTag(config('tablelist.template.table.tr.class'), config('tablelist.template.table.tbody.tr.class')) }}>
-            <td {{ classTag('empty-list', config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}
+            <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}
                 colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
                 <span class="text-info">
                     <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -14,8 +14,8 @@
             <tr {{ classTag(
             config('tablelist.template.table.tr.class'),
             config('tablelist.template.table.tbody.tr.class'),
-            $entity->disabled ? 'disabled' : null,
-            $entity->highlighted ? 'highlighted' : null
+            $entity->disabled ? $table->disableLinesClass : null,
+            $entity->highlighted ? $table->highlightLinesClass : null
             ) }}>
                 @foreach($table->columns as $column)
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
@@ -55,16 +55,21 @@
                 @endforeach
                 {{-- actions --}}
                 @if(($table->isRouteDefined('edit') || $table->isRouteDefined('destroy')))
-                    <td {{ classTag('actions', 'text-right', config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
+                    <td {{ classTag('text-right', config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
                             @if(! $entity->disabled)
-                                <form class="edit d-inline-block"
+                                <form {{ classTag('edit-' . $entity->id, config('tablelist.template.table.tbody.edit.container.class')) }}
                                       role="form"
                                       method="GET"
                                       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
                             @endif
-                                    @include('tablelist::components.buttons.edit', ['disabled' => $entity->disabled])
+                                    <button type="submit"
+                                            {{ classTag(config('tablelist.template.table.tbody.edit.item.class'), $entity->disabled ? 'disabled' : null) }}
+                                            title="{{ trans('tablelist::tablelist.tbody.action.edit') }}"
+                                            @if($entity->disabled)disabled="disabled" @endisset>
+                                        {!! config('tablelist.template.table.tbody.edit.item.icon') !!}
+                                    </button>
                             @if(! $entity->disabled)
                                 </form>
                             @endif
@@ -72,17 +77,26 @@
                         {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
                             @if(! $entity->disabled)
-                                <form class="destroy d-inline-block"
+                                <form {{ classTag('destroy-' . $entity->id, config('tablelist.template.table.tbody.destroy.container.class')) }}
                                       role="form"
                                       method="POST"
                                       action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="_method" value="DELETE">
                             @endif
-                                    @include('tablelist::components.buttons.destroy', ['disabled' => $entity->disabled])
+                                    <button type="button"
+                                            {{ classTag(config('tablelist.template.table.tbody.destroy.item.class'), $entity->disabled ? 'disabled' : null) }}
+                                            title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}"
+                                            @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
+                                            data-toggle="modal"
+                                            data-target="#destroy-confirm-modal-{{ $entity->id }}"
+                                            @endif
+                                            @if($entity->disabled)disabled="disabled" @endif>
+                                        {!! config('tablelist.template.table.tbody.destroy.item.icon') !!}
+                                    </button>
                             @if(! $entity->disabled)
-                                    @if(config('tablelist.template.button.destroy.trigger-bootrap-native-modal'))
-                                        @include('tablelist::components.modals.destroy-confirmation')
+                                    @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
+                                        @include('tablelist::destroy-confirm-modal')
                                     @endif
                                 </form>
                             @endif

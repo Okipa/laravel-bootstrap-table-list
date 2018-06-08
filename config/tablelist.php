@@ -7,195 +7,261 @@ return [
     ],
     // template customization
     'template' => [
-        'table'  => [
+        'table' => [
+            // table > global
             'container' => [
-                'class' => 'table-responsive-lg',
+                'class' => ['table-responsive-lg'],
             ],
             'item'      => [
-                'class' => 'table-striped table-hover',
+                'class' => ['table-striped', 'table-hover'],
             ],
-            'tr'    => [
-                'class' => '',
+            'tr'        => [
+                'class' => [],
             ],
-            'th'    => [
-                'class' => 'align-middle',
+            'th'        => [
+                'class' => ['align-middle'],
             ],
-            'td'    => [
-                'class' => 'align-middle',
+            'td'        => [
+                'class' => ['align-middle'],
             ],
+            // table > header
             'thead'     => [
-                'item' => [
-                    'class' => '',
+                'item'        => [
+                    'class' => [],
                 ],
+                // table > header > options bar
                 'options-bar' => [
                     'tr'                   => [
-                        'class' => '',
+                        'class' => [],
                     ],
                     'td'                   => [
-                        'class' => 'border-0',
+                        'class' => ['border-0'],
                     ],
+                    // table > header > options bar > row number selector
                     'rows-number-selector' => [
                         'item'     => [
-                            'class' => 'rows-number-selector col-sm-12 col-lg-4 pb-2',
+                            'class' => ['col-sm-12', 'col-lg-4', 'pb-2'],
                         ],
                         'lines'    => [
                             'container' => [
-                                'class' => '',
+                                'class' => [],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-list"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'validate' => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-check"></i>',
-                                'class' => 'btn btn-link text-success',
+                                'class' => ['btn', 'btn-link', 'text-success'],
                             ],
                         ],
                     ],
+                    // table > header > options bar > spacer
                     'spacer'               => [
                         'item' => [
-                            'class' => 'spacer col-sm-2',
-                        ]
+                            'class' => ['spacer', 'col-sm-2'],
+                        ],
                     ],
+                    // table > header > options bar > search bar
                     'search-bar'           => [
                         'item'     => [
-                            'class' => 'col-sm-12 col-lg-6',
+                            'class' => ['col-sm-12', 'col-lg-6'],
                         ],
                         'search'   => [
                             'container' => [
-                                'class' => '',
+                                'class' => [],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-search"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'validate' => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-check"></i>',
-                                'class' => 'btn btn-link text-success',
+                                'class' => ['btn', 'btn-link', 'text-success'],
                             ],
                         ],
                         'cancel'   => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-times"></i>',
-                                'class' => 'btn btn-link text-danger',
+                                'class' => ['btn', 'btn-link', 'text-danger'],
                             ],
                         ],
                     ],
                 ],
+                // table > header > titles bar
                 'titles-bar'  => [
                     'tr'   => [
-                        'class' => '',
+                        'class' => [],
                     ],
                     'th'   => [
-                        'class' => 'border-0',
+                        'class' => ['border-0'],
                     ],
+                    // table > header > titles bar > sort
                     'sort' => [
                         'item'     => [
-                            'class' => 'sort',
+                            'class' => ['sort'],
                         ],
                         'asc'      => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort-up"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'desc'     => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort-down"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'unsorted' => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                     ],
                 ],
             ],
         ],
-        'tbody'  => [
-            'tr' => [
-                'class' => '',
+        // table > body
+        'tbody' => [
+            'tr'      => [
+                'class' => [],
             ],
-            'td' => [
-                'class' => '',
+            'td'      => [
+                'class' => [],
+            ],
+            // table > body > edit
+            'edit'    => [
+                'container' => [
+                    'item' => [
+                        'class' => ['d-inline-block'],
+                    ],
+                ],
+                'item'      => [
+                    'class' => ['btn', 'btn-link', 'text-primary', 'p-1'],
+                    'icon'  => '<i class="fas fa-fw fa-edit"></i>',
+                ],
+            ],
+            // table > body > destroy
+            'destroy' => [
+                'container'               => [
+                    'item' => [
+                        'class' => ['d-inline-block'],
+                    ],
+                ],
+                'item'                    => [
+                    'class' => ['btn', 'btn-link', 'text-danger', 'p-1'],
+                    'icon'  => '<i class="fas fa-fw fa-times-circle"></i>',
+                ],
+                'trigger-bootstrap-modal' => true,
             ],
         ],
-        'tfoot'  => [
+        // table > footer
+        'tfoot' => [
+            'item'        => [
+                'class' => [],
+            ],
             'tr'          => [
-                'class' => '',
+                'class' => [],
             ],
             'td'          => [
-                'class' => '',
+                'class' => [],
             ],
+            // table > footer > options bar
             'options-bar' => [
-                'create'               => [
+                'item'       => [
+                    'class' => ['row'],
+                ],
+                // table > footer > options bar > create
+                'create'     => [
                     'container' => [
-                        'class' => 'col-sm-4',
+                        'class' => ['col-sm-4'],
+                    ],
+                    'item'      => [
+                        'class' => ['btn', 'btn-success'],
+                        'icon'  => '<i class="fas fa-fw fa-plus-circle"></i>',
                     ],
                 ],
-                'navigation-status'    => [
+                // table > footer > options bar > navigation
+                'navigation' => [
                     'with-create-route'    => [
                         'container' => [
-                            'class' => 'col-sm-4 text-center',
+                            'class' => ['col-sm-4', 'text-center'],
                         ],
                     ],
                     'without-create-route' => [
                         'container' => [
-                            'class' => 'col-sm-6 text-left',
+                            'class' => ['col-sm-6', 'text-left'],
                         ],
                     ],
                 ],
-                'pagination-container' => [
+                // table > footer > options bar > pagination
+                'pagination' => [
                     'with-create-route'    => [
                         'container' => [
-                            'class' => 'col-sm-4',
+                            'class' => ['col-sm-4'],
                         ],
                     ],
                     'without-create-route' => [
                         'container' => [
-                            'class' => 'col-sm-6',
+                            'class' => ['col-sm-6'],
                         ],
                     ],
                 ],
             ],
         ],
-        'button' => [
-            'create'  => [
-                'class' => 'btn btn-success',
-                'icon'  => '<i class="fas fa-fw fa-plus-circle"></i>',
+        // modal
+        'modal' => [
+            'container' => [
+                'class' => ['modal-lg'],
             ],
-            'edit'    => [
-                'class' => 'btn btn-link text-primary p-1',
-                'icon'  => '<i class="fas fa-fw fa-edit"></i>',
+            'item'      => [
+                'class' => [],
             ],
-            'destroy' => [
-                'class'                        => 'btn btn-link text-danger p-1',
-                'icon'                         => '<i class="fas fa-fw fa-times-circle"></i>',
-                'trigger-bootrap-native-modal' => true,
+            'title'     => [
+                'container' => [
+                    'class' => ['text-danger'],
+                ],
+                'item'      => [
+                    'class' => [],
+                    'icon'  => '<i class="fas fa-exclamation-triangle"></i>',
+                ],
             ],
-            'confirm' => [
-                'class' => 'btn btn-success',
-                'icon'  => '<i class="fas fa-fw fa-check"></i>',
+            'body'      => [
+                'item' => [
+                    'class' => [],
+                ],
             ],
-            'cancel'  => [
-                'class' => 'btn btn-danger',
-                'icon'  => '<i class="fas fa-fw fa-ban"></i>',
+            'footer'    => [
+                'item'    => [
+                    'class' => [],
+                ],
+                'confirm' => [
+                    'item' => [
+                        'class' => ['btn', 'btn-success'],
+                        'icon'  => '<i class="fas fa-fw fa-check"></i>',
+                    ],
+                ],
+                'cancel'  => [
+                    'item' => [
+                        'class' => ['btn', 'btn-danger'],
+                        'icon'  => '<i class="fas fa-fw fa-ban"></i>',
+                    ],
+                ],
             ],
         ],
     ],

@@ -29,6 +29,7 @@ class TableList extends Model implements Htmlable
         'columns',
         'queryClosure',
         'disableLinesClosure',
+        'disableLinesClass',
         'highlightLinesClosure',
         'list',
         'destroyAttribute',
@@ -73,7 +74,7 @@ class TableList extends Model implements Htmlable
     public function setRequest(Request $request): TableList
     {
         $this->setAttribute('request', $request);
-        
+
         return $this;
     }
 
@@ -224,31 +225,40 @@ class TableList extends Model implements Htmlable
 
     /**
      * Set the disable lines closure that will be executed during the table list generation (optional).
-     * For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
+     * The optional second param let you set the class that will be applied for the disabled lines. By default,
+     * the « disabled » class is applied.
+     * For example, you can disable the current logged user to prevent him being
+     * edited or deleted from the table list.
      * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $disableLinesClosure
+     * @param array    $lineClass
      *
      * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function disableLines(Closure $disableLinesClosure): TableList
+    public function disableLines(Closure $disableLinesClosure, array $lineClass = []): TableList
     {
         $this->setAttribute('disableLinesClosure', $disableLinesClosure);
+        $this->setAttribute('disableLinesClass', ! empty($lineClass) ? $lineClass : ['disabled']);
 
         return $this;
     }
 
     /**
      * Set the highlight lines closure that will executed during the table list generation (optional).
+     * The optional second param let you set the class that will be applied for the highlighted lines. By default,
+     * the « highlighted » class is applied.
      * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $highlightLinesClosure
+     * @param array    $lineClass
      *
      * @return \Okipa\LaravelBootstrapTableList\TableList
      */
-    public function highlightLines(Closure $highlightLinesClosure): TableList
+    public function highlightLines(Closure $highlightLinesClosure, array $lineClass = []): TableList
     {
         $this->setAttribute('highlightLinesClosure', $highlightLinesClosure);
+        $this->setAttribute('highlightLinesClass', ! empty($lineClass) ? $lineClass : ['highlighted']);
 
         return $this;
     }
@@ -481,7 +491,7 @@ class TableList extends Model implements Htmlable
         if ($validator->fails()) {
             Log::error($validator->errors());
             $this->getAttribute('request')->merge([
-                'rowsNumber' => $this->getAttribute('rowsNumber') 
+                'rowsNumber' => $this->getAttribute('rowsNumber')
                     ? $this->getAttribute('rowsNumber')
                     : config('tablelist.value.rows_number'),
                 'search'     => null,

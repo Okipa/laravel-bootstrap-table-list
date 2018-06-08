@@ -1,25 +1,29 @@
-<tfoot {{ classTag(config('tablelist.template.global.tfoot.class')) }}>
-    <tr {{ classTag(config('tablelist.template.table.tr.class'), config('tablelist.template.tfoot.tr.class')) }}>
-        <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.tfoot.td.class')) }}
+<tfoot {{ classTag(config('tablelist.template.table.tfoot.item.class')) }}>
+    <tr {{ classTag(config('tablelist.template.table.tr.class'), config('tablelist.template.table.tfoot.tr.class')) }}>
+        <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tfoot.td.class')) }}
             colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
-            <div class="row">
+            <div {{ classTag(config('tablelist.template.table.tfoot.options-bar.item.class')) }}>
                 {{-- create button --}}
                 @if($table->isRouteDefined('create'))
-                    <div {{ classTag(config('tablelist.template.tfoot.options-bar.create.container.class')) }}>
-                        @include('tablelist::components.buttons.create', ['route' => $table->getRoute('create')])
+                    <div {{ classTag('create-container', config('tablelist.template.table.tfoot.options-bar.create.container.class')) }}>
+                        <a href="{{ $table->getRoute('create') }}"
+                           {{ classTag(config('tablelist.template.table.tfoot.options-bar.create.item.class')) }}
+                           title="{{ trans('tablelist::tablelist.tfoot.action.create') }}">
+                            {!! config('tablelist.template.table.tfoot.options-bar.create.item.icon') !!}
+                            {{ trans('tablelist::tablelist.tfoot.action.create') }}
+                        </a>
                     </div>
                 @endif
-                {{-- navigation status --}}
-                <div {{ classTag(
-                $table->isRouteDefined('create') 
-                ? config('tablelist.template.tfoot.options-bar.navigation-status.with-create-route.container.class') 
-                : config('tablelist.template.tfoot.options-bar.navigation-status.without-create-route.container.class')) }}>
+                {{-- navigation --}}
+                <div {{ classTag('navigation', $table->isRouteDefined('create') 
+                ? config('tablelist.template.table.tfoot.options-bar.navigation.with-create-route.container.class') 
+                : config('tablelist.template.table.tfoot.options-bar.navigation.without-create-route.container.class')) }}>
                     {!! $table->navigationStatus() !!}
                 </div>
                 {{-- pagination container --}}
-                <div {{ classTag($table->isRouteDefined('create')
-                ? config('tablelist.template.tfoot.options-bar.pagination-container.with-create-route.container.class')
-                :config('tablelist.template.tfoot.options-bar.pagination-container.without-create-route.container.class')) }}>
+                <div {{ classTag('pagination-container', $table->isRouteDefined('create')
+                ? config('tablelist.template.table.tfoot.options-bar.pagination.with-create-route.container.class')
+                : config('tablelist.template.table.tfoot.options-bar.pagination.without-create-route.container.class')) }}>
                     {!! $table->list->render() !!}
                 </div>
             </div>

@@ -14,27 +14,23 @@ class ConfigTest extends TableListTestCase
     use RoutesFaker;
     use UsersFaker;
 
-    public function testCustomValueRowsNumber()
-    {
-        config()->set('tablelist.value.rows_number', 9999);
-        $html = $this->generateTableList();
-        $this->assertContains('value="9999"', $html);
-        $this->assertContains('rowsNumber=9999', $html);
-    }
-
-    protected function generateTableList(Request $request = null)
+    protected function generateTableList(Request $request = null, array $routes = null)
     {
         $this->createMultipleUsers(3);
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $table = app(TableList::class)
-            ->setRoutes([
+            ->setModel(User::class)
+            ->enableRowsNumberSelector();
+        if (! empty($routes)) {
+            $table->setRoutes($routes);
+        } else {
+            $table->setRoutes([
                 'index'   => ['alias' => 'users.index', 'parameters' => []],
                 'create'  => ['alias' => 'users.create', 'parameters' => []],
                 'edit'    => ['alias' => 'users.edit', 'parameters' => []],
                 'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
-            ])
-            ->setModel(User::class)
-            ->enableRowsNumberSelector();
+            ]);
+        }
         if ($request) {
             $table->setRequest($request);
         }
@@ -51,6 +47,37 @@ class ConfigTest extends TableListTestCase
         $table->render();
 
         return view('tablelist::table', ['table' => $table])->render();
+    }
+
+    public function testCustomValueRowsNumber()
+    {
+        config()->set('tablelist.value.rows_number', 9999);
+        $this->createMultipleUsers(3);
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $table = app(TableList::class)
+            ->setModel(User::class)
+            ->enableRowsNumberSelector()
+            ->setRoutes([
+                'index'   => ['alias' => 'users.index', 'parameters' => []],
+                'create'  => ['alias' => 'users.create', 'parameters' => []],
+                'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+                'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+            ]);
+        $table->addColumn('name')
+            ->setTitle('Name')
+            ->sortByDefault()
+            ->isSortable()
+            ->isSearchable()
+            ->useForDestroyConfirmation();;
+        $table->addColumn('email')
+            ->setTitle('Email')
+            ->isSearchable()
+            ->isSortable();
+        $table->render();
+        $html = view('tablelist::table', ['table' => $table])->render();
+        $this->assertEquals(9999, $table->rowsNumber);
+        $this->assertContains('value="9999"', $html);
+        $this->assertContains('rowsNumber=9999', $html);
     }
 
     public function testCustomTemplateTableConfig()
@@ -293,5 +320,230 @@ class ConfigTest extends TableListTestCase
         $this->assertEquals(3, substr_count($html, $trClass));
         $this->assertContains($tdClass, $html);
         $this->assertEquals(9, substr_count($html, $tdClass));
+    }
+
+    public function testCustomTemplateTableTbodyEditConfig()
+    {
+        $containerClass = 'test-table-tbody-edit-container-custom-class';
+        $itemClass = 'test-table-tbody-edit-item-custom-class';
+        $itemIcon = 'test-table-tbody-edit-item-custom-icon';
+        config()->set('tablelist.template.table.tbody.edit.container.class', $containerClass);
+        config()->set('tablelist.template.table.tbody.edit.item.class', $itemClass);
+        config()->set('tablelist.template.table.tbody.edit.item.icon', $itemIcon);
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+        $this->assertContains($itemIcon, $html);
+        $this->assertEquals(3, substr_count($html, $itemIcon));
+    }
+
+    public function testCustomTemplateTableTbodyDestroyConfig()
+    {
+        $containerClass = 'test-table-tbody-destroy-container-custom-class';
+        $itemClass = 'test-table-tbody-destroy-item-custom-class';
+        $itemIcon = 'test-table-tbody-destroy-item-custom-icon';
+        config()->set('tablelist.template.table.tbody.destroy.container.class', $containerClass);
+        config()->set('tablelist.template.table.tbody.destroy.item.class', $itemClass);
+        config()->set('tablelist.template.table.tbody.destroy.item.icon', $itemIcon);
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+        $this->assertContains($itemIcon, $html);
+        $this->assertEquals(3, substr_count($html, $itemIcon));
+    }
+
+    public function testCustomTemplateTableTbodyDestroyEnableBootstrapModalConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $html = $this->generateTableList();
+        $this->assertContains('<div id="destroy-confirm-modal', $html);
+        $this->assertEquals(3, substr_count($html, '<div id="destroy-confirm-modal'));
+    }
+
+    public function testCustomTemplateTableTbodyDestroyDisableBootstrapModalConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', false);
+        $html = $this->generateTableList();
+        $this->assertNotContains('<div id="destroy-confirm-modal', $html);
+        $this->assertEquals(0, substr_count($html, '<div id="destroy-confirm-modal'));
+    }
+
+    public function testCustomTemplateTableTfootConfig()
+    {
+        $itemClass = 'test-table-tfoot-item-custom-class';
+        $trClass = 'test-table-tfoot-tr-custom-class';
+        $tdClass = 'test-table-tfoot-td-custom-class';
+        config()->set('tablelist.template.table.tfoot.item.class', $itemClass);
+        config()->set('tablelist.template.table.tfoot.tr.class', $trClass);
+        config()->set('tablelist.template.table.tfoot.td.class', $tdClass);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(1, substr_count($html, $itemClass));
+        $this->assertContains($trClass, $html);
+        $this->assertEquals(1, substr_count($html, $trClass));
+        $this->assertContains($tdClass, $html);
+        $this->assertEquals(1, substr_count($html, $tdClass));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarConfig()
+    {
+        $itemClass = 'test-table-tfoot-options-bar-item-custom-class';
+        config()->set('tablelist.template.table.tfoot.options-bar.item.class', $itemClass);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(1, substr_count($html, $itemClass));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarCreateConfig()
+    {
+        $containerClass = 'test-table-tfoot-options-bar-create-container-custom-class';
+        $itemClass = 'test-table-tfoot-options-bar-create-item-custom-class';
+        $itemIcon = 'test-table-tfoot-options-bar-create-item-custom-icon';
+        config()->set('tablelist.template.table.tfoot.options-bar.create.container.class', $containerClass);
+        config()->set('tablelist.template.table.tfoot.options-bar.create.item.class', $itemClass);
+        config()->set('tablelist.template.table.tfoot.options-bar.create.item.icon', $itemIcon);
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(1, substr_count($html, $containerClass));
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(1, substr_count($html, $itemClass));
+        $this->assertContains($itemIcon, $html);
+        $this->assertEquals(1, substr_count($html, $itemIcon));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarNavigationWithCreateRouteConfig()
+    {
+        $containerClass = 'test-table-tfoot-options-bar-navigation-container-custom-class';
+        config()->set(
+            'tablelist.template.table.tfoot.options-bar.navigation.with-create-route.container.class',
+            $containerClass
+        );
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(1, substr_count($html, $containerClass));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarNavigationWithoutCreateRouteConfig()
+    {
+        $containerClass = 'test-table-tfoot-options-bar-navigation-container-custom-class';
+        config()->set(
+            'tablelist.template.table.tfoot.options-bar.navigation.without-create-route.container.class',
+            $containerClass
+        );
+        $html = $this->generateTableList(null, [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ]);
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(1, substr_count($html, $containerClass));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarPaginationWithCreateRouteConfig()
+    {
+        $containerClass = 'test-table-tfoot-options-bar-pagination-container-custom-class';
+        config()->set(
+            'tablelist.template.table.tfoot.options-bar.pagination.with-create-route.container.class',
+            $containerClass
+        );
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(1, substr_count($html, $containerClass));
+    }
+
+    public function testCustomTemplateTableTfootOptionsBarPaginationWithoutCreateRouteConfig()
+    {
+        $containerClass = 'test-table-tfoot-options-bar-pagination-container-custom-class';
+        config()->set(
+            'tablelist.template.table.tfoot.options-bar.pagination.without-create-route.container.class',
+            $containerClass
+        );
+        $html = $this->generateTableList(null, [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ]);
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(1, substr_count($html, $containerClass));
+    }
+
+    public function testCustomTemplateModalConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $containerClass = 'test-modal-container-custom-class';
+        $itemClass = 'test-modal-item-custom-class';
+        config()->set('tablelist.template.modal.container.class', $containerClass);
+        config()->set('tablelist.template.modal.item.class', $itemClass);
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+    }
+
+    public function testCustomTemplateModalTitleConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $containerClass = 'test-modal-title-container-custom-class';
+        $itemClass = 'test-modal-title-item-custom-class';
+        config()->set('tablelist.template.modal.title.container.class', $containerClass);
+        config()->set('tablelist.template.modal.title.item.class', $itemClass);
+        $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+    }
+
+    public function testCustomTemplateModalBodyConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $itemClass = 'test-modal-body-item-custom-class';
+        config()->set('tablelist.template.modal.body.item.class', $itemClass);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+    }
+
+    public function testCustomTemplateModalFooterConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $itemClass = 'test-modal-footer-item-custom-class';
+        config()->set('tablelist.template.modal.footer.item.class', $itemClass);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+    }
+
+    public function testCustomTemplateModalFooterConfirmConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $itemClass = 'test-modal-footer-confirm-item-custom-class';
+        $itemIcon = 'test-modal-footer-confirm-item-custom-icon';
+        config()->set('tablelist.template.modal.footer.confirm.item.class', $itemClass);
+        config()->set('tablelist.template.modal.footer.confirm.item.icon', $itemIcon);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+        $this->assertContains($itemIcon, $html);
+        $this->assertEquals(3, substr_count($html, $itemIcon));
+    }
+
+    public function testCustomTemplateModalFooterCancelConfig()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
+        $itemClass = 'test-modal-footer-cancel-item-custom-class';
+        $itemIcon = 'test-modal-footer-cancel-item-custom-icon';
+        config()->set('tablelist.template.modal.footer.cancel.item.class', $itemClass);
+        config()->set('tablelist.template.modal.footer.cancel.item.icon', $itemIcon);
+        $html = $this->generateTableList();
+        $this->assertContains($itemClass, $html);
+        $this->assertEquals(3, substr_count($html, $itemClass));
+        $this->assertContains($itemIcon, $html);
+        $this->assertEquals(3, substr_count($html, $itemIcon));
     }
 }
