@@ -5,10 +5,10 @@ return [
     'value'    => [
         'rows_number'      => 20,
         'disabled_line'    => [
-            'class' => ['disabled', 'bg-secondary'],
+            'class' => ['disabled', 'bg-secondary', 'text-white'],
         ],
         'highlighted_line' => [
-            'class' => ['highlighted', 'bg-info'],
+            'class' => ['highlighted', 'bg-info', 'text-white'],
         ],
     ],
     // template customization
