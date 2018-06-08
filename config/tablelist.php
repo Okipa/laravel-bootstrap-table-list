@@ -146,18 +146,28 @@ return [
             ],
             // table > body > edit
             'edit'    => [
-                'item' => [
+                'container' => [
+                    'item' => [
+                        'class' => 'd-inline-block',
+                    ],
+                ],
+                'item'      => [
                     'class' => 'btn btn-link text-primary p-1',
                     'icon'  => '<i class="fas fa-fw fa-edit"></i>',
                 ],
             ],
             // table > body > destroy
             'destroy' => [
-                'item'                  => [
+                'container'               => [
+                    'item' => [
+                        'class' => 'd-inline-block',
+                    ],
+                ],
+                'item'                    => [
                     'class' => 'btn btn-link text-danger p-1',
                     'icon'  => '<i class="fas fa-fw fa-times-circle"></i>',
                 ],
-                'trigger-bootrap-modal' => true,
+                'trigger-bootstrap-modal' => true,
             ],
         ],
         // table > footer
@@ -236,17 +246,17 @@ return [
                     'class' => '',
                 ],
             ],
-            'footer' => [
-                'item' => [
+            'footer'    => [
+                'item'    => [
                     'class' => '',
                 ],
-                'confirm'   => [
+                'confirm' => [
                     'item' => [
                         'class' => 'btn btn-success',
                         'icon'  => '<i class="fas fa-fw fa-check"></i>',
                     ],
                 ],
-                'cancel'    => [
+                'cancel'  => [
                     'item' => [
                         'class' => 'btn btn-danger',
                         'icon'  => '<i class="fas fa-fw fa-ban"></i>',

@@ -11,14 +11,14 @@
                 <h5 id="destroy-confirm-modal-label-{{ $entity->id }}"
                     {{ classTag('modal-title', config('tablelist.template.modal.title.item.class')) }}>
                     {{ config('tablelist.template.modal.title.item.icon') }}
-                    {{ trans('tablelist::tablelist.template.modal.title') }}
+                    {{ trans('tablelist::tablelist.modal.title') }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div {{ classTag('modal-body', config('tablelist.template.modal.body.item.class')) }}>
-                {!! trans('tablelist::tablelist.template.modal.question', [
+                {!! trans('tablelist::tablelist.modal.question', [
                     'entity' => $entity->{$table->destroyAttribute}
                 ]) !!}
             </div>
@@ -27,12 +27,12 @@
                         {{ classTag(config('tablelist.template.modal.footer.cancel.item.class')) }}
                         data-dismiss="modal">
                     {!! config('tablelist.template.modal.footer.cancel.item.icon') !!}
-                    {{ trans('tablelist::tablelist.template.modal.action.cancel') }}
+                    {{ trans('tablelist::tablelist.modal.action.cancel') }}
                 </button>
                 <button type="submit"
                     {{ classTag(config('tablelist.template.modal.footer.confirm.item.class')) }}>
                     {!! config('tablelist.template.modal.footer.confirm.item.icon') !!}
-                    {{ trans('tablelist::tablelist.template.modal.action.confirm') }}
+                    {{ trans('tablelist::tablelist.modal.action.confirm') }}
                 </button>
             </div>
         </div>

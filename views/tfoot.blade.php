@@ -5,7 +5,7 @@
             <div {{ classTag(config('tablelist.template.table.tfoot.options-bar.item.class')) }}>
                 {{-- create button --}}
                 @if($table->isRouteDefined('create'))
-                    <div {{ classTag(config('tablelist.template.table.tfoot.options-bar.create.container.class')) }}>
+                    <div {{ classTag('create-container', config('tablelist.template.table.tfoot.options-bar.create.container.class')) }}>
                         <a href="{{ $table->getRoute('create') }}"
                            {{ classTag(config('tablelist.template.table.tfoot.options-bar.create.item.class')) }}
                            title="{{ trans('tablelist::tablelist.tfoot.action.create') }}">
@@ -15,16 +15,15 @@
                     </div>
                 @endif
                 {{-- navigation --}}
-                <div {{ classTag(
-                $table->isRouteDefined('create') 
+                <div {{ classTag('navigation', $table->isRouteDefined('create') 
                 ? config('tablelist.template.table.tfoot.options-bar.navigation.with-create-route.container.class') 
                 : config('tablelist.template.table.tfoot.options-bar.navigation.without-create-route.container.class')) }}>
                     {!! $table->navigationStatus() !!}
                 </div>
                 {{-- pagination container --}}
-                <div {{ classTag($table->isRouteDefined('create')
+                <div {{ classTag('pagination-container', $table->isRouteDefined('create')
                 ? config('tablelist.template.table.tfoot.options-bar.pagination.with-create-route.container.class')
-                :config('tablelist.template.table.tfoot.options-bar.pagination.without-create-route.container.class')) }}>
+                : config('tablelist.template.table.tfoot.options-bar.pagination.without-create-route.container.class')) }}>
                     {!! $table->list->render() !!}
                 </div>
             </div>

@@ -68,22 +68,6 @@ class HtmlTest extends TableListTestCase
         }
     }
 
-    public function testNoCreateActionHtml()
-    {
-        $this->setRoutes(['users'], ['create']);
-        $routes = [
-            'index' => ['alias' => 'users.index', 'parameters' => []],
-        ];
-        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name')->setTitle('Name')->sortByDefault();
-        $table->render();
-        // tfoot
-        $tfoot = view('tablelist::tfoot', ['table' => $table])->render();
-        $this->assertNotContains('<div class="tfoot-tab col-sm-4 create-button">', $tfoot);
-        $this->assertNotContains('href="http://localhost/users/create"', $tfoot);
-        $this->assertNotContains('title="Add"', $tfoot);
-    }
-
     public function testCreateActionHtml()
     {
         $this->setRoutes(['users'], ['create']);
@@ -95,24 +79,24 @@ class HtmlTest extends TableListTestCase
         $table->addColumn('name')->setTitle('Name')->sortByDefault();
         $table->render();
         $tfoot = view('tablelist::tfoot', ['table' => $table])->render();
-        $this->assertContains('<div class="tfoot-tab col-sm-4 create-button">', $tfoot);
+        $this->assertContains('<div class="create-container', $tfoot);
         $this->assertContains('href="http://localhost/users/create"', $tfoot);
         $this->assertContains('title="Add"', $tfoot);
     }
 
-    public function testNoEditActionHtml()
+    public function testNoCreateActionHtml()
     {
-        $users = $this->createMultipleUsers(5);
+        $this->setRoutes(['users'], ['create']);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
         ];
         $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
         $table->addColumn('name')->setTitle('Name')->sortByDefault();
         $table->render();
-        $tbody = view('tablelist::tbody', ['table' => $table])->render();
-        foreach ($users as $user) {
-            $this->assertNotContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
-        }
+        $tfoot = view('tablelist::tfoot', ['table' => $table])->render();
+        $this->assertNotContains('<div class="create-container', $tfoot);
+        $this->assertNotContains('href="http://localhost/users/create"', $tfoot);
+        $this->assertNotContains('title="Add"', $tfoot);
     }
 
     public function testEditActionHtml()
@@ -128,30 +112,30 @@ class HtmlTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
+            $this->assertContains('<form class="edit-' . $user->id . '"', $tbody);
             $this->assertContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
         }
     }
-
-    public function testNoDestroyActionHtml()
+    
+    public function testNoEditActionHtml()
     {
         $users = $this->createMultipleUsers(5);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
         ];
         $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('name')->setTitle('Name')->sortByDefault();
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
-            $this->assertNotContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
-            $this->assertNotContains(trans('tablelist::tablelist.modal.question', [
-                'entity' => $user->{$table->destroyAttribute},
-            ]), $tbody);
+            $this->assertNotContains('<form class="edit-' . $user->id . '"', $tbody);
+            $this->assertNotContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
         }
     }
 
-    public function testDestroyActionHtml()
+    public function testDestroyActionHtmlWithModal()
     {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $users = $this->createMultipleUsers(5);
         $this->setRoutes(['users'], ['destroy']);
         $routes = [
@@ -163,13 +147,83 @@ class HtmlTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
+            $this->assertContains('<form class="destroy-' . $user->id, $tbody);
             $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
+            $this->assertContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
             $this->assertContains(trans('tablelist::tablelist.modal.question', [
                 'entity' => $user->{$table->destroyAttribute},
             ]), $tbody);
         }
     }
 
+    public function testDestroyActionHtmlWithoutModal()
+    {
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', false);
+        $users = $this->createMultipleUsers(5);
+        $this->setRoutes(['users'], ['destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->render();
+        $tbody = view('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertContains('<form class="destroy-' . $user->id, $tbody);
+            $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
+            $this->assertNotContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
+            $this->assertNotContains(trans('tablelist::tablelist.modal.question', [
+                'entity' => $user->{$table->destroyAttribute},
+            ]), $tbody);
+        }
+    }
+    
+    public function testNoDestroyActionHtml()
+    {
+        $users = $this->createMultipleUsers(5);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->render();
+        $tbody = view('tablelist::tbody', ['table' => $table])->render();
+        foreach ($users as $user) {
+            $this->assertNotContains('<form class="destroy-' . $user->id, $tbody);
+            $this->assertNotContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
+            $this->assertNotContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
+            $this->assertNotContains(trans('tablelist::tablelist.modal.question', [
+                'entity' => $user->{$table->destroyAttribute},
+            ]), $tbody);
+        }
+    }
+
+    public function testSearchableHtml()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = ['index' => ['alias' => 'users.index', 'parameters' => []]];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
+        $table->addColumn('email')->setTitle('Email')->isSearchable();
+        $table->render();
+        $thead = view('tablelist::thead', ['table' => $table])->render();
+        $this->assertContains('<div class="search-bar', $thead);
+        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
+        $this->assertContains('<input type="hidden" name="rowsNumber" value="20">', $thead);
+        $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
+        $this->assertContains('<input type="hidden" name="sortDir" value="desc">', $thead);
+        $this->assertContains('name="search"', $thead);
+        $this->assertContains(
+            'placeholder="' . trans('tablelist::tablelist.thead.search') . ' '
+            . $table->getSearchableTitles() . '"', $thead
+        );
+        $this->assertContains(
+            'title="' . trans('tablelist::tablelist.thead.search') . ' '
+            . $table->getSearchableTitles() . '"', $thead
+        );
+    }
+    
     public function testNoSearchableHtml()
     {
         $this->setRoutes(['users'], ['index']);
@@ -179,7 +233,7 @@ class HtmlTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $thead = view('tablelist::thead', ['table' => $table])->render();
-        $this->assertNotContains('div class="col-sm-6 col-xs-12 search-bar">', $thead);
+        $this->assertNotContains('<div class="search-bar', $thead);
         $this->assertNotContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
         $this->assertNotContains('<input type="hidden" name="rowsNumber" value="20">', $thead);
         $this->assertNotContains('<input type="hidden" name="sortBy" value="name">', $thead);
@@ -195,31 +249,6 @@ class HtmlTest extends TableListTestCase
         );
     }
 
-    public function testSearchableHtml()
-    {
-        $this->setRoutes(['users'], ['index']);
-        $routes = ['index' => ['alias' => 'users.index', 'parameters' => []]];
-        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name')->setTitle('Name')->sortByDefault('desc');
-        $table->addColumn('email')->setTitle('Email')->isSearchable();
-        $table->render();
-        $thead = view('tablelist::thead', ['table' => $table])->render();
-        $this->assertContains('div class="col-sm-6 col-xs-12 search-bar">', $thead);
-        $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
-        $this->assertContains('<input type="hidden" name="rowsNumber" value="20">', $thead);
-        $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
-        $this->assertContains('<input type="hidden" name="sortDir" value="desc">', $thead);
-        $this->assertContains('name="search"', $thead);
-        $this->assertContains(
-            'placeholder="' . trans('tablelist::tablelist.thead.search') . ' '
-            . $table->getSearchableTitles() . '"', $thead
-        );
-        $this->assertContains(
-            'title="' . trans('tablelist::tablelist.thead.search') . ' '
-            . $table->getSearchableTitles() . '"', $thead
-        );
-    }
-
     public function testRowsNumberSelectionHtml()
     {
         $this->setRoutes(['users'], ['index']);
@@ -231,7 +260,7 @@ class HtmlTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $thead = view('tablelist::thead', ['table' => $table])->render();
-        $this->assertContains('<div class="col-sm-4 col-xs-12 rows-number-selector">', $thead);
+        $this->assertContains('<div class="rows-number-selector', $thead);
         $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
         $this->assertContains('<input type="hidden" name="search" value="">', $thead);
         $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);
@@ -258,7 +287,7 @@ class HtmlTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $thead = view('tablelist::thead', ['table' => $table])->render();
-        $this->assertContains('<div class="col-sm-4 col-xs-12 rows-number-selector">', $thead);
+        $this->assertContains('<div class="rows-number-selector', $thead);
         $this->assertContains('<form role="form" method="GET" action="http://localhost/users/index">', $thead);
         $this->assertContains('<input type="hidden" name="search" value="">', $thead);
         $this->assertContains('<input type="hidden" name="sortBy" value="name">', $thead);

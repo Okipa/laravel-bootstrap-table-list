@@ -59,7 +59,7 @@
                         {{-- edit button --}}
                         @if($table->isRouteDefined('edit'))
                             @if(! $entity->disabled)
-                                <form class="edit d-inline-block"
+                                <form {{ classTag('edit-' . $entity->id, config('tablelist.template.table.tbody.edit.container.class')) }}
                                       role="form"
                                       method="GET"
                                       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
@@ -77,7 +77,7 @@
                         {{-- destroy button --}}
                         @if($table->isRouteDefined('destroy'))
                             @if(! $entity->disabled)
-                                <form class="destroy d-inline-block"
+                                <form {{ classTag('destroy-' . $entity->id, config('tablelist.template.table.tbody.destroy.container.class')) }}
                                       role="form"
                                       method="POST"
                                       action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
@@ -87,7 +87,7 @@
                                     <button type="button"
                                             {{ classTag(config('tablelist.template.table.tbody.destroy.item.class'), $entity->disabled ? 'disabled' : null) }}
                                             title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}"
-                                            @if(config('tablelist.template.table.tbody.destroy.trigger-bootrap-modal'))
+                                            @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
                                             data-toggle="modal"
                                             data-target="#destroy-confirm-modal-{{ $entity->id }}"
                                             @endif
@@ -95,7 +95,7 @@
                                         {!! config('tablelist.template.table.tbody.destroy.item.icon') !!}
                                     </button>
                             @if(! $entity->disabled)
-                                    @if(config('tablelist.template.table.tbody.destroy.trigger-bootrap-modal'))
+                                    @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
                                         @include('tablelist::destroy-confirm-modal')
                                     @endif
                                 </form>

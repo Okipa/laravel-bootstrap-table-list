@@ -327,11 +327,15 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateTableTbodyEditConfig()
     {
+        $containerClass = 'test-table-tbody-edit-container-custom-class';
         $itemClass = 'test-table-tbody-edit-item-custom-class';
         $itemIcon = 'test-table-tbody-edit-item-custom-icon';
+        config()->set('tablelist.template.table.tbody.edit.container.class', $containerClass);
         config()->set('tablelist.template.table.tbody.edit.item.class', $itemClass);
         config()->set('tablelist.template.table.tbody.edit.item.icon', $itemIcon);
         $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
         $this->assertContains($itemClass, $html);
         $this->assertEquals(3, substr_count($html, $itemClass));
         $this->assertContains($itemIcon, $html);
@@ -340,11 +344,15 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateTableTbodyDestroyConfig()
     {
+        $containerClass = 'test-table-tbody-destroy-container-custom-class';
         $itemClass = 'test-table-tbody-destroy-item-custom-class';
         $itemIcon = 'test-table-tbody-destroy-item-custom-icon';
+        config()->set('tablelist.template.table.tbody.destroy.container.class', $containerClass);
         config()->set('tablelist.template.table.tbody.destroy.item.class', $itemClass);
         config()->set('tablelist.template.table.tbody.destroy.item.icon', $itemIcon);
         $html = $this->generateTableList();
+        $this->assertContains($containerClass, $html);
+        $this->assertEquals(3, substr_count($html, $containerClass));
         $this->assertContains($itemClass, $html);
         $this->assertEquals(3, substr_count($html, $itemClass));
         $this->assertContains($itemIcon, $html);
@@ -353,7 +361,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateTableTbodyDestroyEnableBootstrapModalConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $html = $this->generateTableList();
         $this->assertContains('<div id="destroy-confirm-modal', $html);
         $this->assertEquals(3, substr_count($html, '<div id="destroy-confirm-modal'));
@@ -361,7 +369,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateTableTbodyDestroyDisableBootstrapModalConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', false);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', false);
         $html = $this->generateTableList();
         $this->assertNotContains('<div id="destroy-confirm-modal', $html);
         $this->assertEquals(0, substr_count($html, '<div id="destroy-confirm-modal'));
@@ -468,7 +476,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $containerClass = 'test-modal-container-custom-class';
         $itemClass = 'test-modal-item-custom-class';
         config()->set('tablelist.template.modal.container.class', $containerClass);
@@ -482,7 +490,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalTitleConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $containerClass = 'test-modal-title-container-custom-class';
         $itemClass = 'test-modal-title-item-custom-class';
         config()->set('tablelist.template.modal.title.container.class', $containerClass);
@@ -496,7 +504,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalBodyConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $itemClass = 'test-modal-body-item-custom-class';
         config()->set('tablelist.template.modal.body.item.class', $itemClass);
         $html = $this->generateTableList();
@@ -506,7 +514,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalFooterConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $itemClass = 'test-modal-footer-item-custom-class';
         config()->set('tablelist.template.modal.footer.item.class', $itemClass);
         $html = $this->generateTableList();
@@ -516,7 +524,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalFooterConfirmConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $itemClass = 'test-modal-footer-confirm-item-custom-class';
         $itemIcon = 'test-modal-footer-confirm-item-custom-icon';
         config()->set('tablelist.template.modal.footer.confirm.item.class', $itemClass);
@@ -530,7 +538,7 @@ class ConfigTest extends TableListTestCase
 
     public function testCustomTemplateModalFooterCancelConfig()
     {
-        config()->set('tablelist.template.table.tbody.destroy.trigger-bootrap-modal', true);
+        config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $itemClass = 'test-modal-footer-cancel-item-custom-class';
         $itemIcon = 'test-modal-footer-cancel-item-custom-icon';
         config()->set('tablelist.template.modal.footer.cancel.item.class', $itemClass);
