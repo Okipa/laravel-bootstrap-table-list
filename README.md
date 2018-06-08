@@ -16,12 +16,13 @@ Because it is sometimes convenient to build a simple backoffice without sophisti
 
 ## Before use
 
-The V2 of this table list generator is pre-configured for Bootstrap 4 and Fontawesome 5.  
-However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3.  
-If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.  
-If someone is up to give me a functional configuration for bootstrap 3, I will include it in the readme.
+The V2 of this table list generator is pre-configured for **Bootstrap 4** and **Fontawesome 5**.  
+However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3 and other versions of FA ot other icon libraries (or not icon at all).  
+If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.
 
-For a pre-configured bootstrap 3 version of this package (with less features), [please check the v1](https://github.com/Okipa/laravel-bootstrap-table-list/tree/v1).
+**Notes:**    
+If someone is motivated to give me a functional configuration for **bootstrap 3**, I will include it in the readme. It could interest some developers.
+Anyway, a pre-configured bootstrap 3 version of this package does exists (with less features) : [please check the v1](https://github.com/Okipa/laravel-bootstrap-table-list/tree/v1).
 
 ------------------------------------------------------------------------------------------------------------------------
 
