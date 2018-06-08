@@ -220,48 +220,48 @@ Add a column that will be displayed in the table list (required) :
 
 ### TableListColumn public methods
 
-##### `public function setTitle(string $title): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function setTitle(string $title): TableListColumn`
 Set the column title (required).
 
-##### `public function sortByDefault(string $direction = 'asc'): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function sortByDefault(string $direction = 'asc'): TableListColumn`
 Set the default sorted column (required).
 
-##### `public function useForDestroyConfirmation(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function useForDestroyConfirmation(): TableListColumn`
 Use the column attribute for the destroy confirmation message generation (required) :
 - At least one column must be selected for destroy confirmation if a destroy route is set.  
 - This method can be called only once.
 
-##### `public function isSortable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isSortable(): TableListColumn`
 Make the column sortable (optional).
 
-##### `public function isSearchable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isSearchable(): TableListColumn`
 Make the column searchable (optional).
 
-##### `public function setCustomTable(string $customColumnTable): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function setCustomTable(string $customColumnTable): TableListColumn`
 Set a custom table for the column (optional).  
 Calling this method can be useful if the column attribute does not directly belong to the table list model.
 
-##### `public function setColumnDateFormat(string $columnDateFormat): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function setColumnDateFormat(string $columnDateFormat): TableListColumn`
 Set the format for a date (optional).  
 (Carbon is used to format the date).
 
-##### `public function isButton(string $buttonClass): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isButton(string $buttonClass): TableListColumn`
 Set the column button class (optional).  
 The attribute is wrapped into a button.
 
-##### `public function setStringLimit(int $stringLimit): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function setStringLimit(int $stringLimit): TableListColumn`
 Set the string value display limitation (optional).  
 Shows "..." when the limit is reached.
 
-##### `public function isLink(Closure $linkClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isLink(Closure $linkClosure): TableListColumn`
 Set the link in the method closure (optional).  
 The closure let you manipulate the following attributes : $entity, $column.
 
-##### `public function isCustomValue(Closure $customValueClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isCustomValue(Closure $customValueClosure): TableListColumn`
 Set a custom value in the method closure (optional).  
 The closure let you manipulate the following attributes : $entity, $column.
 
-##### `public function isCustomHtmlElement(Closure $customHtmlEltClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+##### `public function isCustomHtmlElement(Closure $customHtmlEltClosure): TableListColumn`
 Set the HTML element to render in the method closure (optional).  
 The closure let you manipulate the following attributes : $entity, $column.
 
