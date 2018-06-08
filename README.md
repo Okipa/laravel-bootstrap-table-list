@@ -204,13 +204,15 @@ The closure let you manipulate the following attribute : $query`.
 
 ##### `public function disableLines(Closure $disableLinesClosure, array $lineClass = []): TableList`
 Set the disable lines closure that will be executed during the table list generation (optional).  
-The optional second param let you set the class that will be applied for the disabled lines. By default, the « disabled » class is applied.  
+The optional second param let you set the class that will be applied for the disabled lines.  
+By default, the `config('tablelist.value.disabled_line.class')` config value is applied.  
 For example, you can disable the current logged user to prevent him being edited or deleted from the table list.  
 The closure let you manipulate the following attribute : $model.
 
 ##### `public function highlightLines(Closure $highlightLinesClosure, array $lineClass = []): TableList`
 Set the highlight lines closure that will executed during the table list generation (optional).  
-The optional second param let you set the class that will be applied for the highlighted lines. By default, the « highlighted » class is applied.  
+The optional second param let you set the class that will be applied for the highlighted lines.  
+By default, the `config('tablelist.value.highlighted_line.class')` config value is applied.  
 The closure let you manipulate the following attribute : $model.
 
 ##### `public function addColumn(string $attribute = null) : TableList`

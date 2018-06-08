@@ -21,6 +21,12 @@ class ConfigTest extends TableListTestCase
         $this->assertTrue(array_key_exists('template', config('tablelist')));
         // tablelist.value
         $this->assertTrue(array_key_exists('rows_number', config('tablelist.value')));
+        $this->assertTrue(array_key_exists('disabled_line', config('tablelist.value')));
+        $this->assertTrue(array_key_exists('highlighted_line', config('tablelist.value')));
+        // tablelist.value.disabled_line
+        $this->assertTrue(array_key_exists('class', config('tablelist.value.disabled_line')));
+        // tablelist.value.highlighted_line
+        $this->assertTrue(array_key_exists('class', config('tablelist.value.highlighted_line')));
         // tablelist.template
         $this->assertTrue(array_key_exists('table', config('tablelist.template')));
         $this->assertTrue(array_key_exists('modal', config('tablelist.template')));

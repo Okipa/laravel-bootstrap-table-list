@@ -225,8 +225,8 @@ class TableList extends Model implements Htmlable
 
     /**
      * Set the disable lines closure that will be executed during the table list generation (optional).
-     * The optional second param let you set the class that will be applied for the disabled lines. By default,
-     * the « disabled » class is applied.
+     * The optional second param let you set the class that will be applied for the disabled lines.
+     * By default, the « config('tablelist.value.disabled_line.class') » config value is applied.
      * For example, you can disable the current logged user to prevent him being
      * edited or deleted from the table list.
      * The closure let you manipulate the following attribute : $model.
@@ -239,15 +239,18 @@ class TableList extends Model implements Htmlable
     public function disableLines(Closure $disableLinesClosure, array $lineClass = []): TableList
     {
         $this->setAttribute('disableLinesClosure', $disableLinesClosure);
-        $this->setAttribute('disableLinesClass', ! empty($lineClass) ? $lineClass : ['disabled']);
+        $this->setAttribute(
+            'disableLinesClass',
+            ! empty($lineClass) ? $lineClass : config('tablelist.value.disabled_line.class')
+        );
 
         return $this;
     }
 
     /**
      * Set the highlight lines closure that will executed during the table list generation (optional).
-     * The optional second param let you set the class that will be applied for the highlighted lines. By default,
-     * the « highlighted » class is applied.
+     * The optional second param let you set the class that will be applied for the highlighted lines.
+     * By default, the « config('tablelist.value.highlighted_line.class') » config value is applied.
      * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $highlightLinesClosure
@@ -258,7 +261,10 @@ class TableList extends Model implements Htmlable
     public function highlightLines(Closure $highlightLinesClosure, array $lineClass = []): TableList
     {
         $this->setAttribute('highlightLinesClosure', $highlightLinesClosure);
-        $this->setAttribute('highlightLinesClass', ! empty($lineClass) ? $lineClass : ['highlighted']);
+        $this->setAttribute(
+            'highlightLinesClass',
+            ! empty($lineClass) ? $lineClass : config('tablelist.value.highlighted_line.class')
+        );
 
         return $this;
     }

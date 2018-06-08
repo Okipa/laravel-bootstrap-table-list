@@ -3,7 +3,13 @@
 return [
     // default values
     'value'    => [
-        'rows_number' => 20,
+        'rows_number'      => 20,
+        'disabled_line'    => [
+            'class' => ['disabled', 'bg-secondary'],
+        ],
+        'highlighted_line' => [
+            'class' => ['highlighted', 'bg-info'],
+        ],
     ],
     // template customization
     'template' => [

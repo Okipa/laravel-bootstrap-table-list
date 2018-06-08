@@ -172,6 +172,7 @@ class TableListTest extends TableListTestCase
 
     public function testDisableLineWithDefaultClass()
     {
+        config()->set('tablelist.value.disabled_line.class', 'test-disabled-default-class');
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
             'index'   => ['alias' => 'users.index', 'parameters' => []],
@@ -197,9 +198,9 @@ class TableListTest extends TableListTestCase
             }
         }
         $html = view('tablelist::tbody', ['table' => $table])->render();
-        $this->assertContains('disabled', $html);
+        $this->assertContains('test-disabled-default-class', $html);
         $this->assertContains('disabled="disabled"', $html);
-        $this->assertEquals(14, substr_count($html, 'disabled'));
+        $this->assertEquals(2, substr_count($html, 'test-disabled-default-class'));
         $this->assertEquals(4, substr_count($html, 'disabled="disabled"'));
     }
 
@@ -240,6 +241,7 @@ class TableListTest extends TableListTestCase
 
     public function testWithNoDisableLines()
     {
+        config()->set('tablelist.value.disabled_line.class', 'test-disabled-default-class');
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
             'index'   => ['alias' => 'users.index', 'parameters' => []],
@@ -255,11 +257,9 @@ class TableListTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
-        $this->assertNotContains('test-disabled-custom-class', $html);
-        $this->assertNotContains('class="disabled"', $html);
+        $this->assertNotContains('test-disabled-default-class', $html);
         $this->assertNotContains('disabled="disabled"', $html);
-        $this->assertEquals(0, substr_count($html, 'test-disabled-custom-class'));
-        $this->assertEquals(0, substr_count($html, 'class="disabled"'));
+        $this->assertEquals(0, substr_count($html, 'test-disabled-default-class'));
         $this->assertEquals(0, substr_count($html, 'disabled="disabled"'));
     }
 
@@ -276,6 +276,7 @@ class TableListTest extends TableListTestCase
 
     public function testHighlightLinesWithDefaultClass()
     {
+        config()->set('tablelist.value.highlighted_line.class', 'test-highlighted-default-class');
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
             'index'   => ['alias' => 'users.index', 'parameters' => []],
@@ -301,8 +302,8 @@ class TableListTest extends TableListTestCase
             }
         }
         $html = view('tablelist::table', ['table' => $table])->render();
-        $this->assertContains('highlighted', $html);
-        $this->assertEquals(2, substr_count($html, 'highlighted'));
+        $this->assertContains('test-highlighted-default-class', $html);
+        $this->assertEquals(2, substr_count($html, 'test-highlighted-default-class'));
     }
 
     public function testHighlightLinesWithCustomClass()
@@ -338,6 +339,7 @@ class TableListTest extends TableListTestCase
 
     public function testNoHighlightedLines()
     {
+        config()->set('tablelist.value.highlighted_line.class', 'test-highlighted-default-class');
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
             'index'   => ['alias' => 'users.index', 'parameters' => []],
@@ -353,8 +355,8 @@ class TableListTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $html = view('tablelist::table', ['table' => $table])->render();
-        $this->assertNotContains('highlighted', $html);
-        $this->assertEquals(0, substr_count($html, 'highlighted'));
+        $this->assertNotContains('test-highlighted-default-class', $html);
+        $this->assertEquals(0, substr_count($html, 'test-highlighted-default-class'));
     }
 
     /**
