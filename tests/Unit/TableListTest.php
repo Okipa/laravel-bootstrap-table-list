@@ -164,11 +164,13 @@ class TableListTest extends TableListTestCase
         $disableLinesClosure = function($model) {
             return $model->id === 1;
         };
-        $table = app(TableList::class)->disableLines($disableLinesClosure);
+        $disabledLinesClass = ['test-disabled-custom-class'];
+        $table = app(TableList::class)->disableLines($disableLinesClosure, $disabledLinesClass);
         $this->assertEquals($disableLinesClosure, $table->disableLinesClosure);
+        $this->assertEquals($disabledLinesClass, $table->disableLinesClass);
     }
 
-    public function testDisableLine()
+    public function testDisableLineWithDefaultClass()
     {
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
@@ -195,9 +197,46 @@ class TableListTest extends TableListTestCase
             }
         }
         $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('disabled', $html);
         $this->assertContains('class="disabled"', $html);
         $this->assertContains('disabled="disabled"', $html);
+        $this->assertEquals(14, substr_count($html, 'disabled'));
         $this->assertEquals(6, substr_count($html, 'class="disabled"'));
+        $this->assertEquals(4, substr_count($html, 'disabled="disabled"'));
+    }
+
+    public function testDisableLineWithCustomClass()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $users = $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes)
+            ->disableLines(function($model) use ($users) {
+                return $model->id === 1 || $model->id === 2;
+            }, ['test-disabled-custom-class']);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        foreach ($table->list->getCollection() as $user) {
+            if ($user->id === 1 || $user->id === 2) {
+                $this->assertTrue($user->disabled);
+            } else {
+                $this->assertFalse($user->disabled);
+            }
+        }
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('test-disabled-custom-class', $html);
+        $this->assertContains('class="disabled"', $html);
+        $this->assertContains('disabled="disabled"', $html);
+        $this->assertEquals(2, substr_count($html, 'test-disabled-custom-class'));
+        $this->assertEquals(4, substr_count($html, 'class="disabled"'));
         $this->assertEquals(4, substr_count($html, 'disabled="disabled"'));
     }
 
@@ -218,8 +257,10 @@ class TableListTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertNotContains('test-disabled-custom-class', $html);
         $this->assertNotContains('class="disabled"', $html);
         $this->assertNotContains('disabled="disabled"', $html);
+        $this->assertEquals(0, substr_count($html, 'test-disabled-custom-class'));
         $this->assertEquals(0, substr_count($html, 'class="disabled"'));
         $this->assertEquals(0, substr_count($html, 'disabled="disabled"'));
     }
@@ -229,11 +270,13 @@ class TableListTest extends TableListTestCase
         $highlightLinesClosure = function($model) {
             return $model->id === 1;
         };
-        $table = app(TableList::class)->highlightLines($highlightLinesClosure);
+        $highlightedLinesClass = ['test-highlighted-custom-class'];
+        $table = app(TableList::class)->highlightLines($highlightLinesClosure, $highlightedLinesClass);
         $this->assertEquals($highlightLinesClosure, $table->highlightLinesClosure);
+        $this->assertEquals($highlightedLinesClass, $table->highlightLinesClass);
     }
 
-    public function testHighlightLines()
+    public function testHighlightLinesWithDefaultClass()
     {
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $routes = [
@@ -260,8 +303,39 @@ class TableListTest extends TableListTestCase
             }
         }
         $html = view('tablelist::table', ['table' => $table])->render();
-        $this->assertContains('class="highlighted"', $html);
-        $this->assertEquals(2, substr_count($html, 'class="highlighted"'));
+        $this->assertContains('highlighted', $html);
+        $this->assertEquals(2, substr_count($html, 'highlighted'));
+    }
+
+    public function testHighlightLinesWithCustomClass()
+    {
+        $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
+        $routes = [
+            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'create'  => ['alias' => 'users.create', 'parameters' => []],
+            'edit'    => ['alias' => 'users.edit', 'parameters' => []],
+            'destroy' => ['alias' => 'users.destroy', 'parameters' => []],
+        ];
+        $users = $this->createMultipleUsers(5);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(User::class)
+            ->setRoutes($routes)
+            ->highlightLines(function($model) use ($users) {
+                return $model->id === 1 || $model->id === 2;
+            }, ['test-highlighted-custom-class']);
+        $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
+        $table->addColumn('email')->setTitle('Email');
+        $table->render();
+        foreach ($table->list->getCollection() as $user) {
+            if ($user->id === 1 || $user->id === 2) {
+                $this->assertTrue($user->highlighted);
+            } else {
+                $this->assertFalse($user->highlighted);
+            }
+        }
+        $html = view('tablelist::table', ['table' => $table])->render();
+        $this->assertContains('test-highlighted-custom-class', $html);
+        $this->assertEquals(2, substr_count($html, 'test-highlighted-custom-class'));
     }
 
     public function testNoHighlightedLines()
@@ -281,8 +355,8 @@ class TableListTest extends TableListTestCase
         $table->addColumn('email')->setTitle('Email');
         $table->render();
         $html = view('tablelist::table', ['table' => $table])->render();
-        $this->assertNotContains('class="highlighted"', $html);
-        $this->assertEquals(0, substr_count($html, 'class="highlighted"'));
+        $this->assertNotContains('highlighted', $html);
+        $this->assertEquals(0, substr_count($html, 'highlighted'));
     }
 
     /**

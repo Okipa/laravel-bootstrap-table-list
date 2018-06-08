@@ -52,9 +52,6 @@ class ConfigTest extends TableListTestCase
     public function testCustomValueRowsNumber()
     {
         config()->set('tablelist.value.rows_number', 9999);
-
-    
-        config()->set('tablelist.value.rows_number', 9999);
         $this->createMultipleUsers(3);
         $this->setRoutes(['users'], ['index', 'create', 'edit', 'destroy']);
         $table = app(TableList::class)

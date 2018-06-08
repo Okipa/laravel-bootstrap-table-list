@@ -14,8 +14,8 @@
             <tr {{ classTag(
             config('tablelist.template.table.tr.class'),
             config('tablelist.template.table.tbody.tr.class'),
-            $entity->disabled ? 'disabled' : null,
-            $entity->highlighted ? 'highlighted' : null
+            $entity->disabled ? $table->disableLinesClass : null,
+            $entity->highlighted ? $table->highlightLinesClass : null
             ) }}>
                 @foreach($table->columns as $column)
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>

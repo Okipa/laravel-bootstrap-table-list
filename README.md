@@ -14,6 +14,15 @@ Because it is sometimes convenient to build a simple backoffice without sophisti
 
 ------------------------------------------------------------------------------------------------------------------------
 
+## Before use
+
+The V2 of this table is generator is pre-configured for Bootstrap 4 and Fontawesome 5.  
+However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3.  
+If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.  
+If someone is up to give me a functional configuration for bootstrap 3, I will include it in the readme.
+
+------------------------------------------------------------------------------------------------------------------------
+
 ## Installation
 
 - Install the package with composer :
@@ -97,10 +106,10 @@ $table = app(TableList::class)
     })
     ->disableLines(function($model){
         return $model->id === 1 || $model->id === 2;
-    })
+    }, ['disabled', 'bg-secondary'])
     ->highlightLines(function($model){
         return $model->id === 3;
-    });
+    }, ['highlighted', 'bg-success']);
 // we add columns
 $table->addColumn('image')
     ->setTitle(__('news.label.image'))
@@ -155,19 +164,21 @@ $table->addColumn('updated_at')
 
 ### TableList public methods
 
-- `public function setModel(string $tableModel): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the model used for the table list generation (required).
-- `public function setRequest(Request $request): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the request used for the table list generation (required).
-- `public function setRoutes(array $routes): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the routes used for the table list generation (required) :
-    > - Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
-    > - The `index` route is required and must be the route that will be used to display the page that contains the table list.
-    > - The following routes can be defined as well :
-    >     - `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.
-    >     - `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.
-    >     - `destroy` : must be used to destroy a table list line. Displays a `Remove` icon on each table list line if defined.
-    > - Each route have to be defined with the following structure :
+##### `public function setModel(string $tableModel): \Okipa\LaravelBootstrapTableList\TableList`
+Set the model used for the table list generation (required).
+
+##### `public function setRequest(Request $request): \Okipa\LaravelBootstrapTableList\TableList`
+Set the request used for the table list generation (required).
+
+##### `public function setRoutes(array $routes): \Okipa\LaravelBootstrapTableList\TableList`
+Set the routes used for the table list generation (required) :
+- Each route will be generated with the line entity id. The given extra parameters will be added for the route generation.
+- The `index` route is required and must be the route that will be used to display the page that contains the table list.
+- The following routes can be defined as well :
+    - `create` : must be used to redirect toward the entity creation page. Displays a `Create` button under the table list if defined.
+    - `edit` : must be used to redirect toward the entity edition page. Displays a `Edit` icon on each table list line if defined.
+    - `destroy` : must be used to destroy a table list line. Displays a `Remove` icon on each table list line if defined.
+    - Each route have to be defined with the following structure :
 ```php
 'index' => [
     'alias' => 'news.index',
@@ -176,62 +187,81 @@ $table->addColumn('updated_at')
     ]
 ]
 ```
-- `public function setRowsNumber(int $owsNumber): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set a custom number of rows for the table list (optional).
-- `public function enableRowsNumberSelector(): \Okipa\LaravelBootstrapTableList\TableList`
-    > Enables the rows number selection in the table list (optional) :
-    > - Calling this method displays a rows number input that enable the user to choose how much rows to show.
-- `public function addQueryInstructions(Closure $queryClosure): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the query closure that will be used during the table list generation (optional).  
-    > For example, you can define your joined tables here.  
-    > The closure let you manipulate the following attribute : $query`.
-- `public function disableLines(Closure $disableLinesClosure): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the disable lines closure that will executed during the table list generation (optional).
-    > For example, you can disable the current logged user to prevent him being edited or deleted from the table list.
-    > The closure let you manipulate the following attribute : $model.
-- `public function highlightLines(Closure $highlightLinesClosure): \Okipa\LaravelBootstrapTableList\TableList`
-    > Set the highlight lines closure that will executed during the table list generation (optional).
-    > The closure let you manipulate the following attribute : $model.
-- `public function addColumn(string $attribute = null) : \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Add a column that will be displayed in the table list (required) :`
-    > - At least one column must be added to the table list.  
-    > - A column can be created without attribute specification, in case of HTML element display, for example.
+
+##### `public function setRowsNumber(int $owsNumber): TableList`
+Set a custom number of rows for the table list (optional).
+
+##### `public function enableRowsNumberSelector(): TableList`
+Enables the rows number selection in the table list (optional) :
+- Calling this method displays a rows number input that enable the user to choose how much rows to show.
+
+##### `public function addQueryInstructions(Closure $queryClosure): TableList`
+Set the query closure that will be used during the table list generation (optional).  
+For example, you can define your joined tables here.  
+The closure let you manipulate the following attribute : $query`.
+
+##### `public function disableLines(Closure $disableLinesClosure, array $lineClass = []): TableList`
+Set the disable lines closure that will be executed during the table list generation (optional).  
+The optional second param let you set the class that will be applied for the disabled lines. By default, the « disabled » class is applied.  
+For example, you can disable the current logged user to prevent him being edited or deleted from the table list.  
+The closure let you manipulate the following attribute : $model.
+
+##### `public function highlightLines(Closure $highlightLinesClosure, array $lineClass = []): TableList`
+Set the highlight lines closure that will executed during the table list generation (optional).  
+The optional second param let you set the class that will be applied for the highlighted lines. By default, the « highlighted » class is applied.  
+The closure let you manipulate the following attribute : $model.
+
+##### `public function addColumn(string $attribute = null) : TableList`
+Add a column that will be displayed in the table list (required) :
+- At least one column must be added to the table list.  
+- A column can be created without attribute specification, in case of HTML element display, for example.
 
 ### TableListColumn public methods
 
-- `public function setTitle(string $title): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the column title (required).
-- `public function sortByDefault(string $direction = 'asc'): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the default sorted column (required).
-- `public function useForDestroyConfirmation(): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Use the column attribute for the destroy confirmation message generation (required) :
-    > - At least one column must be selected for destroy confirmation if a destroy route is set.  
-    > - This method can be called only once.
-- `public function isSortable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Make the column sortable (optional).
-- `public function isSearchable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Make the column searchable (optional).
-- `public function setCustomTable(string $customColumnTable): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set a custom table for the column (optional).  
-    > Calling this method can be useful if the column attribute does not directly belong to the table list model.
-- `public function setColumnDateFormat(string $columnDateFormat): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the format for a date (optional).  
-    > (Carbon is used to format the date).
-- `public function isButton(string $buttonClass): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the column button class (optional).
-    > The attribute is wrapped into a button.
-- `public function setStringLimit(int $stringLimit): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the string value display limitation (optional).
-    > Shows "..." when the limit is reached.
-- `public function isLink(Closure $linkClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the link in the method closure (optional).
-    > The closure let you manipulate the following attributes : $entity, $column.
-- `public function isCustomValue(Closure $customValueClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set a custom value in the method closure (optional).
-    > The closure let you manipulate the following attributes : $entity, $column.
-- `public function isCustomHtmlElement(Closure $customHtmlEltClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
-    > Set the HTML element to render in the method closure (optional).
-    > The closure let you manipulate the following attributes : $entity, $column.
+##### `public function setTitle(string $title): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the column title (required).
+
+##### `public function sortByDefault(string $direction = 'asc'): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the default sorted column (required).
+
+##### `public function useForDestroyConfirmation(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Use the column attribute for the destroy confirmation message generation (required) :
+- At least one column must be selected for destroy confirmation if a destroy route is set.  
+- This method can be called only once.
+
+##### `public function isSortable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Make the column sortable (optional).
+
+##### `public function isSearchable(): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Make the column searchable (optional).
+
+##### `public function setCustomTable(string $customColumnTable): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set a custom table for the column (optional).  
+Calling this method can be useful if the column attribute does not directly belong to the table list model.
+
+##### `public function setColumnDateFormat(string $columnDateFormat): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the format for a date (optional).  
+(Carbon is used to format the date).
+
+##### `public function isButton(string $buttonClass): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the column button class (optional).  
+The attribute is wrapped into a button.
+
+##### `public function setStringLimit(int $stringLimit): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the string value display limitation (optional).  
+Shows "..." when the limit is reached.
+
+##### `public function isLink(Closure $linkClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the link in the method closure (optional).  
+The closure let you manipulate the following attributes : $entity, $column.
+
+##### `public function isCustomValue(Closure $customValueClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set a custom value in the method closure (optional).  
+The closure let you manipulate the following attributes : $entity, $column.
+
+##### `public function isCustomHtmlElement(Closure $customHtmlEltClosure): \Okipa\LaravelBootstrapTableList\TableListColumn`
+Set the HTML element to render in the method closure (optional).  
+The closure let you manipulate the following attributes : $entity, $column.
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -251,23 +281,6 @@ You can customize the table list associated translation by publishing them in yo
 php artisan vendor:publish --tag=tablelist::translations
 ```
 Once you have published them, You will find them in your `resources/lang` directory.
-
-------------------------------------------------------------------------------------------------------------------------
-
-## Customize styles
-If you use `CSS`, just override the package styles.
-
-If you use `SASS`, you can override the following variables **before** the package SASS file import. Check the following example for a bootstrap use :
-```sass
-// bootstrap 3 example
-$highlighted-bg-color: $brand-success; // default #5cb85c
-$highlighted-color: white; // default #fff
-$disabled-bg-color: $gray-dark; // default #333
-$disabled-color: $gray-light; // default #777
-$disabled-opacity: $btn-disabled-opacity; // default 0.7
-$disabled-cursor: not-allowed; // default not-allowed
-@import('[path/to/composer/vendor]/okipa/laravel-bootstrap-table-list/styles/styles')
-```
 
 ------------------------------------------------------------------------------------------------------------------------
 

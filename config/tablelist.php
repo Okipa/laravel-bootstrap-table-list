@@ -10,93 +10,93 @@ return [
         'table' => [
             // table > global
             'container' => [
-                'class' => 'table-responsive-lg',
+                'class' => ['table-responsive-lg'],
             ],
             'item'      => [
-                'class' => 'table-striped table-hover',
+                'class' => ['table-striped', 'table-hover'],
             ],
             'tr'        => [
-                'class' => '',
+                'class' => [],
             ],
             'th'        => [
-                'class' => 'align-middle',
+                'class' => ['align-middle'],
             ],
             'td'        => [
-                'class' => 'align-middle',
+                'class' => ['align-middle'],
             ],
             // table > header
             'thead'     => [
                 'item'        => [
-                    'class' => '',
+                    'class' => [],
                 ],
                 // table > header > options bar
                 'options-bar' => [
                     'tr'                   => [
-                        'class' => '',
+                        'class' => [],
                     ],
                     'td'                   => [
-                        'class' => 'border-0',
+                        'class' => ['border-0'],
                     ],
                     // table > header > options bar > row number selector
                     'rows-number-selector' => [
                         'item'     => [
-                            'class' => 'rows-number-selector col-sm-12 col-lg-4 pb-2',
+                            'class' => ['col-sm-12', 'col-lg-4', 'pb-2'],
                         ],
                         'lines'    => [
                             'container' => [
-                                'class' => '',
+                                'class' => [],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-list"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'validate' => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-check"></i>',
-                                'class' => 'btn btn-link text-success',
+                                'class' => ['btn', 'btn-link', 'text-success'],
                             ],
                         ],
                     ],
                     // table > header > options bar > spacer
                     'spacer'               => [
                         'item' => [
-                            'class' => 'spacer col-sm-2',
+                            'class' => ['spacer', 'col-sm-2'],
                         ],
                     ],
                     // table > header > options bar > search bar
                     'search-bar'           => [
                         'item'     => [
-                            'class' => 'col-sm-12 col-lg-6',
+                            'class' => ['col-sm-12', 'col-lg-6'],
                         ],
                         'search'   => [
                             'container' => [
-                                'class' => '',
+                                'class' => [],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-search"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'validate' => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-check"></i>',
-                                'class' => 'btn btn-link text-success',
+                                'class' => ['btn', 'btn-link', 'text-success'],
                             ],
                         ],
                         'cancel'   => [
                             'container' => [
-                                'class' => 'p-0',
+                                'class' => ['p-0'],
                             ],
                             'item'      => [
                                 'icon'  => '<i class="fas fa-fw fa-times"></i>',
-                                'class' => 'btn btn-link text-danger',
+                                'class' => ['btn', 'btn-link', 'text-danger'],
                             ],
                         ],
                     ],
@@ -104,32 +104,32 @@ return [
                 // table > header > titles bar
                 'titles-bar'  => [
                     'tr'   => [
-                        'class' => '',
+                        'class' => [],
                     ],
                     'th'   => [
-                        'class' => 'border-0',
+                        'class' => ['border-0'],
                     ],
                     // table > header > titles bar > sort
                     'sort' => [
                         'item'     => [
-                            'class' => 'sort',
+                            'class' => ['sort'],
                         ],
                         'asc'      => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort-up"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'desc'     => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort-down"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                         'unsorted' => [
                             'item' => [
                                 'icon'  => '<i class="fas fa-fw fa-sort"></i>',
-                                'class' => '',
+                                'class' => [],
                             ],
                         ],
                     ],
@@ -139,20 +139,20 @@ return [
         // table > body
         'tbody' => [
             'tr'      => [
-                'class' => '',
+                'class' => [],
             ],
             'td'      => [
-                'class' => '',
+                'class' => [],
             ],
             // table > body > edit
             'edit'    => [
                 'container' => [
                     'item' => [
-                        'class' => 'd-inline-block',
+                        'class' => ['d-inline-block'],
                     ],
                 ],
                 'item'      => [
-                    'class' => 'btn btn-link text-primary p-1',
+                    'class' => ['btn', 'btn-link', 'text-primary', 'p-1'],
                     'icon'  => '<i class="fas fa-fw fa-edit"></i>',
                 ],
             ],
@@ -160,11 +160,11 @@ return [
             'destroy' => [
                 'container'               => [
                     'item' => [
-                        'class' => 'd-inline-block',
+                        'class' => ['d-inline-block'],
                     ],
                 ],
                 'item'                    => [
-                    'class' => 'btn btn-link text-danger p-1',
+                    'class' => ['btn', 'btn-link', 'text-danger', 'p-1'],
                     'icon'  => '<i class="fas fa-fw fa-times-circle"></i>',
                 ],
                 'trigger-bootstrap-modal' => true,
@@ -173,26 +173,26 @@ return [
         // table > footer
         'tfoot' => [
             'item'        => [
-                'class' => '',
+                'class' => [],
             ],
             'tr'          => [
-                'class' => '',
+                'class' => [],
             ],
             'td'          => [
-                'class' => '',
+                'class' => [],
             ],
             // table > footer > options bar
             'options-bar' => [
                 'item'       => [
-                    'class' => 'row',
+                    'class' => ['row'],
                 ],
                 // table > footer > options bar > create
                 'create'     => [
                     'container' => [
-                        'class' => 'col-sm-4',
+                        'class' => ['col-sm-4'],
                     ],
                     'item'      => [
-                        'class' => 'btn btn-success',
+                        'class' => ['btn', 'btn-success'],
                         'icon'  => '<i class="fas fa-fw fa-plus-circle"></i>',
                     ],
                 ],
@@ -200,12 +200,12 @@ return [
                 'navigation' => [
                     'with-create-route'    => [
                         'container' => [
-                            'class' => 'col-sm-4 text-center',
+                            'class' => ['col-sm-4', 'text-center'],
                         ],
                     ],
                     'without-create-route' => [
                         'container' => [
-                            'class' => 'col-sm-6 text-left',
+                            'class' => ['col-sm-6', 'text-left'],
                         ],
                     ],
                 ],
@@ -213,12 +213,12 @@ return [
                 'pagination' => [
                     'with-create-route'    => [
                         'container' => [
-                            'class' => 'col-sm-4',
+                            'class' => ['col-sm-4'],
                         ],
                     ],
                     'without-create-route' => [
                         'container' => [
-                            'class' => 'col-sm-6',
+                            'class' => ['col-sm-6'],
                         ],
                     ],
                 ],
@@ -227,38 +227,38 @@ return [
         // modal
         'modal' => [
             'container' => [
-                'class' => 'modal-lg',
+                'class' => ['modal-lg'],
             ],
             'item'      => [
-                'class' => '',
+                'class' => [],
             ],
             'title'     => [
                 'container' => [
-                    'class' => 'text-danger',
+                    'class' => ['text-danger'],
                 ],
                 'item'      => [
-                    'class' => '',
+                    'class' => [],
                     'icon'  => '<i class="fas fa-exclamation-triangle"></i>',
                 ],
             ],
             'body'      => [
                 'item' => [
-                    'class' => '',
+                    'class' => [],
                 ],
             ],
             'footer'    => [
                 'item'    => [
-                    'class' => '',
+                    'class' => [],
                 ],
                 'confirm' => [
                     'item' => [
-                        'class' => 'btn btn-success',
+                        'class' => ['btn', 'btn-success'],
                         'icon'  => '<i class="fas fa-fw fa-check"></i>',
                     ],
                 ],
                 'cancel'  => [
                     'item' => [
-                        'class' => 'btn btn-danger',
+                        'class' => ['btn', 'btn-danger'],
                         'icon'  => '<i class="fas fa-fw fa-ban"></i>',
                     ],
                 ],
