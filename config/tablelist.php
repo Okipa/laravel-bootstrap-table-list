@@ -229,10 +229,10 @@ return [
         // modal
         'modal' => [
             'container' => [
-                'class' => ['modal-lg'],
+                'class' => [],
             ],
             'item'      => [
-                'class' => [],
+                'class' => ['modal-lg'],
             ],
             'title'     => [
                 'container' => [

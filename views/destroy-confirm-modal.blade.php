@@ -10,7 +10,7 @@
             <div {{ classTag('modal-header', config('tablelist.template.modal.title.container.class')) }}>
                 <h5 id="destroy-confirm-modal-label-{{ $entity->id }}"
                     {{ classTag('modal-title', config('tablelist.template.modal.title.item.class')) }}>
-                    {{ config('tablelist.template.modal.title.item.icon') }}
+                    {!! config('tablelist.template.modal.title.item.icon') !!}
                     {{ trans('tablelist::tablelist.modal.title') }}
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
