@@ -16,7 +16,7 @@ Because it is sometimes convenient to build a simple backoffice without sophisti
 
 ## Before use
 
-The V2 of this table is generator is pre-configured for Bootstrap 4 and Fontawesome 5.  
+The V2 of this table list generator is pre-configured for Bootstrap 4 and Fontawesome 5.  
 However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3.  
 If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.  
 If someone is up to give me a functional configuration for bootstrap 3, I will include it in the readme.
