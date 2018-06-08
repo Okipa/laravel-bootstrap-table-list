@@ -198,10 +198,8 @@ class TableListTest extends TableListTestCase
         }
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertContains('disabled', $html);
-        $this->assertContains('class="disabled"', $html);
         $this->assertContains('disabled="disabled"', $html);
         $this->assertEquals(14, substr_count($html, 'disabled'));
-        $this->assertEquals(6, substr_count($html, 'class="disabled"'));
         $this->assertEquals(4, substr_count($html, 'disabled="disabled"'));
     }
 
@@ -233,10 +231,10 @@ class TableListTest extends TableListTestCase
         }
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertContains('test-disabled-custom-class', $html);
-        $this->assertContains('class="disabled"', $html);
+        $this->assertContains('disabled', $html);
         $this->assertContains('disabled="disabled"', $html);
         $this->assertEquals(2, substr_count($html, 'test-disabled-custom-class'));
-        $this->assertEquals(4, substr_count($html, 'class="disabled"'));
+        $this->assertEquals(14, substr_count($html, 'disabled'));
         $this->assertEquals(4, substr_count($html, 'disabled="disabled"'));
     }
 

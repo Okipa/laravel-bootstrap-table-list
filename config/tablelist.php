@@ -135,90 +135,86 @@ return [
                     ],
                 ],
             ],
-        ],
-        // table > body
-        'tbody' => [
-            'tr'      => [
-                'class' => [],
-            ],
-            'td'      => [
-                'class' => [],
-            ],
-            // table > body > edit
-            'edit'    => [
-                'container' => [
-                    'item' => [
-                        'class' => ['d-inline-block'],
-                    ],
+            // table > body
+            'tbody'     => [
+                'tr'      => [
+                    'class' => [],
                 ],
-                'item'      => [
-                    'class' => ['btn', 'btn-link', 'text-primary', 'p-1'],
-                    'icon'  => '<i class="fas fa-fw fa-edit"></i>',
+                'td'      => [
+                    'class' => [],
                 ],
-            ],
-            // table > body > destroy
-            'destroy' => [
-                'container'               => [
-                    'item' => [
-                        'class' => ['d-inline-block'],
-                    ],
-                ],
-                'item'                    => [
-                    'class' => ['btn', 'btn-link', 'text-danger', 'p-1'],
-                    'icon'  => '<i class="fas fa-fw fa-times-circle"></i>',
-                ],
-                'trigger-bootstrap-modal' => true,
-            ],
-        ],
-        // table > footer
-        'tfoot' => [
-            'item'        => [
-                'class' => [],
-            ],
-            'tr'          => [
-                'class' => [],
-            ],
-            'td'          => [
-                'class' => [],
-            ],
-            // table > footer > options bar
-            'options-bar' => [
-                'item'       => [
-                    'class' => ['row'],
-                ],
-                // table > footer > options bar > create
-                'create'     => [
+                // table > body > edit
+                'edit'    => [
                     'container' => [
-                        'class' => ['col-sm-4'],
+                        'class' => ['d-inline-block'],
                     ],
                     'item'      => [
-                        'class' => ['btn', 'btn-success'],
-                        'icon'  => '<i class="fas fa-fw fa-plus-circle"></i>',
+                        'class' => ['btn', 'btn-link', 'text-primary', 'p-1'],
+                        'icon'  => '<i class="fas fa-fw fa-edit"></i>',
                     ],
                 ],
-                // table > footer > options bar > navigation
-                'navigation' => [
-                    'with-create-route'    => [
-                        'container' => [
-                            'class' => ['col-sm-4', 'text-center'],
-                        ],
+                // table > body > destroy
+                'destroy' => [
+                    'container'               => [
+                        'class' => ['d-inline-block'],
                     ],
-                    'without-create-route' => [
-                        'container' => [
-                            'class' => ['col-sm-6', 'text-left'],
-                        ],
+                    'item'                    => [
+                        'class' => ['btn', 'btn-link', 'text-danger', 'p-1'],
+                        'icon'  => '<i class="fas fa-fw fa-times-circle"></i>',
                     ],
+                    'trigger-bootstrap-modal' => true,
                 ],
-                // table > footer > options bar > pagination
-                'pagination' => [
-                    'with-create-route'    => [
+            ],
+            // table > footer
+            'tfoot'     => [
+                'item'        => [
+                    'class' => [],
+                ],
+                'tr'          => [
+                    'class' => [],
+                ],
+                'td'          => [
+                    'class' => [],
+                ],
+                // table > footer > options bar
+                'options-bar' => [
+                    'item'       => [
+                        'class' => ['row'],
+                    ],
+                    // table > footer > options bar > create
+                    'create'     => [
                         'container' => [
                             'class' => ['col-sm-4'],
                         ],
+                        'item'      => [
+                            'class' => ['btn', 'btn-success'],
+                            'icon'  => '<i class="fas fa-fw fa-plus-circle"></i>',
+                        ],
                     ],
-                    'without-create-route' => [
-                        'container' => [
-                            'class' => ['col-sm-6'],
+                    // table > footer > options bar > navigation
+                    'navigation' => [
+                        'with-create-route'    => [
+                            'container' => [
+                                'class' => ['col-sm-4', 'text-center'],
+                            ],
+                        ],
+                        'without-create-route' => [
+                            'container' => [
+                                'class' => ['col-sm-6', 'text-left'],
+                            ],
+                        ],
+                    ],
+                    // table > footer > options bar > pagination
+                    'pagination' => [
+                        'with-create-route'    => [
+                            'container' => [
+                                'class' => ['col-sm-4'],
+                            ],
+                        ],
+                        'without-create-route' => [
+                            'container' => [
+                                'class' => ['col-sm-6'],
+                            ],
                         ],
                     ],
                 ],

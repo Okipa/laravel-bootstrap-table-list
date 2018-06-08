@@ -112,7 +112,7 @@ class HtmlTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
-            $this->assertContains('<form class="edit-' . $user->id . '"', $tbody);
+            $this->assertContains('<form class="edit-' . $user->id, $tbody);
             $this->assertContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
         }
     }
@@ -128,7 +128,7 @@ class HtmlTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
-            $this->assertNotContains('<form class="edit-' . $user->id . '"', $tbody);
+            $this->assertNotContains('<form class="edit-' . $user->id, $tbody);
             $this->assertNotContains('action="http://localhost/users/edit?id=' . $user->id . '"', $tbody);
         }
     }
