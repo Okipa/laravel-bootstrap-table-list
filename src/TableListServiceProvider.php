@@ -22,12 +22,12 @@ class TableListServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../views' => resource_path('views/vendor/tablelist'),
         ], 'tablelist::views');
-        // we load the laravel html helper package
-        // https://github.com/Okipa/laravel-html-helper
-        $this->app->register(HtmlHelperServiceProvider::class);
         $this->mergeConfigFrom(
             __DIR__.'/../config/tablelist.php', 'tablelist'
         );
+        // we load the laravel html helper package
+        // https://github.com/Okipa/laravel-html-helper
+        $this->app->register(HtmlHelperServiceProvider::class);
     }
     
     public function register()
