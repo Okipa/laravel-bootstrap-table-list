@@ -473,18 +473,30 @@ class TableListTest extends TableListTestCase
         $table->render();
     }
 
+    public function testRenderWithColumnWithAttributeAndNoTitle()
+    {
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->isSearchable();
+        $html = $table->render();
+        $this->assertContains('validation.attributes.name', $html);
+    }
+
     /**
      * @expectedException ErrorException
-     * @expectedExceptionMessage  The given column "name" has no defined title. Please define a title by using the
-     *                            "setTitle()" method on the column object.
+     * @expectedExceptionMessage  A column with no given attribute has no defined title. Please define a title for this
+     *                            column using the "setTitle()" method on the column object.
      */
-    public function testRenderWithoutColumnTitle()
+    public function testRenderWithColumnWithNoAttributeAndNoTitle()
     {
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
         ];
         $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name');
+        $table->addColumn();
         $table->render();
     }
 

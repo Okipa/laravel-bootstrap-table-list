@@ -35,6 +35,7 @@ class TableListColumn extends Model
             'tableList'         => $tableList,
             'customColumnTable' => $tableList->getAttribute('tableModel')->getTable(),
             'attribute'         => $attribute,
+            'title'             => $attribute ? trans('validation.attributes.' . $attribute) : null,
         ]);
     }
 

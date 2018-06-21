@@ -85,6 +85,7 @@ That's it !
 ### Notes :
 
 - **Request** : No need to transmit the request to the TableList : it systematically uses the current request given by the `request()` helper to get the number of lines to show and the searching, sorting or pagination data. However, if you need to pass a particular request to the TableList, you can do it with the `setRequest()` method.
+- **Column titles** : By default, the columns titles take the following value : `trans('validation.attributes.[attribute])`. You can set a custom title using the `setTitle()` method, especially when a a column is not related to a table attribute.
 
 ### Advanced usage
 
@@ -115,7 +116,6 @@ $table = app(TableList::class)
     }, ['highlighted', 'bg-success']);
 // we add columns
 $table->addColumn('image')
-    ->setTitle(__('news.label.image'))
     ->isCustomHtmlElement(function ($entity, $column) {
         if ($src = $entity->{$column->attribute}) {
             $imageZoomSrc = $entity->imagePath($src, $column->attribute, 'zoom');
@@ -125,38 +125,33 @@ $table->addColumn('image')
         }
     });
 $table->addColumn('title')
-    ->setTitle(__('news.label.title'))
     ->setCustomTable('news_translations')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
 $table->addColumn('content')
-    ->setTitle(__('news.label.content'))
     ->setCustomTable('news_translations')
     ->setStringLimit(30);
 $table->addColumn('category_id')
-    ->setTitle(__('news.label.category'))
     ->isButton('btn btn-default')
     ->isCustomValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
     });
-$table->addColumn()->setTitle(__('news.label.preview'))
+$table->addColumn()
+    ->setTitle(__('news.label.preview'))
     ->isCustomHtmlElement(function ($entity, $column) {
         $preview_route = route('news.preview', ['id' => $entity->id]);
         $preview_label = __('global.action.preview');
         return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
     });
 $table->addColumn('released_at')
-    ->setTitle(__('news.label.released_at'))
     ->isSortable()
     ->sortByDefault('desc')
     ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('created_at')
-    ->setTitle(__('news.label.created_at'))
     ->isSortable()
     ->setColumnDateFormat('d/m/Y H:i:s');
 $table->addColumn('updated_at')
-    ->setTitle(__('news.label.updated_at'))
     ->isSortable()
     ->setColumnDateFormat('d/m/Y H:i:s');
 ```

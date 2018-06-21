@@ -424,9 +424,8 @@ class TableList extends Model implements Htmlable
                 Schema::getColumnListing($column->getAttribute('customColumnTable'))
             )
         ) {
-            $errorMessage =
-                'The given column attribute "' . $column->getAttribute('attribute') . '" does not exist in the "'
-                . $column->getAttribute('customColumnTable') . '" table.';
+            $errorMessage = 'The given column attribute "' . $column->getAttribute('attribute')
+                            . '" does not exist in the "' . $column->getAttribute('customColumnTable') . '" table.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -442,8 +441,8 @@ class TableList extends Model implements Htmlable
     private function checkColumnTitleDefinition(TableListColumn $column): void
     {
         if (! $column->getAttribute('title')) {
-            $errorMessage = 'The given column "' . $column->getAttribute('attribute')
-                            . '" has no defined title. Please define a title by using the "setTitle()" '
+            $errorMessage = 'A column with no given attribute has no defined title. '
+                            . 'Please define a title for this column using the "setTitle()" '
                             . 'method on the column object.';
             throw new ErrorException($errorMessage);
         }
