@@ -1,7 +1,7 @@
 <tbody {{ classTag(config('tablelist.template.global.tbody.class')) }}>
     @if($table->list->isEmpty())
         <tr {{ classTag(config('tablelist.template.table.tr.class'), config('tablelist.template.table.tbody.tr.class')) }}>
-            <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}
+            <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class'), 'text-center') }}
                 colspan="{{ $table->getColumnsCount() + ($table->isRouteDefined('edit') || $table->isRouteDefined('destroy') ? 1 : 0) }}">
                 <span class="text-info">
                     <i class="fa fa-info-circle" aria-hidden="true"></i>
