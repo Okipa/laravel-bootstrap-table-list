@@ -494,7 +494,7 @@ class TableList extends Model implements Htmlable
                 'sortDir'    => 'nullable|string|in:asc,desc',
             ]);
         if ($validator->fails()) {
-            Log::error($validator->errors());
+            Log::debug($validator->errors());
             $this->getAttribute('request')->merge([
                 'rowsNumber' => $this->getAttribute('rowsNumber')
                     ? $this->getAttribute('rowsNumber')
@@ -503,6 +503,9 @@ class TableList extends Model implements Htmlable
                 'sortBy'     => $this->getAttribute('sortBy'),
                 'sortDir'    => $this->getAttribute('sortDir'),
             ]);
+            Log::debug(
+                'The request has taken the following values : ' . json_encode($this->getAttribute('request')->all())
+            );
         } else {
             $this->setAttribute('rowsNumber', $this->getAttribute('request')->rowsNumber);
             $this->setAttribute('search', $this->getAttribute('request')->search);
