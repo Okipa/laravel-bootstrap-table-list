@@ -16,7 +16,7 @@ return [
         'table' => [
             // table > global
             'container' => [
-                'class' => ['table-responsive-lg'],
+                'class' => ['table-responsive'],
             ],
             'item'      => [
                 'class' => ['table-striped', 'table-hover'],
