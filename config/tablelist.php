@@ -152,7 +152,7 @@ return [
                 // table > body > edit
                 'edit'    => [
                     'container' => [
-                        'class' => ['d-inline-block'],
+                        'class' => ['d-table-cell'],
                     ],
                     'item'      => [
                         'class' => ['btn', 'btn-link', 'text-primary', 'p-1'],
@@ -162,7 +162,7 @@ return [
                 // table > body > destroy
                 'destroy' => [
                     'container'               => [
-                        'class' => ['d-inline-block'],
+                        'class' => ['d-table-cell'],
                     ],
                     'item'                    => [
                         'class' => ['btn', 'btn-link', 'text-danger', 'p-1'],
