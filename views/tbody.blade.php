@@ -25,7 +25,7 @@
                         @endif
                             {{-- string limit --}}
                             @if($stringLimit = $column->stringLimit)
-                                {{ str_limit(strip_tags($entity->{$column->attribute}, $stringLimit)) }}
+                                {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
                             {{-- date format --}}
                             @elseif($columnDateFormat = $column->columnDateFormat)
                                 {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(

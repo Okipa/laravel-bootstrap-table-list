@@ -97,13 +97,6 @@ class TableListColumnTest extends TableListTestCase
         $this->assertEquals('buttonClass', $table->columns->first()->buttonClass);
     }
 
-    public function testSetStringLimit()
-    {
-        $table = app(TableList::class)->setModel(User::class);
-        $table->addColumn('name')->setStringLimit(10);
-        $this->assertEquals(10, $table->columns->first()->stringLimit);
-    }
-
     public function testIsLink()
     {
         $table = app(TableList::class)->setModel(User::class);
