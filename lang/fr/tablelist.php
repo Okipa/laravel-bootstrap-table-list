@@ -22,7 +22,7 @@ return [
     ],
     "modal" => [
         "title"    => "Demande de confirmation",
-        'question' => "Confirmez-vous la suppression de la ligne <b>:entity</b> ?",
+        'question' => "Confirmez-vous la suppression de l'entrée <b>:entity</b> ?",
         "action"   => [
             "confirm" => "Confirmer",
             "cancel"  => "Annuler",

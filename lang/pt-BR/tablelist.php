@@ -22,7 +22,7 @@ return [
     ],
     "modal" => [
         "title"    => "Confirmar requisição",
-        "question" => "Você deseja remover o registro <b>:entity</b> ?",
+        "question" => "Você confirma a exclusão da entrada <b>:entity</b> ?",
         "action"   => [
             "confirm" => "Confirmar",
             "cancel"  => "Cancelar",

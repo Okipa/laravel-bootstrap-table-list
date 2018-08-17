@@ -22,7 +22,7 @@ return [
     ],
     "modal" => [
         "title"    => "Confirmation request",
-        'question' => "Do you confirm the removal of the line <b>:entity</b> ?",
+        'question' => "Do you confirm the removal of the entry <b>:entity</b> ?",
         "action"   => [
             "confirm" => "Confirm",
             "cancel"  => "Cancel",
