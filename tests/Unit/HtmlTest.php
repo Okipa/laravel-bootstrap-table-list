@@ -412,7 +412,7 @@ class HtmlTest extends TableListTestCase
     {
         $this->setRoutes(['users'], ['index']);
         $routes = [
-            'index'   => ['alias' => 'users.index', 'parameters' => []],
+            'index' => ['alias' => 'users.index', 'parameters' => []],
         ];
         $user = $this->createUniqueUser();
         $table = app(TableList::class)->setRoutes($routes)
@@ -473,7 +473,7 @@ class HtmlTest extends TableListTestCase
             $thead
         );
     }
-    
+
     public function testMultipleDestroyConfirmationDisplayedInModalHtml()
     {
         $users = $this->createMultipleUsers(5);
@@ -498,7 +498,76 @@ class HtmlTest extends TableListTestCase
             ]), $tbody);
         }
     }
-    
-    // todo: test is button
-    // todo: test is link
+
+    public function testIsButtonHtml()
+    {
+        $users = $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isButton(['btn', 'btn-primary']);
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<button class="btn btn-primary ' . str_slug($users->first()->name, '-') . '">', $html);
+    }
+
+    public function testIsLinkDefaultHtml()
+    {
+        $users = $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink();
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<a href="' . $users->first()->name . '" title="validation.attributes.name">', $html);
+    }
+
+    public function testIsLinkStringHtml()
+    {
+        $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink('test');
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<a href="test" title="validation.attributes.name">', $html);
+    }
+
+    public function testIsLinkClosureHtml()
+    {
+        $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink(function(){
+            return 'url';
+        });
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<a href="url" title="validation.attributes.name">', $html);
+    }
+
+    public function testSetIconHtml()
+    {
+        $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->setIcon('icon');
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('icon', $html);
+    }
 }

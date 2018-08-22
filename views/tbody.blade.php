@@ -22,8 +22,7 @@
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
                         {{-- link --}}
                         @if($isLink = $column->url)
-                            <a href="{{ $isLink instanceof Closure ? $isLink($entity, $column) : ($isLink !== true ? $isLink : $entity->{$column->attribute}) }}"
-                               title="{{ strip_tags($column->title) }}">
+                            <a href="{{ $isLink instanceof Closure ? $isLink($entity, $column) : ($isLink !== true ? $isLink : $entity->{$column->attribute}) }}" title="{{ strip_tags($column->title) }}">
                                 @endif
                                 {{-- button start--}}
                                 @if($buttonClass = $column->buttonClass)

@@ -219,7 +219,7 @@ Add a column that will be displayed in the table list (required) :
 ### TableListColumn public methods
 
 ##### `public function setTitle(string $title): TableListColumn`
-Set the column title (required).
+Set the column title (optional).
 
 ##### `public function sortByDefault(string $direction = 'asc'): TableListColumn`
 Set the default sorted column (required).
@@ -247,13 +247,17 @@ Set the format for a date (optional).
 Set the column button class (optional).  
 The attribute is wrapped into a button.
 
+##### `public function setIcon(string $icon): TableListColumn`
+Set the icon to display before the value (optional).
+
 ##### `public function setStringLimit(int $stringLimit): TableListColumn`
 Set the string value display limitation (optional).  
 Shows "..." when the limit is reached.
 
 ##### `public function isLink(Closure $linkClosure): TableListColumn`
-Set the link in the method closure (optional).  
-The closure let you manipulate the following attributes : $entity, $column.
+Set the link url.  
+You can declare the link as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
+If no url is declared, the url will be set with the column value.
 
 ##### `public function isCustomValue(Closure $customValueClosure): TableListColumn`
 Set a custom value in the method closure (optional).  
