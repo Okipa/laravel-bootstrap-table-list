@@ -19,7 +19,9 @@
             </div>
             <div {{ classTag('modal-body', config('tablelist.template.modal.body.item.class')) }}>
                 {!! trans('tablelist::tablelist.modal.question', [
-                    'entity' => $entity->{$table->destroyAttribute}
+                    'entity' => $table->destroyAttributes->map(function($attribute) use ($entity) {
+                            return $entity->{$attribute};
+                        })->implode(' ')
                 ]) !!}
             </div>
             <div {{ classTag('modal-footer', config('tablelist.template.modal.footer.item.class')) }}>

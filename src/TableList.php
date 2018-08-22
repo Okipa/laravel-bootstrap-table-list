@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
-use Log;
 use Schema;
 use Validator;
 
@@ -32,7 +31,7 @@ class TableList extends Model implements Htmlable
         'disableLinesClass',
         'highlightLinesClosure',
         'list',
-        'destroyAttribute',
+        'destroyAttributes',
     ];
 
     /**
@@ -47,6 +46,7 @@ class TableList extends Model implements Htmlable
             'request'           => request(),
             'routes'            => [],
             'columns'           => new Collection(),
+            'destroyAttributes' => new Collection(),
         ]);
     }
 
@@ -127,8 +127,8 @@ class TableList extends Model implements Htmlable
         foreach ($requiredRouteKeys as $requiredRouteKey) {
             if (! in_array($requiredRouteKey, $routeKeys)) {
                 throw new ErrorException(
-                    'The required "' . $requiredRouteKey
-                    . '" route key is missing. Please use the setRoutes() method to declare it.'
+                    'The required « ' . $requiredRouteKey
+                    . ' » route key is missing. Use the « setRoutes() » method to declare it.'
                 );
             }
         }
@@ -148,8 +148,8 @@ class TableList extends Model implements Htmlable
         foreach ($routes as $routeKey => $route) {
             if (! in_array($routeKey, $allowedRouteKeys)) {
                 throw new ErrorException(
-                    'The "' . $routeKey . '" key is not an authorized route key (' . implode(', ', $allowedRouteKeys)
-                    . '). Please correct your routes declaration using the setRoutes() method.'
+                    'The « ' . $routeKey . ' » key is not an authorized route key (' . implode(', ', $allowedRouteKeys)
+                    . '). Fix your routes declaration in the « setRoutes() » method.'
                 );
             }
         }
@@ -170,11 +170,11 @@ class TableList extends Model implements Htmlable
             foreach ($requiredRouteParams as $requiredRouteParam) {
                 if (! in_array($requiredRouteParam, array_keys($route))) {
                     throw new ErrorException(
-                        'The "' . $requiredRouteParam . '" key is missing from the "' . $routeKey
-                        . '" route definition. Each route key must contain an array with a (string) "alias" key and a '
-                        . '(array) "parameters" value. Check the following example : '
+                        'The « ' . $requiredRouteParam . ' » key is missing from the « ' . $routeKey
+                        . ' » route definition. Each route key must contain an array with a (string) « alias » key and a '
+                        . '(array) « parameters » value. Check the following example : '
                         . '["index" => ["alias" => "news.index","parameters" => []]. '
-                        . 'Please correct your routes declaration using the setRoutes() method.'
+                        . 'Fix your routes declaration in the « setRoutes() » method.'
                     );
                 }
             }
@@ -281,7 +281,8 @@ class TableList extends Model implements Htmlable
     {
         // we check if the model has correctly been defined
         if (! $this->getAttribute('tableModel') instanceof Model) {
-            $errorMessage = 'The table list model has not been defined or is not an instance of ' . Model::class . '.';
+            $errorMessage = 'The table list model has not been defined or is not an instance of « '
+                            . Model::class . ' ».';
             throw new ErrorException($errorMessage);
         }
         $column = new TableListColumn($this, $attribute);
@@ -322,8 +323,8 @@ class TableList extends Model implements Htmlable
     {
         if (! isset($this->getAttribute('routes')[$routeKey]) || empty($this->getAttribute('routes')[$routeKey])) {
             throw new InvalidArgumentException(
-                'Invalid $routeKey argument for the route() method. The route key «'
-                . $routeKey . '» has not been found in the routes stack.'
+                'Invalid « $routeKey » argument for the « route() » method. The route key « '
+                . $routeKey . ' » has not been found in the routes stack.'
             );
         }
 
@@ -369,27 +370,12 @@ class TableList extends Model implements Htmlable
     public function render(): string
     {
         $this->checkRoutesValidity($this->getAttribute('routes'));
-        $this->checkColumnsValidity();
-        $this->checkDestroyAttributeDefinition();
+        $this->checkIfAtLeastOneColumnIsDeclared();
+        $this->checkDestroyAttributesDefinition();
         $this->handleRequest();
         $this->generateEntitiesListFromQuery();
 
         return view('tablelist::table', ['table' => $this]);
-    }
-
-    /**
-     * Check the given attributes validity in each table list column.
-     *
-     * @return void
-     * @throws ErrorException
-     */
-    private function checkColumnsValidity(): void
-    {
-        $this->checkIfAtLeastOneColumnIsDeclared();
-        $this->getAttribute('columns')->map(function(TableListColumn $column) {
-            $this->checkColumnAttributeExistence($column);
-            $this->checkColumnTitleDefinition($column);
-        });
     }
 
     /**
@@ -400,50 +386,9 @@ class TableList extends Model implements Htmlable
      */
     private function checkIfAtLeastOneColumnIsDeclared(): void
     {
-        if (! count($this->getAttribute('columns'))) {
+        if ($this->getAttribute('columns')->isEmpty()) {
             $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
-                            . '"addColumn" method on the table list object.';
-            throw new ErrorException($errorMessage);
-        }
-    }
-
-    /**
-     * Check that the column attribute exists.
-     *
-     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkColumnAttributeExistence(TableListColumn $column): void
-    {
-        if (
-            ! is_null($column->getAttribute('attribute'))
-            && ! in_array(
-                $column->getAttribute('attribute'),
-                Schema::getColumnListing($column->getAttribute('customColumnTable'))
-            )
-        ) {
-            $errorMessage = 'The given column attribute "' . $column->getAttribute('attribute')
-                            . '" does not exist in the "' . $column->getAttribute('customColumnTable') . '" table.';
-            throw new ErrorException($errorMessage);
-        }
-    }
-
-    /**
-     * Check that the column title has been defined.
-     *
-     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkColumnTitleDefinition(TableListColumn $column): void
-    {
-        if (! $column->getAttribute('title')) {
-            $errorMessage = 'A column with no given attribute has no defined title. '
-                            . 'Please define a title for this column using the "setTitle()" '
-                            . 'method on the column object.';
+                            . '« addColumn() » method on the table list object.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -454,12 +399,11 @@ class TableList extends Model implements Htmlable
      * @return void
      * @throws \ErrorException
      */
-    private function checkDestroyAttributeDefinition(): void
+    private function checkDestroyAttributesDefinition(): void
     {
-        if ($this->isRouteDefined('destroy') && ! $this->getAttribute('destroyAttribute')) {
-            $errorMessage = 'No column attribute has been choosed for the destroy confirmation. '
-                            . 'Please define an attribute by using the "useForDestroyConfirmation()" '
-                            . 'method on a column object.';
+        if ($this->isRouteDefined('destroy') && $this->getAttribute('destroyAttributes')->isEmpty()) {
+            $errorMessage = 'No columns have been chosen for the destroy confirmation. '
+                            . 'Use the « useForDestroyConfirmation() » method on column objects to define them.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -486,15 +430,15 @@ class TableList extends Model implements Htmlable
      */
     private function handleRequest(): void
     {
-        $validator =
-            Validator::make($this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+        $validator = Validator::make(
+            $this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
                 'rowsNumber' => 'required|numeric',
                 'search'     => 'nullable|string',
                 'sortBy'     => 'nullable|string|in:' . $this->getAttribute('columns')->implode('attribute', ','),
                 'sortDir'    => 'nullable|string|in:asc,desc',
-            ]);
+            ]
+        );
         if ($validator->fails()) {
-            Log::debug($validator->errors());
             $this->getAttribute('request')->merge([
                 'rowsNumber' => $this->getAttribute('rowsNumber')
                     ? $this->getAttribute('rowsNumber')
@@ -503,9 +447,6 @@ class TableList extends Model implements Htmlable
                 'sortBy'     => $this->getAttribute('sortBy'),
                 'sortDir'    => $this->getAttribute('sortDir'),
             ]);
-            Log::debug(
-                'The request has taken the following values : ' . json_encode($this->getAttribute('request')->all())
-            );
         } else {
             $this->setAttribute('rowsNumber', $this->getAttribute('request')->rowsNumber);
             $this->setAttribute('search', $this->getAttribute('request')->search);
@@ -515,13 +456,13 @@ class TableList extends Model implements Htmlable
     /**
      * Generate the entities list.
      *
-     * @throws ErrorException
      * @return void
      */
     private function generateEntitiesListFromQuery(): void
     {
         $query = $this->getAttribute('tableModel')->query();
         $this->applyQueryClosure($query);
+        $this->checkColumnsValidity($query);
         $this->applySearchClauses($query);
         $this->applySortClauses($query);
         $this->paginateList($query);
@@ -543,6 +484,57 @@ class TableList extends Model implements Htmlable
     }
 
     /**
+     * Check the given attributes validity in each table list column.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return void
+     */
+    private function checkColumnsValidity(Builder $query): void
+    {
+        $this->getAttribute('columns')->map(function(TableListColumn $column) use ($query) {
+            $this->checkColumnAttributeExistence($column);
+        });
+    }
+
+    /**
+     * Check that the column attribute exists.
+     *
+     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
+     *
+     * @return void
+     * @throws \ErrorException
+     */
+    private function checkColumnAttributeExistence(TableListColumn $column): void
+    {
+        $isAlias = $column->getAttribute('columnDatabaseAlias') ?: false;
+        $attribute = $isAlias ? $column->getAttribute('columnDatabaseAlias') : $column->getAttribute('attribute');
+        if ($isAlias && ! $column->getAttribute('attribute')) {
+            $errorMessage = 'No defined attribute for the column with the database alias « ' . $attribute . ' ».';
+            throw new ErrorException($errorMessage);
+        }
+        $tableColumns = Schema::getColumnListing($column->getAttribute('customColumnTable'));
+        $isSortable = $column->getAttribute('isSortableColumn') ?: false;
+        $isSearchable = in_array(
+            $column->getAttribute('attribute'),
+            $this->getAttribute('searchableColumns')->pluck('attribute')->toArray()
+        );
+        if (! $attribute && $isSortable) {
+            $errorMessage = 'A sortable column has no defined attribute. Define a column attribute for each sortable '
+                            . 'columns by setting a string parameter in the « addColumn() » method.';
+            throw new ErrorException($errorMessage);
+        }
+        if ($attribute && ! in_array($attribute, $tableColumns) && $isSearchable) {
+            $errorMessage = 'The given ' . ($isSearchable ? 'searchable' : '')
+                            . ' column ' . ($isAlias ? 'database alias' : 'attribute') . ' « ' . $attribute
+                            . ' » does not exist in the « ' . $column->getAttribute('customColumnTable')
+                            . ' » table. Set the correct column-related table and alias with the '
+                            . '« setCustomTable() » method.';
+            throw new ErrorException($errorMessage);
+        }
+    }
+
+    /**
      * Apply search clauses
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -556,11 +548,14 @@ class TableList extends Model implements Htmlable
                 &$query,
                 $searched
             ) {
-                $attribute = $column->getAttribute('customColumnTable') . '.' . $column->getAttribute('attribute');
+                $table = $column->getAttribute('customColumnTable');
+                $attribute = $column->getAttribute('columnDatabaseAlias')
+                    ? $column->getAttribute('columnDatabaseAlias')
+                    : $column->getAttribute('attribute');
                 if ($key > 0) {
-                    $query->orWhere($attribute, 'like', '%' . $searched . '%');
+                    $query->orWhere($table . '.' . $attribute, 'like', '%' . $searched . '%');
                 } else {
-                    $query->where($attribute, 'like', '%' . $searched . '%');
+                    $query->where($table . '.' . $attribute, 'like', '%' . $searched . '%');
                 }
             });
         }
@@ -572,19 +567,15 @@ class TableList extends Model implements Htmlable
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return void
-     * @throws \ErrorException
      */
     private function applySortClauses(Builder $query): void
     {
-        if (
-            ($sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy')))
-            && ($sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir')))
-        ) {
+        $sortBy = $sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy'));
+        $sortDir = $sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir'));
+        if ($sortBy && $sortDir) {
             $query->orderBy($sortBy, $sortDir);
-        } else {
-            $errorMessage = 'No default column has been selected for the table sort. '
-                            . 'Please define a column sorted by default by using the "sortByDefault()" method.';
-            throw new ErrorException($errorMessage);
+            $this->setAttribute('sortBy', $sortBy);
+            $this->setAttribute('sortDir', $sortDir);
         }
     }
 

@@ -18,38 +18,45 @@
             $entity->highlighted ? $table->highlightLinesClass : null
             ) }}>
                 @foreach($table->columns as $column)
+                    {{--{{ dd($entity->toArray(), $column->attribute) }}--}}
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
-                        {{-- button start--}}
-                        @if($buttonClass = $column->buttonClass)
-                            <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}))) }}>
-                        @endif
-                            {{-- string limit --}}
-                            @if($stringLimit = $column->stringLimit)
-                                {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
-                            {{-- date format --}}
-                            @elseif($columnDateFormat = $column->columnDateFormat)
-                                {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
-                                    'Y-m-d H:i:s', $entity->{$column->attribute}
-                                )->format($columnDateFormat) : null }}
-                            {{-- link --}}
-                            @elseif($linkClosure = $column->linkClosure)
-                                <a href="{{ $linkClosure($entity, $column) }}"
-                                   title="{{ strip_tags($entity->{$column->attribute}) }}">
-                                    {!! $entity->{$column->attribute} !!}
-                                </a>
-                            {{-- custom value --}}
-                            @elseif($customValueClosure = $column->customValueClosure)
-                                {{ $customValueClosure($entity, $column) }}
-                            {{-- custom html element --}}
-                            @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
-                                {!! $customHtmlEltClosure($entity, $column) !!}
-                            {{-- basic value --}}
-                            @else
-                                {!! $entity->{$column->attribute} !!}
-                            @endif
-                        {{-- button end --}}
-                        @if($buttonClass)
-                            </button>
+                        {{-- link --}}
+                        @if($isLink = $column->url)
+                            <a href="{{ $isLink instanceof Closure ? $isLink($entity, $column) : ($isLink !== true ? $isLink : $entity->{$column->attribute}) }}"
+                               title="{{ strip_tags($column->title) }}">
+                                @endif
+                                {{-- button start--}}
+                                @if($buttonClass = $column->buttonClass)
+                                    <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}), '-')) }}>
+                                        @endif
+                                        {{-- icon--}}
+                                        @if($icon = $column->icon)
+                                            {!! $icon !!}
+                                        @endif
+                                        {{-- string limit --}}
+                                        @if($stringLimit = $column->stringLimit)
+                                            {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
+                                            {{-- date format --}}
+                                        @elseif($columnDateFormat = $column->columnDateFormat)
+                                            {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
+                                                'Y-m-d H:i:s', $entity->{$column->attribute}
+                                            )->format($columnDateFormat) : null }}
+                                            {{-- custom value --}}
+                                        @elseif($customValueClosure = $column->customValueClosure)
+                                            {{ $customValueClosure($entity, $column) }}
+                                            {{-- custom html element --}}
+                                        @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
+                                            {!! $customHtmlEltClosure($entity, $column) !!}
+                                            {{-- basic value --}}
+                                        @else
+                                            {!! $entity->{$column->attribute} !!}
+                                        @endif
+                                        {{-- button end --}}
+                                        @if($buttonClass)
+                                    </button>
+                                @endif
+                                @if($isLink)
+                            </a>
                         @endif
                     </td>
                 @endforeach
@@ -63,14 +70,14 @@
                                       role="form"
                                       method="GET"
                                       action="{{ $table->getRoute('edit', ['id' => $entity->id]) }}">
-                            @endif
+                                    @endif
                                     <button type="submit"
                                             {{ classTag(config('tablelist.template.table.tbody.edit.item.class'), $entity->disabled ? 'disabled' : null) }}
                                             title="{{ trans('tablelist::tablelist.tbody.action.edit') }}"
                                             @if($entity->disabled)disabled="disabled" @endisset>
                                         {!! config('tablelist.template.table.tbody.edit.item.icon') !!}
                                     </button>
-                            @if(! $entity->disabled)
+                                    @if(! $entity->disabled)
                                 </form>
                             @endif
                         @endif
@@ -83,7 +90,7 @@
                                       action="{{ $table->getRoute('destroy', ['id' => $entity->id]) }}">
                                     {!! csrf_field() !!}
                                     <input type="hidden" name="_method" value="DELETE">
-                            @endif
+                                    @endif
                                     <button type="button"
                                             {{ classTag(config('tablelist.template.table.tbody.destroy.item.class'), $entity->disabled ? 'disabled' : null) }}
                                             title="{{ trans('tablelist::tablelist.tbody.action.destroy') }}"
@@ -94,10 +101,10 @@
                                             @if($entity->disabled)disabled="disabled" @endif>
                                         {!! config('tablelist.template.table.tbody.destroy.item.icon') !!}
                                     </button>
-                            @if(! $entity->disabled)
-                                    @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
-                                        @include('tablelist::destroy-confirm-modal')
-                                    @endif
+                                    @if(! $entity->disabled)
+                                        @if(config('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal'))
+                                            @include('tablelist::destroy-confirm-modal')
+                                        @endif
                                 </form>
                             @endif
                         @endif

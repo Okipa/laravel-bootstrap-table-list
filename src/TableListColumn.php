@@ -9,18 +9,25 @@ use InvalidArgumentException;
 
 class TableListColumn extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'tableList',
         'customColumnTable',
+        'columnDatabaseAlias',
         'attribute',
         'isSortableColumn',
         'title',
         'columnDateFormat',
         'buttonClass',
         'stringLimit',
-        'linkClosure',
+        'url',
         'customValueClosure',
         'customHtmlEltClosure',
+        'icon',
     ];
 
     /**
@@ -40,7 +47,7 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the column title (required).
+     * Set the column title (optional).
      *
      * @param string|null $title
      *
@@ -65,16 +72,16 @@ class TableListColumn extends Model
     {
         // we check if the method has already been called
         if ($this->getAttribute('tableList')->sortBy || $this->getAttribute('tableList')->sortDir) {
-            $errorMessage = 'The sortByDefault() method has already been called. '
-                            . 'You can sort a column by default only once.';
+            $errorMessage = 'The « sortByDefault() » method has already been called. '
+                            . 'You only can sort a column by default once.';
             throw new ErrorException($errorMessage);
         }
         // we set the sort attribute
         $this->getAttribute('tableList')->sortBy = $this->getAttribute('attribute');
         // we set the sort direction
         $acceptedDirections = ['asc', 'desc'];
-        $errorMessage = 'Invalid $direction argument for sortByAttribute() method. Has to be "asc" or "desc". "'
-                        . $direction . '" given.';
+        $errorMessage = 'Invalid « $direction » argument for « sortByAttribute() » method. Has to be « asc » or '
+                        . '« desc ». « ' . $direction . ' » given.';
         if (! in_array($direction, $acceptedDirections)) {
             throw new InvalidArgumentException($errorMessage);
         }
@@ -92,12 +99,13 @@ class TableListColumn extends Model
      */
     public function useForDestroyConfirmation(): TableListColumn
     {
-        if ($this->getAttribute('tableList')->destroyAttribute) {
-            $errorMessage = 'The useForDestroyConfirmation() method has already been called. '
-                            . 'You can define a column attribute for the destroy confirmation only once.';
+        if (! $this->getAttribute('attribute')) {
+            $errorMessage = 'You cannot use the « useForDestroyConfirmation() » method on a column which have no '
+                            . 'defined attribute. Define a column attribute by setting '
+                            . 'a string parameter in the « addColumn() » method.';
             throw new ErrorException($errorMessage);
         }
-        $this->getAttribute('tableList')->setAttribute('destroyAttribute', $this->getAttribute('attribute'));
+        $this->getAttribute('tableList')->getAttribute('destroyAttributes')->add($this->getAttribute('attribute'));
 
         return $this;
     }
@@ -109,7 +117,7 @@ class TableListColumn extends Model
      */
     public function isSortable(): TableListColumn
     {
-        $this->getAttribute('tableList')->sortableColumns->add($this);
+        $this->getAttribute('tableList')->getAttribute('sortableColumns')->add($this);
         $this->setAttribute('isSortableColumn', true);
 
         return $this;
@@ -122,22 +130,24 @@ class TableListColumn extends Model
      */
     public function isSearchable(): TableListColumn
     {
-        $this->getAttribute('tableList')->searchableColumns->add($this);
+        $this->getAttribute('tableList')->getAttribute('searchableColumns')->add($this);
 
         return $this;
     }
 
     /**
-     * Set a custom table for the column (optional).
-     * Calling this method can be useful if the column attribute does not directly belong to the table list model.
+     * Set a custom related table for the column and a facultative alias for the column attribute (optional).
+     * Calling this method is mandatory if you define your column as searchable and if the column attribute does not
+     * directly belong to the table list model.
      *
      * @param string $customColumnTable
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setCustomTable(string $customColumnTable): TableListColumn
+    public function setCustomTable(string $customColumnTable, string $columnDatabaseAlias = null): TableListColumn
     {
         $this->setAttribute('customColumnTable', $customColumnTable);
+        $this->setAttribute('columnDatabaseAlias', $columnDatabaseAlias);
 
         return $this;
     }
@@ -161,11 +171,11 @@ class TableListColumn extends Model
      * Set the column button class (optional).
      * The attribute is wrapped into a button.
      *
-     * @param string $buttonClass
+     * @param array $buttonClass
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isButton(string $buttonClass): TableListColumn
+    public function isButton(array $buttonClass = []): TableListColumn
     {
         $this->setAttribute('buttonClass', $buttonClass);
 
@@ -188,16 +198,32 @@ class TableListColumn extends Model
     }
 
     /**
-     * Set the link in the method closure (optional).
-     * The closure let you manipulate the following attributes : $entity, $column.
+     * Set the icon to display before the value (optional).
      *
-     * @param Closure $linkClosure
+     * @param string $icon
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function isLink(Closure $linkClosure): TableListColumn
+    public function setIcon(string $icon): TableListColumn
     {
-        $this->setAttribute('linkClosure', $linkClosure);
+        $this->setAttribute('icon', $icon);
+
+        return $this;
+    }
+
+    /**
+     * Set the link url.
+     * You can declare the link as a string or as a closure which will let you manipulate the following attributes :
+     * $entity, $column.
+     * If no url is declared, the url will be set with the column value.
+     *
+     * @param null $url
+     *
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
+     */
+    public function isLink($url = null): TableListColumn
+    {
+        $this->setAttribute('url', $url ?: true);
 
         return $this;
     }
