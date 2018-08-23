@@ -16,9 +16,9 @@ Because it is sometimes convenient to build a simple backoffice without sophisti
 
 ## Before use
 
-The V2 of this table list generator is pre-configured for **Bootstrap 4** and **Fontawesome 5**.  
-However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3 and other versions of FA ot other icon libraries (or not icon at all).  
-If the configuration is not precise enought for you, you definitely should [publish the templates and customize them](#customize-templates) in your project.
+This V2 of this table list generator is pre-configured for **Bootstrap 4** and **Fontawesome 5**.  
+However, this package is deeply configurable and it is possible to easily set it up for Bootstrap 3 and other versions of FA or other icon libraries (or not icon at all).  
+If the configuration does not give enough possibilities for your customization needs, you definitely should [publish the templates and customize them](#customize-templates) in your project.
 
 **Notes:**  
 If someone is motivated to give me a functional configuration for **bootstrap 3**, I will include it in the readme. It could interest some developers.  
