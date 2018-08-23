@@ -217,7 +217,7 @@ class TableListColumn extends Model
      * $entity, $column.
      * If no url is declared, it will be set with the column value.
      *
-     * @param null/string/Closure $url
+     * @param string|Closure|null $url
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
