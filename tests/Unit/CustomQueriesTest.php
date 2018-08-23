@@ -142,6 +142,36 @@ class SetCustomTableTest extends TableListTestCase
         }
     }
 
+    public function testPaginateSearchOnOtherTableField()
+    {
+        $users = $this->createMultipleUsers(1);
+        $this->createMultipleCompanies(10);
+        $this->setRoutes(['companies'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'companies.index', 'parameters' => []],
+        ];
+        $searchedValue = $users->first()->name;
+        $customRequest = app(Request::class);
+        $customRequest->merge([
+            'rowsNumber' => 5,
+            'search'     => $searchedValue,
+            'page'       => 2,
+        ]);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(Company::class)
+            ->addQueryInstructions(function($query) {
+                $query->select('companies_test.*');
+                $query->addSelect('users_test.name as owner');
+                $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
+            })
+            ->setRequest($customRequest);
+        $table->addColumn('owner')->setCustomTable('users_test', 'name')->isSearchable();
+        $table->render();
+        foreach (App(Company::class)->paginate(5) as $key => $company){
+            $this->assertEquals($company->name, $table->list->toArray()['data'][$key]['name']);
+        }
+    }
+
     public function testSortOnOtherTableFieldWithoutCustomTableDeclaration()
     {
         $this->createMultipleUsers(5);
@@ -167,6 +197,40 @@ class SetCustomTableTest extends TableListTestCase
         $table->addColumn('owner')->isSortable();
         $table->render();
         foreach ($companies->load('owner')->sortByDesc('owner.name')->values() as $key => $company) {
+            $this->assertEquals($company->owner->name, $table->list->toArray()['data'][$key]['owner']);
+        }
+    }
+
+    public function testPaginateSortOnOtherTableField()
+    {
+        $this->createMultipleUsers(5);
+        $this->createMultipleCompanies(10);
+        $this->setRoutes(['companies'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'companies.index', 'parameters' => []],
+        ];
+        $customRequest = app(Request::class);
+        $customRequest->merge([
+            'rowsNumber' => 5,
+            'sortBy'     => 'owner',
+            'sortDir'    => 'desc',
+        ]);
+        $table = app(TableList::class)->setRoutes($routes)
+            ->setModel(Company::class)
+            ->addQueryInstructions(function($query) {
+                $query->select('companies_test.*');
+                $query->addSelect('users_test.name as owner');
+                $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
+            })
+            ->setRequest($customRequest);
+        $table->addColumn('owner')->isSortable();
+        $table->render();
+        $paginatedCompanies = Company::join('users_test', 'users_test.id', '=', 'companies_test.owner_id')
+            ->orderBy('users_test.name', 'desc')
+            ->select('companies_test.*')
+            ->with('owner')
+            ->paginate(5);
+        foreach ($paginatedCompanies as $key => $company) {
             $this->assertEquals($company->owner->name, $table->list->toArray()['data'][$key]['owner']);
         }
     }
