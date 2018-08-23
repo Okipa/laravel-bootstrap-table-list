@@ -4,16 +4,11 @@ namespace Okipa\LaravelBootstrapTableList\Tests\Unit;
 
 use Illuminate\Http\Request;
 use Okipa\LaravelBootstrapTableList\TableList;
-use Okipa\LaravelBootstrapTableList\Test\Fakers\RoutesFaker;
-use Okipa\LaravelBootstrapTableList\Test\Fakers\UsersFaker;
 use Okipa\LaravelBootstrapTableList\Test\Models\User;
 use Okipa\LaravelBootstrapTableList\Test\TableListTestCase;
 
 class ConfigTest extends TableListTestCase
 {
-    use RoutesFaker;
-    use UsersFaker;
-
     public function testConfigStructure()
     {
         // tablelist
@@ -821,7 +816,7 @@ class ConfigTest extends TableListTestCase
         $this->assertEquals(3, substr_count($html, $itemIcon));
     }
 
-    public function testDestroyActionHtmlWithModal()
+    public function testSetModalOnDestroyRouteConfig()
     {
         config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', true);
         $users = $this->createMultipleUsers(5);
@@ -835,13 +830,11 @@ class ConfigTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
-            $this->assertContains('<form class="destroy-' . $user->id, $tbody);
-            $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
             $this->assertContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
         }
     }
 
-    public function testDestroyActionHtmlWithoutModal()
+    public function testSetNoModalOnDestroyRouteConfig()
     {
         config()->set('tablelist.template.table.tbody.destroy.trigger-bootstrap-modal', false);
         $users = $this->createMultipleUsers(5);
@@ -855,8 +848,6 @@ class ConfigTest extends TableListTestCase
         $table->render();
         $tbody = view('tablelist::tbody', ['table' => $table])->render();
         foreach ($users as $user) {
-            $this->assertContains('<form class="destroy-' . $user->id, $tbody);
-            $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
             $this->assertNotContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
         }
     }

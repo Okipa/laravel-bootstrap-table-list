@@ -3,11 +3,17 @@
 namespace Okipa\LaravelBootstrapTableList\Test;
 
 use Faker\Factory;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\CompaniesFaker;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\RoutesFaker;
+use Okipa\LaravelBootstrapTableList\Test\Fakers\UsersFaker;
 use Orchestra\Testbench\TestCase;
 
 abstract class TableListTestCase extends TestCase
 {
     protected $faker;
+    use RoutesFaker;
+    use UsersFaker;
+    use CompaniesFaker;
 
     /**
      * Define environment setup.

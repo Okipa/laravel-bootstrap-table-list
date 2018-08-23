@@ -9,12 +9,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use InvalidArgumentException;
-use Schema;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use Okipa\LaravelBootstrapTableList\Traits\ColumnsValidationChecks;
+use Okipa\LaravelBootstrapTableList\Traits\RoutesValidationChecks;
 
 class TableList extends Model implements Htmlable
 {
+    use RoutesValidationChecks;
+    use ColumnsValidationChecks;
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'tableModel',
         'rowsNumber',
@@ -92,93 +99,6 @@ class TableList extends Model implements Htmlable
         $this->setAttribute('routes', $routes);
 
         return $this;
-    }
-
-    /**
-     * Check routes validity.
-     *
-     * @param array $routes
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkRoutesValidity(array $routes): void
-    {
-        $requiredRouteKeys = ['index'];
-        $optionalRouteKeys = ['create', 'edit', 'destroy'];
-        $allowedRouteKeys = array_merge($requiredRouteKeys, $optionalRouteKeys);
-        $this->checkRequiredRoutesValidity($routes, $requiredRouteKeys);
-        $this->checkAllowedRoutesValidity($routes, $allowedRouteKeys);
-        $this->checkRoutesStructureValidity($routes);
-    }
-
-    /**
-     * Check required routes validity.
-     *
-     * @param array $routes
-     * @param array $requiredRouteKeys
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkRequiredRoutesValidity(array $routes, array $requiredRouteKeys): void
-    {
-        $routeKeys = array_keys($routes);
-        foreach ($requiredRouteKeys as $requiredRouteKey) {
-            if (! in_array($requiredRouteKey, $routeKeys)) {
-                throw new ErrorException(
-                    'The required « ' . $requiredRouteKey
-                    . ' » route key is missing. Use the « setRoutes() » method to declare it.'
-                );
-            }
-        }
-    }
-
-    /**
-     * Check allowed routes validity.
-     *
-     * @param array $routes
-     * @param array $allowedRouteKeys
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkAllowedRoutesValidity(array $routes, array $allowedRouteKeys): void
-    {
-        foreach ($routes as $routeKey => $route) {
-            if (! in_array($routeKey, $allowedRouteKeys)) {
-                throw new ErrorException(
-                    'The « ' . $routeKey . ' » key is not an authorized route key (' . implode(', ', $allowedRouteKeys)
-                    . '). Fix your routes declaration in the « setRoutes() » method.'
-                );
-            }
-        }
-    }
-
-    /**
-     * Check routes structure validity.
-     *
-     * @param array $routes
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkRoutesStructureValidity(array $routes): void
-    {
-        $requiredRouteParams = ['alias', 'parameters'];
-        foreach ($routes as $routeKey => $route) {
-            foreach ($requiredRouteParams as $requiredRouteParam) {
-                if (! in_array($requiredRouteParam, array_keys($route))) {
-                    throw new ErrorException(
-                        'The « ' . $requiredRouteParam . ' » key is missing from the « ' . $routeKey
-                        . ' » route definition. Each route key must contain an array with a (string) « alias » key and a '
-                        . '(array) « parameters » value. Check the following example : '
-                        . '["index" => ["alias" => "news.index","parameters" => []]. '
-                        . 'Fix your routes declaration in the « setRoutes() » method.'
-                    );
-                }
-            }
-        }
     }
 
     /**
@@ -279,12 +199,7 @@ class TableList extends Model implements Htmlable
      */
     public function addColumn(string $attribute = null): TableListColumn
     {
-        // we check if the model has correctly been defined
-        if (! $this->getAttribute('tableModel') instanceof Model) {
-            $errorMessage = 'The table list model has not been defined or is not an instance of « '
-                            . Model::class . ' ».';
-            throw new ErrorException($errorMessage);
-        }
+        $this->checkModelIsDefined();
         $column = new TableListColumn($this, $attribute);
         $this->getAttribute('columns')[] = $column;
 
@@ -321,15 +236,12 @@ class TableList extends Model implements Htmlable
      */
     public function getRoute(string $routeKey, array $params = []): string
     {
-        if (! isset($this->getAttribute('routes')[$routeKey]) || empty($this->getAttribute('routes')[$routeKey])) {
-            throw new InvalidArgumentException(
-                'Invalid « $routeKey » argument for the « route() » method. The route key « '
-                . $routeKey . ' » has not been found in the routes stack.'
-            );
-        }
+        $this->checkRouteIsDefined($routeKey);
 
-        return route($this->getAttribute('routes')[$routeKey]['alias'],
-            array_merge($this->getAttribute('routes')[$routeKey]['parameters'], $params));
+        return route(
+            $this->getAttribute('routes')[$routeKey]['alias'],
+            array_merge($this->getAttribute('routes')[$routeKey]['parameters'], $params)
+        );
     }
 
     /**
@@ -376,51 +288,6 @@ class TableList extends Model implements Htmlable
         $this->generateEntitiesListFromQuery();
 
         return view('tablelist::table', ['table' => $this]);
-    }
-
-    /**
-     * Check if at least one column is declared.
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkIfAtLeastOneColumnIsDeclared(): void
-    {
-        if ($this->getAttribute('columns')->isEmpty()) {
-            $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
-                            . '« addColumn() » method on the table list object.';
-            throw new ErrorException($errorMessage);
-        }
-    }
-
-    /**
-     * Check that a destroy attribute has been defined.
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkDestroyAttributesDefinition(): void
-    {
-        if ($this->isRouteDefined('destroy') && $this->getAttribute('destroyAttributes')->isEmpty()) {
-            $errorMessage = 'No columns have been chosen for the destroy confirmation. '
-                            . 'Use the « useForDestroyConfirmation() » method on column objects to define them.';
-            throw new ErrorException($errorMessage);
-        }
-    }
-
-    /**
-     * Check if a route is defined from its key.
-     *
-     * @param string $routeKey
-     *
-     * @return bool
-     */
-    public function isRouteDefined(string $routeKey): bool
-    {
-        return (
-            isset($this->getAttribute('routes')[$routeKey])
-            || ! empty($this->getAttribute('routes')[$routeKey])
-        );
     }
 
     /**
@@ -493,45 +360,10 @@ class TableList extends Model implements Htmlable
     private function checkColumnsValidity(Builder $query): void
     {
         $this->getAttribute('columns')->map(function(TableListColumn $column) use ($query) {
-            $this->checkColumnAttributeExistence($column);
+            $this->checkColumnAttributeIsDeclaredWithAlias($column);
+            $this->checkSortableColumnHasAttribute($column);
+            $this->checkAttributeAttributeOrAliasFieldDoesExistRelatedTable($column);
         });
-    }
-
-    /**
-     * Check that the column attribute exists.
-     *
-     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkColumnAttributeExistence(TableListColumn $column): void
-    {
-        $isAlias = $column->getAttribute('columnDatabaseAlias') ?: false;
-        $attribute = $isAlias ? $column->getAttribute('columnDatabaseAlias') : $column->getAttribute('attribute');
-        if ($isAlias && ! $column->getAttribute('attribute')) {
-            $errorMessage = 'No defined attribute for the column with the database alias « ' . $attribute . ' ».';
-            throw new ErrorException($errorMessage);
-        }
-        $tableColumns = Schema::getColumnListing($column->getAttribute('customColumnTable'));
-        $isSortable = $column->getAttribute('isSortableColumn') ?: false;
-        $isSearchable = in_array(
-            $column->getAttribute('attribute'),
-            $this->getAttribute('searchableColumns')->pluck('attribute')->toArray()
-        );
-        if (! $attribute && $isSortable) {
-            $errorMessage = 'A sortable column has no defined attribute. Define a column attribute for each sortable '
-                            . 'columns by setting a string parameter in the « addColumn() » method.';
-            throw new ErrorException($errorMessage);
-        }
-        if ($attribute && ! in_array($attribute, $tableColumns) && $isSearchable) {
-            $errorMessage = 'The given ' . ($isSearchable ? 'searchable' : '')
-                            . ' column ' . ($isAlias ? 'database alias' : 'attribute') . ' « ' . $attribute
-                            . ' » does not exist in the « ' . $column->getAttribute('customColumnTable')
-                            . ' » table. Set the correct column-related table and alias with the '
-                            . '« setCustomTable() » method.';
-            throw new ErrorException($errorMessage);
-        }
     }
 
     /**
@@ -619,5 +451,17 @@ class TableList extends Model implements Htmlable
 
             return $model;
         });
+    }
+
+    /**
+     * Check if a route is defined from its key.
+     *
+     * @param string $routeKey
+     *
+     * @return bool
+     */
+    public function isRouteDefined(string $routeKey): bool
+    {
+        return (isset($this->getAttribute('routes')[$routeKey]) || ! empty($this->getAttribute('routes')[$routeKey]));
     }
 }
