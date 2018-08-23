@@ -351,22 +351,6 @@ class TableList extends Model implements Htmlable
     }
 
     /**
-     * Check the given attributes validity in each table list column.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return void
-     */
-    private function checkColumnsValidity(Builder $query): void
-    {
-        $this->getAttribute('columns')->map(function(TableListColumn $column) use ($query) {
-            $this->checkColumnAttributeIsDeclaredWithAlias($column);
-            $this->checkSortableColumnHasAttribute($column);
-            $this->checkAttributeAttributeOrAliasFieldDoesExistRelatedTable($column);
-        });
-    }
-
-    /**
      * Apply search clauses
      *
      * @param \Illuminate\Database\Eloquent\Builder $query

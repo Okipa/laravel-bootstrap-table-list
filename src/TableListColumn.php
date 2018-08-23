@@ -215,9 +215,9 @@ class TableListColumn extends Model
      * Set the link url.
      * You can declare the link as a string or as a closure which will let you manipulate the following attributes :
      * $entity, $column.
-     * If no url is declared, the url will be set with the column value.
+     * If no url is declared, it will be set with the column value.
      *
-     * @param null $url
+     * @param null/string/Closure $url
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */

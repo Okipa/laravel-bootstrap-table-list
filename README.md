@@ -254,10 +254,10 @@ Set the icon to display before the value (optional).
 Set the string value display limitation (optional).  
 Shows "..." when the limit is reached.
 
-##### `public function isLink(Closure $linkClosure): TableListColumn`
+##### `public function isLink($url): TableListColumn`
 Set the link url.  
-You can declare the link as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
-If no url is declared, the url will be set with the column value.
+You can declare the $url as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
+If no $url is declared, it will be set with the column value.
 
 ##### `public function isCustomValue(Closure $customValueClosure): TableListColumn`
 Set a custom value in the method closure (optional).  
