@@ -8,6 +8,15 @@ use InvalidArgumentException;
 trait RoutesValidationChecks
 {
     /**
+     * Get an attribute from the model.
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
+    public abstract function getAttribute($key);
+
+    /**
      * Check routes validity.
      *
      * @param array $routes

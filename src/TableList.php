@@ -386,8 +386,8 @@ class TableList extends Model implements Htmlable
      */
     private function applySortClauses(Builder $query): void
     {
-        $sortBy = $sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy'));
-        $sortDir = $sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir'));
+        $sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy'));
+        $sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir'));
         if ($sortBy && $sortDir) {
             $query->orderBy($sortBy, $sortDir);
             $this->setAttribute('sortBy', $sortBy);
