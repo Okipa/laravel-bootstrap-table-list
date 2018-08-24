@@ -29,8 +29,9 @@
                                     <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}), '-')) }}>
                                         @endif
                                         {{-- icon--}}
-                                        @if($icon = $column->icon)
-                                            {!! $icon !!}
+                                        @if(($column->icon && $entity->{$column->attribute}) 
+                                        || ($column->icon && ! $entity->{$column->attribute} && $column->showIconWithNoValue))
+                                            {!! $column->icon !!}
                                         @endif
                                         {{-- string limit --}}
                                         @if($stringLimit = $column->stringLimit)

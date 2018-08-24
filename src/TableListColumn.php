@@ -28,6 +28,7 @@ class TableListColumn extends Model
         'customValueClosure',
         'customHtmlEltClosure',
         'icon',
+        'showIconWithNoValue'
     ];
 
     /**
@@ -201,12 +202,14 @@ class TableListColumn extends Model
      * Set the icon to display before the value (optional).
      *
      * @param string $icon
+     * @param bool   $showWithNoValue
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setIcon(string $icon): TableListColumn
+    public function setIcon(string $icon, $showWithNoValue = false): TableListColumn
     {
         $this->setAttribute('icon', $icon);
+        $this->setAttribute('showIconWithNoValue', $showWithNoValue);
 
         return $this;
     }
