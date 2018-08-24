@@ -12,51 +12,58 @@
     @else
         @foreach($table->list as $entity)
             <tr {{ classTag(
-            config('tablelist.template.table.tr.class'),
-            config('tablelist.template.table.tbody.tr.class'),
-            $entity->disabled ? $table->disableLinesClass : null,
-            $entity->highlighted ? $table->highlightLinesClass : null
+                config('tablelist.template.table.tr.class'),
+                config('tablelist.template.table.tbody.tr.class'),
+                $entity->disabled ? $table->disableLinesClass : null,
+                $entity->highlighted ? $table->highlightLinesClass : null
             ) }}>
                 @foreach($table->columns as $column)
                     {{--{{ dd($entity->toArray(), $column->attribute) }}--}}
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
-                        {{-- link --}}
-                        @if($isLink = $column->url)
-                            <a href="{{ $isLink instanceof Closure ? $isLink($entity, $column) : ($isLink !== true ? $isLink : $entity->{$column->attribute}) }}" title="{{ strip_tags($column->title) }}">
+                        {{-- custom value --}}
+                        @if($customValueClosure = $column->customValueClosure)
+                            {{ $customValueClosure($entity, $column) }}
+                            {{-- custom html element --}}
+                        @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
+                            {!! $customHtmlEltClosure($entity, $column) !!}
+                        @else
+                            {{-- link --}}
+                            @if(($isLink = $column->url) && ($entity->{$column->attribute} || $column->showIconWithNoValue))
+                                <a href="{{ $isLink instanceof Closure 
+                                    ? $isLink($entity, $column) 
+                                    : ($isLink !== true 
+                                        ? $isLink 
+                                        : $entity->{$column->attribute}) }}" title="{{ strip_tags($column->title) }}">
+                            @endif
+                            {{-- button start--}}
+                            @if(($buttonClass = $column->buttonClass) && ($entity->{$column->attribute} || $column->showIconWithNoValue))
+                                <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}), '-')) }}>
+                            @endif
+                                {{-- icon--}}
+                                @if(($entity->{$column->attribute} && $column->icon) 
+                                || (! $entity->{$column->attribute} && $column->icon && $column->showIconWithNoValue))
+                                    {!! $column->icon !!}
                                 @endif
-                                {{-- button start--}}
-                                @if($buttonClass = $column->buttonClass)
-                                    <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}), '-')) }}>
-                                        @endif
-                                        {{-- icon--}}
-                                        @if(($column->icon && $entity->{$column->attribute}) 
-                                        || ($column->icon && ! $entity->{$column->attribute} && $column->showIconWithNoValue))
-                                            {!! $column->icon !!}
-                                        @endif
-                                        {{-- string limit --}}
-                                        @if($stringLimit = $column->stringLimit)
-                                            {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
-                                            {{-- date format --}}
-                                        @elseif($columnDateFormat = $column->columnDateFormat)
-                                            {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
-                                                'Y-m-d H:i:s', $entity->{$column->attribute}
-                                            )->format($columnDateFormat) : null }}
-                                            {{-- custom value --}}
-                                        @elseif($customValueClosure = $column->customValueClosure)
-                                            {{ $customValueClosure($entity, $column) }}
-                                            {{-- custom html element --}}
-                                        @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
-                                            {!! $customHtmlEltClosure($entity, $column) !!}
-                                            {{-- basic value --}}
-                                        @else
-                                            {!! $entity->{$column->attribute} !!}
-                                        @endif
-                                        {{-- button end --}}
-                                        @if($buttonClass)
-                                    </button>
+                                {{-- string limit --}}
+                                @if($stringLimit = $column->stringLimit)
+                                    {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
+                                    {{-- date format --}}
+                                @elseif($columnDateFormat = $column->columnDateFormat)
+                                    {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
+                                        'Y-m-d H:i:s', $entity->{$column->attribute}
+                                    )->format($columnDateFormat) : null }}
+                                    {{-- basic value --}}
+                                @else
+                                    {!! $entity->{$column->attribute} !!}
                                 @endif
-                                @if($isLink)
-                            </a>
+                            {{-- button end --}}
+                            @if($buttonClass)
+                                </button>
+                            @endif
+                            {{-- link end --}}
+                            @if($isLink)
+                                </a>
+                            @endif
                         @endif
                     </td>
                 @endforeach

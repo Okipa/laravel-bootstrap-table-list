@@ -32,7 +32,7 @@ class LinkTest extends TableListTestCase
 
     public function testIsLinkEmptyHtml()
     {
-        $users = $this->createMultipleUsers(1);
+        $user = $this->createUniqueUser();
         $this->setRoutes(['users'], ['index']);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
@@ -41,12 +41,12 @@ class LinkTest extends TableListTestCase
         $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink();
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
-        $this->assertContains('<a href="' . $users->first()->name . '" title="validation.attributes.name">', $html);
+        $this->assertContains('<a href="' . $user->name . '" title="validation.attributes.name">', $html);
     }
 
     public function testIsLinkStringHtml()
     {
-        $this->createMultipleUsers(1);
+        $this->createUniqueUser();
         $this->setRoutes(['users'], ['index']);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
@@ -60,7 +60,7 @@ class LinkTest extends TableListTestCase
 
     public function testIsLinkClosureHtml()
     {
-        $this->createMultipleUsers(1);
+        $this->createUniqueUser();
         $this->setRoutes(['users'], ['index']);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
@@ -72,5 +72,35 @@ class LinkTest extends TableListTestCase
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertContains('<a href="url" title="validation.attributes.name">', $html);
+    }
+
+    public function testIsLinkWithNoValueHtml()
+    {
+        $user = $this->createUniqueUser();
+        $user->update(['name' => null]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink();
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertNotContains('<a href="' . $user->name . '" title="validation.attributes.name">', $html);
+    }
+
+    public function testIsLinkWithNoValueWithIconHtml()
+    {
+        $user = $this->createUniqueUser();
+        $user->update(['name' => null]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink()->setIcon('icon', true);
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<a href="' . $user->name . '" title="validation.attributes.name">', $html);
     }
 }

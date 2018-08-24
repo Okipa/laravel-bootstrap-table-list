@@ -17,7 +17,7 @@ class ButtonTest extends TableListTestCase
 
     public function testIsButtonHtml()
     {
-        $users = $this->createMultipleUsers(1);
+        $this->createUniqueUser();
         $this->setRoutes(['users'], ['index']);
         $routes = [
             'index' => ['alias' => 'users.index', 'parameters' => []],
@@ -26,6 +26,40 @@ class ButtonTest extends TableListTestCase
         $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isButton(['btn', 'btn-primary']);
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
-        $this->assertContains('<button class="btn btn-primary ' . str_slug($users->first()->name, '-') . '">', $html);
+        $this->assertContains('<button class="btn btn-primary', $html);
+    }
+
+    public function testIsButtonWithNoValueHtml()
+    {
+        $user = $this->createUniqueUser();
+        $user->update(['name' => null]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isButton(['btn', 'btn-primary']);
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertNotContains('<button class="btn btn-primary', $html);
+    }
+
+    public function testIsButtonWithNoValueWithIconHtml()
+    {
+        $user = $this->createUniqueUser();
+        $user->update(['name' => null]);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')
+            ->sortByDefault()
+            ->useForDestroyConfirmation()
+            ->isButton(['btn', 'btn-primary'])
+            ->setIcon('icon', true);
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<button class="btn btn-primary', $html);
     }
 }

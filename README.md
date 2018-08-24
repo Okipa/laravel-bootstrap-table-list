@@ -254,7 +254,7 @@ Set the icon to display before the value (optional).
 Set the string value display limitation (optional).  
 Shows "..." when the limit is reached.
 
-##### `public function isLink($url): TableListColumn`
+##### `public function setIcon(string $icon, $showWithNoValue = false): TableListColumn`
 Set the link url.  
 You can declare the $url as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
 If no $url is declared, it will be set with the column value.
@@ -298,7 +298,28 @@ Then, change the content from the package templates in your `resources/views/ven
 
 ------------------------------------------------------------------------------------------------------------------------
 
+## Testing
+
+```bash
+composer test
+```
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+------------------------------------------------------------------------------------------------------------------------
+
 ## Contributors
 
+- [Okipa](https://github.com/Okipa)
 - [ACID-Solutions](https://github.com/ACID-Solutions)
 - [Stephan de Souza](https://github.com/stephandesouza)
+
+------------------------------------------------------------------------------------------------------------------------
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
