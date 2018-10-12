@@ -17,7 +17,7 @@ class TableListColumn extends Model
     protected $fillable = [
         'tableList',
         'customColumnTable',
-        'columnDatabaseAlias',
+        'customColumnTableRealAttribute',
         'attribute',
         'isSortableColumn',
         'title',
@@ -142,13 +142,14 @@ class TableListColumn extends Model
      * directly belong to the table list model.
      *
      * @param string $customColumnTable
+     * @param string|null $customColumnTableRealAttribute
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setCustomTable(string $customColumnTable, string $columnDatabaseAlias = null): TableListColumn
+    public function setCustomTable(string $customColumnTable, string $customColumnTableRealAttribute = null): TableListColumn
     {
         $this->setAttribute('customColumnTable', $customColumnTable);
-        $this->setAttribute('columnDatabaseAlias', $columnDatabaseAlias);
+        $this->setAttribute('customColumnTableRealAttribute', $customColumnTableRealAttribute);
 
         return $this;
     }

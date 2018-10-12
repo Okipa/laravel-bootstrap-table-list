@@ -26,7 +26,7 @@ trait ColumnsValidationChecks
      * @return bool
      */
     public abstract function isRouteDefined(string $routeKey): bool;
-    
+
     /**
      * Check column model is defined.
      *
@@ -49,33 +49,21 @@ trait ColumnsValidationChecks
      */
     private function checkColumnsValidity(): void
     {
-        $this->getAttribute('columns')->map(function(TableListColumn $column) {
-            $this->checkColumnAttributeIsDeclaredWithAlias($column);
+        $this->getAttribute('columns')->map(function (TableListColumn $column) {
             $this->checkSortableColumnHasAttribute($column);
-            $this->checkAttributeAttributeOrAliasFieldDoesExistRelatedTable($column);
+            $isSearchable = in_array(
+                $column->getAttribute('attribute'),
+                $this->getAttribute('searchableColumns')->pluck('attribute')->toArray()
+            );
+            if($isSearchable) {
+                $this->checkSearchableColumnHasAttribute($column);
+                $this->checkSearchedAttributeDoesExistInRelatedTable($column);
+            }
         });
     }
 
     /**
-     * Check if a column attribute is defined when an alias is found.
-     *
-     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
-     *
-     * @return void
-     * @throws \ErrorException
-     */
-    private function checkColumnAttributeIsDeclaredWithAlias(TableListColumn $column): void
-    {
-        if ($column->getAttribute('columnDatabaseAlias') && ! $column->getAttribute('attribute')) {
-            $errorMessage = 'You must define an attribute when declaring an alias with the « setCustomTable() » method.'
-                            . ' No attribute detected for the column aliased column « '
-                            . $column->getAttribute('columnDatabaseAlias') . ' ».';
-            throw new ErrorException($errorMessage);
-        }
-    }
-
-    /**
-     * Check that the column has an attribute if it is a sortable column.
+     * Check if the sortable column has an attribute.
      *
      * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
      *
@@ -85,8 +73,27 @@ trait ColumnsValidationChecks
     private function checkSortableColumnHasAttribute(TableListColumn $column): void
     {
         if (! $column->getAttribute('attribute') && $column->getAttribute('isSortableColumn')) {
-            $errorMessage = 'A sortable column has no defined attribute. Define a column attribute for each sortable '
-                            . 'columns by setting a string parameter in the « addColumn() » method.';
+            $errorMessage = 'One of the sortable columns has no defined attribute. You have to define a column '
+                            . 'attribute for each sortable columns by setting a string parameter in the '
+                            . '« addColumn() » method.';
+            throw new ErrorException($errorMessage);
+        }
+    }
+
+    /**
+     * Check if the searchable column has an attribute.
+     *
+     * @param \Okipa\LaravelBootstrapTableList\TableListColumn $column
+     *
+     * @return void
+     * @throws \ErrorException
+     */
+    private function checkSearchableColumnHasAttribute(TableListColumn $column): void
+    {
+        if (! $column->getAttribute('attribute')) {
+            $errorMessage = 'One of the searchable columns has no defined attribute. You have to define a column '
+                            . 'attribute for each searchable columns by setting a string parameter in the '
+                            . '« addColumn() » method.';
             throw new ErrorException($errorMessage);
         }
     }
@@ -99,26 +106,17 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkAttributeAttributeOrAliasFieldDoesExistRelatedTable(TableListColumn $column): void
+    private function checkSearchedAttributeDoesExistInRelatedTable(TableListColumn $column): void
     {
-        $attribute = $column->getAttribute('columnDatabaseAlias')
-            ? $column->getAttribute('columnDatabaseAlias')
+        $attribute = $column->getAttribute('customColumnTableRealAttribute')
+            ? $column->getAttribute('customColumnTableRealAttribute')
             : $column->getAttribute('attribute');
         $tableColumns = Schema::getColumnListing($column->getAttribute('customColumnTable'));
-        $isSearchable = in_array(
-            $column->getAttribute('attribute'),
-            $this->getAttribute('searchableColumns')->pluck('attribute')->toArray()
-        );
-        if ($attribute && ! in_array($attribute, $tableColumns) && $isSearchable) {
-            $errorMessage = 'The given ' . ($isSearchable ? 'searchable' : '')
-                            . ' column ' . (
-                            $column->getAttribute('columnDatabaseAlias')
-                                ? 'database alias'
-                                : 'attribute'
-                            ) . ' « ' . $attribute . ' » does not exist in the « '
+        if (! in_array($attribute, $tableColumns)) {
+            $errorMessage = 'The given searchable column attribute « ' . $attribute . ' » does not exist in the « '
                             . $column->getAttribute('customColumnTable')
-                            . ' » table. Set the correct column-related table and alias with the '
-                            . '« setCustomTable() » method.';
+                            . ' » table. Set the correct column-related table and the associated real attribute '
+                            . '(if necessary) with the « setCustomTable() » method.';
             throw new ErrorException($errorMessage);
         }
     }

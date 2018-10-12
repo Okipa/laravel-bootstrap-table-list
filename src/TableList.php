@@ -152,7 +152,7 @@ class TableList extends Model implements Htmlable
      * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $disableLinesClosure
-     * @param array    $lineClass
+     * @param array $lineClass
      *
      * @return \Okipa\LaravelBootstrapTableList\TableList
      */
@@ -174,7 +174,7 @@ class TableList extends Model implements Htmlable
      * The closure let you manipulate the following attribute : $model.
      *
      * @param \Closure $highlightLinesClosure
-     * @param array    $lineClass
+     * @param array $lineClass
      *
      * @return \Okipa\LaravelBootstrapTableList\TableList
      */
@@ -230,7 +230,7 @@ class TableList extends Model implements Htmlable
      * Get the route from its key.
      *
      * @param string $routeKey
-     * @param array  $params
+     * @param array $params
      *
      * @return string
      */
@@ -329,7 +329,7 @@ class TableList extends Model implements Htmlable
     {
         $query = $this->getAttribute('tableModel')->query();
         $this->applyQueryClosure($query);
-        $this->checkColumnsValidity($query);
+        $this->checkColumnsValidity();
         $this->applySearchClauses($query);
         $this->applySortClauses($query);
         $this->paginateList($query);
@@ -360,20 +360,18 @@ class TableList extends Model implements Htmlable
     private function applySearchClauses(Builder $query): void
     {
         if ($searched = $this->getAttribute('request')->search) {
-            $this->getAttribute('searchableColumns')->map(function(TableListColumn $column, int $key) use (
-                &$query,
-                $searched
-            ) {
-                $table = $column->getAttribute('customColumnTable');
-                $attribute = $column->getAttribute('columnDatabaseAlias')
-                    ? $column->getAttribute('columnDatabaseAlias')
-                    : $column->getAttribute('attribute');
-                if ($key > 0) {
-                    $query->orWhere($table . '.' . $attribute, 'like', '%' . $searched . '%');
-                } else {
-                    $query->where($table . '.' . $attribute, 'like', '%' . $searched . '%');
-                }
-            });
+            $this->getAttribute('searchableColumns')
+                ->map(function (TableListColumn $column, int $key) use (&$query, $searched) {
+                    $table = $column->getAttribute('customColumnTable');
+                    $attribute = $column->getAttribute('customColumnTableRealAttribute')
+                        ? $column->getAttribute('customColumnTableRealAttribute')
+                        : $column->getAttribute('attribute');
+                    if ($key > 0) {
+                        $query->orWhere($table . '.' . $attribute, 'like', '%' . $searched . '%');
+                    } else {
+                        $query->where($table . '.' . $attribute, 'like', '%' . $searched . '%');
+                    }
+                });
         }
     }
 
@@ -422,7 +420,7 @@ class TableList extends Model implements Htmlable
     {
         $disableLinesClosure = $this->getAttribute('disableLinesClosure');
         $highlightLinesClosure = $this->getAttribute('highlightLinesClosure');
-        $this->getAttribute('list')->getCollection()->transform(function($model) use (
+        $this->getAttribute('list')->getCollection()->transform(function ($model) use (
             $disableLinesClosure,
             $highlightLinesClosure
         ) {

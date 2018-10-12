@@ -53,6 +53,24 @@ class SortTest extends TableListTestCase
         $table->addColumn('email')->sortByDefault();
     }
 
+    /**
+     * @expectedException ErrorException
+     * @expectedExceptionMessage One of the sortable columns has no defined attribute. You have to define a column
+     *                           attribute for each sortable columns by setting a string parameter in the « addColumn()
+     *                           » method.
+     */
+    public function testSortByColumnWithoutAttribute()
+    {
+        $this->createMultipleUsers(5);
+        $this->setRoutes(['companies'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'companies.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn()->isSortable();
+        $table->render();
+    }
+
     public function testSortByColumn()
     {
         $users = $this->createMultipleUsers(5);

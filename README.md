@@ -59,22 +59,9 @@ $table = app(TableList::class)
     ]);
 // we add some columns to the table list
 $table->addColumn('title')
-    ->setTitle('Title')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
-$table->addColumn('content')
-    ->setTitle('Content')
-    ->setStringLimit(30);
-$table->addColumn('created_at')
-    ->setTitle('Creation date')
-    ->isSortable()
-    ->setColumnDateFormat('d/m/Y H:i:s');
-$table->addColumn('updated_at')
-    ->setTitle('Update date')
-    ->isSortable()
-    ->sortByDefault()
-    ->setColumnDateFormat('d/m/Y H:i:s');
 ```
 Then, send your `$table` object in your view and render your table list :
 ```php
@@ -91,68 +78,90 @@ That's it !
 
 If you need your table list for a more advanced usage, with a multilingual project for example, here is an example of what you can do in your controller :
 ```php
-// we instantiate a table list somewhere in the code
+// create your tablelist instance
 $table = app(TableList::class)
+    // set the model namespace
     ->setModel(News::class)
+    // set a custom request to the table list rather than the request() one.
     ->setRequest($request)
+    // set the route that will be targetted when the create / edit / delete button will be hit.
     ->setRoutes([
         'index'      => ['alias' => 'news.index', 'parameters' => []],
         'create'     => ['alias' => 'news.create', 'parameters' => []],
         'edit'       => ['alias' => 'news.edit', 'parameters' => []],
         'destroy'    => ['alias' => 'news.destroy', 'parameters' => []],
     ])
+    // set the default number of rows to show in your table list.
     ->setRowsNumber(50)
+    // show the rows number selector that will enable you to choose the number of rows to show.
     ->enableRowsNumberSelector()
-    ->addQueryInstructions(function ($query) {
-        $query->select('news.*')
-            ->join('news_translations', 'news.id', '=', 'news_translations.news_id')
-            ->where('news_translations.locale', config('app.locale'));
+    // add some query instructions for the special use cases
+    ->addQueryInstructions(function ($query) use ($category_id) {
+        // some examples of what you can do
+        $query->select('news.*');
+        // add a constraint
+        $query->where('category_id', $category_id);
+        // get value stored in a json field
+        $query->addSelect('news.json_field->>json_attribute as json_attribute');
+        // get a formatted value form a pivot table
+        $query->selectRaw('count(comments.id) as comments_count');
+        $query->leftJoin('news_commment', 'news_commment.news_id', '=', 'news.id');
+        $query->leftJoin('comments', 'comments.id', '=', 'news_commment.comment_id');
+        $query->groupBy('comments.id');
+        // alias a value to make it available from the column model
+        $query->addSelect('users.name as author');
+        $query->join('users', 'users.id', '=', 'news.author_id');
     })
+    // display some lines as disabled
     ->disableLines(function($model){
         return $model->id === 1 || $model->id === 2;
     }, ['disabled', 'bg-secondary'])
+    // display some line as highlighted
     ->highlightLines(function($model){
         return $model->id === 3;
     }, ['highlighted', 'bg-success']);
-// we add columns
+// you can now join some columns to your tablelist.
+// display the news image from a custom HTML element.
 $table->addColumn('image')
     ->isCustomHtmlElement(function ($entity, $column) {
-        if ($src = $entity->{$column->attribute}) {
-            $imageZoomSrc = $entity->imagePath($src, $column->attribute, 'zoom');
-            $imageThumbnailSrc = $entity->imagePath($src, $column->attribute, 'thumbnail');
-
-            return "<a href='$imageZoomSrc' title='Image title' target="blank"><img class='thumbnail' src='$imageThumbnailSrc' alt='Image alt'></a>";
-        }
+        return $entity->{$column->attribute})
+            ? '<img src="' . $entity->{$column->attribute}) . '" alt="' .  $entity->title . '">'
+            : null;
     });
+// display the news title that is contained in the news table and use this field in the destroy confirmation modal.
+// this field will also be searchable in the search field.
 $table->addColumn('title')
-    ->setCustomTable('news_translations')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
+// display an abreviated content from a text with the number of caracters you want.
 $table->addColumn('content')
-    ->setCustomTable('news_translations')
     ->setStringLimit(30);
+// display a value from a sql alias
+// in this case, you will target the `users` table and the `author` field, and make this sortable and searchable.
+// this way, you tell the tablelist to manipulate the `name` attribute in the sql queries but to display the aliased `author` model attribute.
+$table->addColumn('author')
+    ->setCustomTable('users', 'name')
+    ->isSortable()
+    ->isSearchable();
+// display the category with a custom column title, as a button, prefixed with an icon and with a value contained in config.
 $table->addColumn('category_id')
-    ->isButton('btn btn-default')
+    ->setTitle('Category custom name')
+    ->setIcon('your-icon)
+    ->isButton(['btn', 'btn-sm', 'btn-outline-primary'])
     ->isCustomValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
     });
+// display a button to preview the news
 $table->addColumn()
-    ->setTitle(__('news.label.preview'))
-    ->isCustomHtmlElement(function ($entity, $column) {
-        $preview_route = route('news.preview', ['id' => $entity->id]);
-        $preview_label = __('global.action.preview');
-        return "<a class='btn btn-primary' href='$preview_route'>$preview_label</a>";
-    });
+    ->isLink(function($entity, $column){
+        return route('news.show', ['id' => $entity->id]);
+    })
+    ->isButton(['btn', 'btn-sm', 'btn-primary']);
+// display the formatted release date of the news and choose to sort the list by this field by default.
 $table->addColumn('released_at')
     ->isSortable()
     ->sortByDefault('desc')
-    ->setColumnDateFormat('d/m/Y H:i:s');
-$table->addColumn('created_at')
-    ->isSortable()
-    ->setColumnDateFormat('d/m/Y H:i:s');
-$table->addColumn('updated_at')
-    ->isSortable()
     ->setColumnDateFormat('d/m/Y H:i:s');
 ```
 
@@ -235,9 +244,27 @@ Make the column sortable (optional).
 ##### `public function isSearchable(): TableListColumn`
 Make the column searchable (optional).
 
-##### `public function setCustomTable(string $customColumnTable): TableListColumn`
-Set a custom table for the column (optional).  
-Calling this method can be useful if the column attribute does not directly belong to the table list model.
+##### `public function setCustomTable(string $customColumnTable, string $customColumnTableRealAttribute = null): TableListColumn`
+Define the custom related table for the column attribute (optional).  
+Defining the custom related table becomes mandatory if you define your column as searchable and if the column attribute does not directly belong to the table list model table.
+The custom real attribute will only be used for the sql request and will also be required only if the defined column attribute does not directly exist in the defined custom table.
+
+Examples :
+```
+$table = app(TableList::class)->setRoutes($routes)
+    ->setModel(Company::class)
+    ->addQueryInstructions(function($query) {
+        $query->select('companies.*');
+        $query->addSelect('users.name as owner');
+        $query->join('users', 'users.id', '=', 'companies.owner_id');
+    });
+// Here, you target the `owner` attribute, which is an alias produced in the `addSelect` bellow, and which will be attached to the `Company` object.
+// Displaying and sorting this alias attribute wouldn't cause any problem but here, we want to authorize the search by owner.
+// As this attribute does not really exist in the users table, you have to precise which real field to use for the search sql request : the `name` attribute.
+$table->addColumn('owner')
+    ->setCustomTable('users', 'name')
+    ->isSearchable();
+```
 
 ##### `public function setColumnDateFormat(string $columnDateFormat): TableListColumn`
 Set the format for a date (optional).  
@@ -247,17 +274,17 @@ Set the format for a date (optional).
 Set the column button class (optional).  
 The attribute is wrapped into a button.
 
-##### `public function setIcon(string $icon): TableListColumn`
+##### `public function setIcon(string $icon, $showWithNoValue = false): TableListColumn`
 Set the icon to display before the value (optional).
 
 ##### `public function setStringLimit(int $stringLimit): TableListColumn`
 Set the string value display limitation (optional).  
 Shows "..." when the limit is reached.
 
-##### `public function setIcon(string $icon, $showWithNoValue = false): TableListColumn`
+##### `public function isLink($url = null): TableListColumn`
 Set the link url.  
-You can declare the $url as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
-If no $url is declared, it will be set with the column value.
+You can declare the link as a string or as a closure which will let you manipulate the following attributes : $entity, $column.  
+If no url is declared, it will be set with the column value.
 
 ##### `public function isCustomValue(Closure $customValueClosure): TableListColumn`
 Set a custom value in the method closure (optional).  

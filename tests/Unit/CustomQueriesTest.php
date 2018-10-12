@@ -12,7 +12,7 @@ class SetCustomTableTest extends TableListTestCase
 {
     public function testSetAddQueryInstructionsAttribute()
     {
-        $queryClosure = function($query) {
+        $queryClosure = function ($query) {
             $query->select('users.*')->where('users.activated');
         };
         $table = app(TableList::class)->addQueryInstructions($queryClosure);
@@ -29,9 +29,9 @@ class SetCustomTableTest extends TableListTestCase
     public function testSetCustomTableAndAliasAttributes()
     {
         $table = app(TableList::class)->setModel(User::class);
-        $table->addColumn('name')->setCustomTable('custom_table', 'alias');
+        $table->addColumn('name')->setCustomTable('custom_table', 'real_field');
         $this->assertEquals('custom_table', $table->columns->first()->customColumnTable);
-        $this->assertEquals('alias', $table->columns->first()->columnDatabaseAlias);
+        $this->assertEquals('real_field', $table->columns->first()->customColumnTableRealAttribute);
     }
 
     /**
@@ -50,7 +50,7 @@ class SetCustomTableTest extends TableListTestCase
         ];
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -61,8 +61,9 @@ class SetCustomTableTest extends TableListTestCase
 
     /**
      * @expectedException \ErrorException
-     * @expectedExceptionMessage You must define an attribute when declaring an alias with the « setCustomTable() »
-     *                           method. No attribute detected for the column aliased column « name ».
+     * @expectedExceptionMessage One of the searchable columns has no defined attribute. You have to define a column
+     *                           attribute for each searchable columns by setting a string parameter in the «
+     *                           addColumn() » method.
      */
     public function testSearchOnOtherTableFieldWithCustomTableDeclarationWithoutColumnAttribute()
     {
@@ -74,7 +75,7 @@ class SetCustomTableTest extends TableListTestCase
         ];
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -99,7 +100,7 @@ class SetCustomTableTest extends TableListTestCase
         ];
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -124,7 +125,7 @@ class SetCustomTableTest extends TableListTestCase
         ]);
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -159,7 +160,7 @@ class SetCustomTableTest extends TableListTestCase
         ]);
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -167,7 +168,7 @@ class SetCustomTableTest extends TableListTestCase
             ->setRequest($customRequest);
         $table->addColumn('owner')->setCustomTable('users_test', 'name')->isSearchable();
         $table->render();
-        foreach (App(Company::class)->paginate(5) as $key => $company){
+        foreach (App(Company::class)->paginate(5) as $key => $company) {
             $this->assertEquals($company->name, $table->list->toArray()['data'][$key]['name']);
         }
     }
@@ -188,7 +189,7 @@ class SetCustomTableTest extends TableListTestCase
         ]);
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
@@ -217,7 +218,7 @@ class SetCustomTableTest extends TableListTestCase
         ]);
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(Company::class)
-            ->addQueryInstructions(function($query) {
+            ->addQueryInstructions(function ($query) {
                 $query->select('companies_test.*');
                 $query->addSelect('users_test.name as owner');
                 $query->join('users_test', 'users_test.id', '=', 'companies_test.owner_id');
