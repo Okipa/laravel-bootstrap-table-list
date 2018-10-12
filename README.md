@@ -147,7 +147,7 @@ $table->addColumn('author')
 // display the category with a custom column title, as a button, prefixed with an icon and with a value contained in config.
 $table->addColumn('category_id')
     ->setTitle('Category custom name')
-    ->setIcon('your-icon)
+    ->setIcon('your-icon')
     ->isButton(['btn', 'btn-sm', 'btn-outline-primary'])
     ->isCustomValue(function ($entity, $column) {
         return config('news.category.' . $entity->{$column->attribute});
