@@ -10,7 +10,7 @@ class HighlightLineTest extends TableListTestCase
 {
     public function testHighlightLinesAttribute()
     {
-        $highlightLinesClosure = function($model) {
+        $highlightLinesClosure = function ($model) {
             return $model->id === 1;
         };
         $highlightedLinesClass = ['test-highlighted-custom-class'];
@@ -33,7 +33,7 @@ class HighlightLineTest extends TableListTestCase
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(User::class)
             ->setRoutes($routes)
-            ->highlightLines(function($model) use ($users) {
+            ->highlightLines(function ($model) use ($users) {
                 return $model->id === 1 || $model->id === 2;
             });
         $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
@@ -64,7 +64,7 @@ class HighlightLineTest extends TableListTestCase
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(User::class)
             ->setRoutes($routes)
-            ->highlightLines(function($model) use ($users) {
+            ->highlightLines(function ($model) use ($users) {
                 return $model->id === 1 || $model->id === 2;
             }, ['test-highlighted-custom-class']);
         $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();

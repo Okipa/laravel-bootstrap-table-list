@@ -127,11 +127,13 @@ class SearchTest extends TableListTestCase
         $this->assertContains('name="search"', $thead);
         $this->assertContains(
             'placeholder="' . trans('tablelist::tablelist.thead.search') . ' '
-            . $table->getSearchableTitles() . '"', $thead
+            . $table->getSearchableTitles() . '"',
+            $thead
         );
         $this->assertContains(
             'title="' . trans('tablelist::tablelist.thead.search') . ' '
-            . $table->getSearchableTitles() . '"', $thead
+            . $table->getSearchableTitles() . '"',
+            $thead
         );
     }
 

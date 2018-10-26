@@ -10,7 +10,7 @@ class DisableLineTest extends TableListTestCase
 {
     public function testSetDisableLinesAttribute()
     {
-        $disableLinesClosure = function($model) {
+        $disableLinesClosure = function ($model) {
             return $model->id === 1;
         };
         $disabledLinesClass = ['test-disabled-custom-class'];
@@ -33,7 +33,7 @@ class DisableLineTest extends TableListTestCase
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(User::class)
             ->setRoutes($routes)
-            ->disableLines(function($model) use ($users) {
+            ->disableLines(function ($model) use ($users) {
                 return $model->id === 1 || $model->id === 2;
             });
         $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();
@@ -66,7 +66,7 @@ class DisableLineTest extends TableListTestCase
         $table = app(TableList::class)->setRoutes($routes)
             ->setModel(User::class)
             ->setRoutes($routes)
-            ->disableLines(function($model) use ($users) {
+            ->disableLines(function ($model) use ($users) {
                 return $model->id === 1 || $model->id === 2;
             }, ['test-disabled-custom-class']);
         $table->addColumn('name')->setTitle('Name')->sortByDefault()->useForDestroyConfirmation();

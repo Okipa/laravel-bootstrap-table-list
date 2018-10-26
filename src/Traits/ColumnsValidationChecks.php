@@ -55,7 +55,7 @@ trait ColumnsValidationChecks
                 $column->getAttribute('attribute'),
                 $this->getAttribute('searchableColumns')->pluck('attribute')->toArray()
             );
-            if($isSearchable) {
+            if ($isSearchable) {
                 $this->checkSearchableColumnHasAttribute($column);
                 $this->checkSearchedAttributeDoesExistInRelatedTable($column);
             }

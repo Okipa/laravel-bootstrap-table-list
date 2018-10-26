@@ -162,7 +162,7 @@ $table->addColumn()
 $table->addColumn('released_at')
     ->isSortable()
     ->sortByDefault('desc')
-    ->setColumnDateFormat('d/m/Y H:i:s');
+    ->setColumnDateTimeFormat('d/m/Y H:i:s');
 ```
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -266,9 +266,9 @@ $table->addColumn('owner')
     ->isSearchable();
 ```
 
-##### `public function setColumnDateFormat(string $columnDateFormat): TableListColumn`
-Set the format for a date (optional).  
-(Carbon is used to format the date).
+##### `public function setColumnDateTimeFormat(string $columnDateFormat): TableListColumn`
+Set the format for a datetime, date or time attribute (optional).  
+(Carbon::parse($value)->format($format) method is used under the hood).
 
 ##### `public function isButton(string $buttonClass): TableListColumn`
 Set the column button class (optional).  
@@ -279,7 +279,7 @@ Set the icon to display before the value (optional).
 
 ##### `public function setStringLimit(int $stringLimit): TableListColumn`
 Set the string value display limitation (optional).  
-Shows "..." when the limit is reached.
+Shows "..." when the limit is reached....ravel-bootstrap-table-list/src/Traits/RoutesValidationChecks.php
 
 ##### `public function isLink($url = null): TableListColumn`
 Set the link url.  

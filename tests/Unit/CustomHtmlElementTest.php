@@ -11,7 +11,8 @@ class CustomHtmlElementTest extends TableListTestCase
     public function testSetIsCustomHtmlElementAttribute()
     {
         $table = app(TableList::class)->setModel(User::class);
-        $closure = function($entity, $column) { };
+        $closure = function ($entity, $column) {
+        };
         $table->addColumn('name')->isCustomHtmlElement($closure);
         $this->assertEquals($closure, $table->columns->first()->customHtmlEltClosure);
     }

@@ -298,7 +298,8 @@ class TableList extends Model implements Htmlable
     private function handleRequest(): void
     {
         $validator = Validator::make(
-            $this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'), [
+            $this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'),
+            [
                 'rowsNumber' => 'required|numeric',
                 'search'     => 'nullable|string',
                 'sortBy'     => 'nullable|string|in:' . $this->getAttribute('columns')->implode('attribute', ','),

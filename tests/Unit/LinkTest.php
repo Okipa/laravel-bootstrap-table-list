@@ -25,7 +25,8 @@ class LinkTest extends TableListTestCase
     public function testSetIsLinkAttributeClosure()
     {
         $table = app(TableList::class)->setModel(User::class);
-        $closure = function($entity, $column) { };
+        $closure = function ($entity, $column) {
+        };
         $table->addColumn('name')->isLink($closure);
         $this->assertEquals($closure, $table->columns->first()->url);
     }
@@ -66,7 +67,7 @@ class LinkTest extends TableListTestCase
             'index' => ['alias' => 'users.index', 'parameters' => []],
         ];
         $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
-        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink(function() {
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->isLink(function () {
             return 'url';
         });
         $table->render();

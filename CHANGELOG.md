@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.5
+2018-10-26
+- Replaced the `setColumnDateFormat()` by the `setColumnDateTimeFormat` method, which now allows to format a datetime, date or time string in the wanted format, using `Carbn::parse($value)->format($format)` under the hood.
+- The `setColumnDateFormat()` has been deprecated and will be removed in the `2.2` version.
+
 ## 2.1.4
 2018-10-12
 - Updated documentation in order to give more examples in the advanced usage.

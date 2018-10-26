@@ -22,19 +22,20 @@ class TableListColumn extends Model
         'isSortableColumn',
         'title',
         'columnDateFormat',
+        'columnDateTimeFormat',
         'buttonClass',
         'stringLimit',
         'url',
         'customValueClosure',
         'customHtmlEltClosure',
         'icon',
-        'showIconWithNoValue'
+        'showIconWithNoValue',
     ];
 
     /**
      * TableListColumn constructor.
      *
-     * @param TableList   $tableList
+     * @param TableList $tableList
      * @param string|null $attribute
      */
     public function __construct(TableList $tableList, string $attribute = null)
@@ -146,8 +147,10 @@ class TableListColumn extends Model
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
-    public function setCustomTable(string $customColumnTable, string $customColumnTableRealAttribute = null): TableListColumn
-    {
+    public function setCustomTable(
+        string $customColumnTable,
+        string $customColumnTableRealAttribute = null
+    ): TableListColumn {
         $this->setAttribute('customColumnTable', $customColumnTable);
         $this->setAttribute('customColumnTableRealAttribute', $customColumnTableRealAttribute);
 
@@ -158,13 +161,30 @@ class TableListColumn extends Model
      * Set the format for a date (optional).
      * (Carbon is used to format the date).
      *
-     * @param string|null $columnDateFormat
+     * @deprecated 2.0 This method will be removed in the v2.0. Please use the setColumnDateTimeFormat() method instead.
+     *
+     * @param string $columnDateFormat
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */
     public function setColumnDateFormat(string $columnDateFormat): TableListColumn
     {
         $this->setAttribute('columnDateFormat', $columnDateFormat);
+
+        return $this;
+    }
+
+    /**
+     * Set the format for a datetime, date or time attribute (optional).
+     * (Carbon::parse($value)->format($format) method is used under the hood).
+     *
+     * @param string $columnDateTimeFormat
+     *
+     * @return \Okipa\LaravelBootstrapTableList\TableListColumn
+     */
+    public function setColumnDateTimeFormat(string $columnDateTimeFormat): TableListColumn
+    {
+        $this->setAttribute('columnDateTimeFormat', $columnDateTimeFormat);
 
         return $this;
     }
@@ -203,7 +223,7 @@ class TableListColumn extends Model
      * Set the icon to display before the value (optional).
      *
      * @param string $icon
-     * @param bool   $showWithNoValue
+     * @param bool $showWithNoValue
      *
      * @return \Okipa\LaravelBootstrapTableList\TableListColumn
      */

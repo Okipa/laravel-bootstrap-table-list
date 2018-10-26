@@ -32,7 +32,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^3.6",
-        "mockery/mockery": "^1.2"
+        "mockery/mockery": "^1.2",
+        "squizlabs/php_codesniffer": "^3.3"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +46,11 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": [
+            "vendor/bin/phpcbf",
+            "vendor/bin/phpcs",
+            "phpunit"
+        ]
     },
     "extra": {
         "laravel": {

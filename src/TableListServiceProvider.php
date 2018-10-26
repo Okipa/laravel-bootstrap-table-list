@@ -22,7 +22,8 @@ class TableListServiceProvider extends ServiceProvider
             __DIR__ . '/../views' => resource_path('views/vendor/tablelist'),
         ], 'tablelist::views');
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/tablelist.php', 'tablelist'
+            __DIR__ . '/../config/tablelist.php',
+            'tablelist'
         );
         // we load the laravel html helper package
         // https://github.com/Okipa/laravel-html-helper
@@ -31,7 +32,7 @@ class TableListServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton('Okipa\TableList', function(Application $app) {
+        $this->app->singleton('Okipa\TableList', function (Application $app) {
             $tableList = $app->make(TableList::class);
 
             return $tableList;

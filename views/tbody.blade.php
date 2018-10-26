@@ -47,12 +47,17 @@
                                 {{-- string limit --}}
                                 @if($stringLimit = $column->stringLimit)
                                     {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
-                                    {{-- date format --}}
+                                {{-- date format --}}
                                 @elseif($columnDateFormat = $column->columnDateFormat)
-                                    {{ $entity->{$column->attribute} ? Carbon\Carbon::createFromFormat(
-                                        'Y-m-d H:i:s', $entity->{$column->attribute}
-                                    )->format($columnDateFormat) : null }}
-                                    {{-- basic value --}}
+                                    {{ $entity->{$column->attribute} 
+                                        ? Carbon\Carbon::parse($entity->{$column->attribute})->format($columnDateFormat) 
+                                        : null }}
+                                {{-- time format --}}
+                                @elseif($columnDateTimeFormat = $column->columnDateTimeFormat)
+                                    {{ $entity->{$column->attribute} 
+                                        ? Carbon\Carbon::parse($entity->{$column->attribute})->format($columnDateTimeFormat)
+                                        : null }}
+                                {{-- basic value --}}
                                 @else
                                     {!! $entity->{$column->attribute} !!}
                                 @endif

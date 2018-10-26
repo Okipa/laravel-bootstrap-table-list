@@ -93,8 +93,8 @@ trait RoutesValidationChecks
                 if (! in_array($requiredRouteParam, array_keys($route))) {
                     throw new ErrorException(
                         'The « ' . $requiredRouteParam . ' » key is missing from the « ' . $routeKey
-                        . ' » route definition. Each route key must contain an array with a (string) « alias » key and a '
-                        . '(array) « parameters » value. Check the following example : '
+                        . ' » route definition. Each route key must contain an array with a (string) '
+                        . '« alias » key and a (array) « parameters » value. Check the following example : '
                         . '["index" => ["alias" => "news.index","parameters" => []]. '
                         . 'Fix your routes declaration in the « setRoutes() » method.'
                     );

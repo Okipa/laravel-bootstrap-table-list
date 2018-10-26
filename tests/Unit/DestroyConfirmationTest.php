@@ -58,7 +58,7 @@ class DestroyConfirmationTest extends TableListTestCase
             $this->assertContains('action="http://localhost/users/destroy?id=' . $user->id . '"', $tbody);
             $this->assertContains('data-target="#destroy-confirm-modal-' . $user->id . '"', $tbody);
             $this->assertContains(trans('tablelist::tablelist.modal.question', [
-                'entity' => $table->destroyAttributes->map(function($attribute) use ($user) {
+                'entity' => $table->destroyAttributes->map(function ($attribute) use ($user) {
                     return $user->{$attribute};
                 })->implode(' '),
             ]), $tbody);
