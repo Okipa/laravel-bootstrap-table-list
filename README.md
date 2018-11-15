@@ -270,7 +270,7 @@ $table->addColumn('owner')
 Set the format for a datetime, date or time attribute (optional).  
 (Carbon::parse($value)->format($format) method is used under the hood).
 
-##### `public function isButton(string $buttonClass): TableListColumn`
+##### `public function isButton(array $buttonClass = []): TableListColumn`
 Set the column button class (optional).  
 The attribute is wrapped into a button.
 
