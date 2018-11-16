@@ -24,7 +24,7 @@ trait RoutesValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkRoutesValidity(array $routes): void
+    protected function checkRoutesValidity(array $routes): void
     {
         $requiredRouteKeys = ['index'];
         $optionalRouteKeys = ['create', 'edit', 'destroy'];
@@ -43,7 +43,7 @@ trait RoutesValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkRequiredRoutesValidity(array $routes, array $requiredRouteKeys): void
+    protected function checkRequiredRoutesValidity(array $routes, array $requiredRouteKeys): void
     {
         $routeKeys = array_keys($routes);
         foreach ($requiredRouteKeys as $requiredRouteKey) {
@@ -65,7 +65,7 @@ trait RoutesValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkAllowedRoutesValidity(array $routes, array $allowedRouteKeys): void
+    protected function checkAllowedRoutesValidity(array $routes, array $allowedRouteKeys): void
     {
         foreach ($routes as $routeKey => $route) {
             if (! in_array($routeKey, $allowedRouteKeys)) {
@@ -85,7 +85,7 @@ trait RoutesValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkRoutesStructureValidity(array $routes): void
+    protected function checkRoutesStructureValidity(array $routes): void
     {
         $requiredRouteParams = ['alias', 'parameters'];
         foreach ($routes as $routeKey => $route) {
@@ -103,7 +103,7 @@ trait RoutesValidationChecks
         }
     }
 
-    private function checkRouteIsDefined(string $routeKey)
+    protected function checkRouteIsDefined(string $routeKey)
     {
         if (! isset($this->getAttribute('routes')[$routeKey]) || empty($this->getAttribute('routes')[$routeKey])) {
             throw new InvalidArgumentException(

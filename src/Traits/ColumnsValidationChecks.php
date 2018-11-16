@@ -33,7 +33,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkModelIsDefined(): void
+    protected function checkModelIsDefined(): void
     {
         if (! $this->getAttribute('tableModel') instanceof Model) {
             $errorMessage = 'The table list model has not been defined or is not an instance of « '
@@ -47,7 +47,7 @@ trait ColumnsValidationChecks
      *
      * @return void
      */
-    private function checkColumnsValidity(): void
+    protected function checkColumnsValidity(): void
     {
         $this->getAttribute('columns')->map(function (TableListColumn $column) {
             $this->checkSortableColumnHasAttribute($column);
@@ -70,7 +70,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkSortableColumnHasAttribute(TableListColumn $column): void
+    protected function checkSortableColumnHasAttribute(TableListColumn $column): void
     {
         if (! $column->getAttribute('attribute') && $column->getAttribute('isSortableColumn')) {
             $errorMessage = 'One of the sortable columns has no defined attribute. You have to define a column '
@@ -88,7 +88,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkSearchableColumnHasAttribute(TableListColumn $column): void
+    protected function checkSearchableColumnHasAttribute(TableListColumn $column): void
     {
         if (! $column->getAttribute('attribute')) {
             $errorMessage = 'One of the searchable columns has no defined attribute. You have to define a column '
@@ -106,7 +106,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkSearchedAttributeDoesExistInRelatedTable(TableListColumn $column): void
+    protected function checkSearchedAttributeDoesExistInRelatedTable(TableListColumn $column): void
     {
         $attribute = $column->getAttribute('customColumnTableRealAttribute')
             ? $column->getAttribute('customColumnTableRealAttribute')
@@ -127,7 +127,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkIfAtLeastOneColumnIsDeclared(): void
+    protected function checkIfAtLeastOneColumnIsDeclared(): void
     {
         if ($this->getAttribute('columns')->isEmpty()) {
             $errorMessage = 'No column has been added to the table list. Please add at least one column by using the '
@@ -142,7 +142,7 @@ trait ColumnsValidationChecks
      * @return void
      * @throws \ErrorException
      */
-    private function checkDestroyAttributesDefinition(): void
+    protected function checkDestroyAttributesDefinition(): void
     {
         if ($this->isRouteDefined('destroy') && $this->getAttribute('destroyAttributes')->isEmpty()) {
             $errorMessage = 'No columns have been chosen for the destroy confirmation. '

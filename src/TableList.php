@@ -295,7 +295,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function handleRequest(): void
+    protected function handleRequest(): void
     {
         $validator = Validator::make(
             $this->getAttribute('request')->only('rowsNumber', 'search', 'sortBy', 'sortDir'),
@@ -326,7 +326,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function generateEntitiesListFromQuery(): void
+    protected function generateEntitiesListFromQuery(): void
     {
         $query = $this->getAttribute('tableModel')->query();
         $this->applyQueryClosure($query);
@@ -344,7 +344,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function applyQueryClosure(Builder $query): void
+    protected function applyQueryClosure(Builder $query): void
     {
         if ($closure = $this->getAttribute('queryClosure')) {
             $closure($query);
@@ -358,7 +358,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function applySearchClauses(Builder $query): void
+    protected function applySearchClauses(Builder $query): void
     {
         if ($searched = $this->getAttribute('request')->search) {
             $this->getAttribute('searchableColumns')
@@ -383,7 +383,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function applySortClauses(Builder $query): void
+    protected function applySortClauses(Builder $query): void
     {
         $sortBy = $this->getAttribute('request')->get('sortBy', $this->getAttribute('sortBy'));
         $sortDir = $this->getAttribute('request')->get('sortDir', $this->getAttribute('sortDir'));
@@ -401,7 +401,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function paginateList(Builder $query): void
+    protected function paginateList(Builder $query): void
     {
         $this->setAttribute('list', $query->paginate($this->getAttribute('rowsNumber')));
         $this->getAttribute('list')->appends([
@@ -417,7 +417,7 @@ class TableList extends Model implements Htmlable
      *
      * @return void
      */
-    private function applyClosuresOnPaginatedList(): void
+    protected function applyClosuresOnPaginatedList(): void
     {
         $disableLinesClosure = $this->getAttribute('disableLinesClosure');
         $highlightLinesClosure = $this->getAttribute('highlightLinesClosure');
