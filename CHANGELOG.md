@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.1.7](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.7)
+2018-11-23
+- Custom values can now be wrapped into a button and a link as all other kind of values.
+
 ## [2.1.6](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.6)
 2018-11-16
 - Transformed all `private` methods into `protected` method to allow customizations.

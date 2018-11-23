@@ -20,11 +20,8 @@
                 @foreach($table->columns as $column)
                     {{--{{ dd($entity->toArray(), $column->attribute) }}--}}
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
-                        {{-- custom value --}}
-                        @if($customValueClosure = $column->customValueClosure)
-                            {{ $customValueClosure($entity, $column) }}
-                            {{-- custom html element --}}
-                        @elseif($customHtmlEltClosure = $column->customHtmlEltClosure)
+                        {{-- custom html element --}}
+                        @if($customHtmlEltClosure = $column->customHtmlEltClosure)
                             {!! $customHtmlEltClosure($entity, $column) !!}
                         @else
                             {{-- link --}}
@@ -36,16 +33,30 @@
                                         : $entity->{$column->attribute}) }}" title="{{ strip_tags($column->title) }}">
                             @endif
                             {{-- button start--}}
-                            @if(($buttonClass = $column->buttonClass) && ($entity->{$column->attribute} || $column->showIconWithNoValue))
-                                <button {{ classTag($buttonClass, str_slug(strip_tags($entity->{$column->attribute}), '-')) }}>
+                            @if($showButton = ($buttonClass = $column->buttonClass) 
+                                && ($entity->{$column->attribute} 
+                                    || ($customValueClosure = $column->customValueClosure) 
+                                    || $column->showIconWithNoValue))
+                                <button {{ classTag(
+                                    $buttonClass,
+                                    $entity->{$column->attribute} 
+                                        ? str_slug(strip_tags($entity->{$column->attribute}), '-')
+                                        : null,
+                                    isset($customValueClosure)
+                                        ? str_slug(strip_tags($customValueClosure($entity, $column)), '-')
+                                        : null
+                                ) }}>
                             @endif
                                 {{-- icon--}}
                                 @if(($entity->{$column->attribute} && $column->icon) 
                                 || (! $entity->{$column->attribute} && $column->icon && $column->showIconWithNoValue))
                                     {!! $column->icon !!}
                                 @endif
+                                {{-- custom value --}}
+                                @if($customValueClosure = $column->customValueClosure)
+                                    {{ $customValueClosure($entity, $column) }}
                                 {{-- string limit --}}
-                                @if($stringLimit = $column->stringLimit)
+                                @elseif($stringLimit = $column->stringLimit)
                                     {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
                                 {{-- date format --}}
                                 @elseif($columnDateFormat = $column->columnDateFormat)
@@ -62,7 +73,7 @@
                                     {!! $entity->{$column->attribute} !!}
                                 @endif
                             {{-- button end --}}
-                            @if($buttonClass)
+                            @if($showButton)
                                 </button>
                             @endif
                             {{-- link end --}}

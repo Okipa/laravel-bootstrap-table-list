@@ -27,6 +27,7 @@ class ButtonTest extends TableListTestCase
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertContains('<button class="btn btn-primary', $html);
+        $this->assertContains('</button>', $html);
     }
 
     public function testIsButtonWithNoValueHtml()
@@ -42,6 +43,7 @@ class ButtonTest extends TableListTestCase
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertNotContains('<button class="btn btn-primary', $html);
+        $this->assertNotContains('</button>', $html);
     }
 
     public function testIsButtonWithNoValueWithIconHtml()
@@ -61,5 +63,23 @@ class ButtonTest extends TableListTestCase
         $table->render();
         $html = view('tablelist::tbody', ['table' => $table])->render();
         $this->assertContains('<button class="btn btn-primary', $html);
+        $this->assertContains('</button>', $html);
+    }
+
+    public function testIsButtonWithCustomValueHtml()
+    {
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $user = $this->createUniqueUser();
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault();
+        $table->addColumn()->isButton(['buttonClass'])->isCustomValue(function($entity){
+            return 'user name = ' . $entity->name;
+        });
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('<button class="buttonClass user-name-' . str_slug(strip_tags($user->name)) . '">', $html);
+        $this->assertContains('</button>', $html);
     }
 }
