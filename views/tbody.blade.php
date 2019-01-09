@@ -18,66 +18,66 @@
                 $entity->highlighted ? $table->highlightLinesClass : null
             ) }}>
                 @foreach($table->columns as $column)
+                    @php
+                        $value = $entity->{$column->attribute};
+                        $customHtml = $column->customHtmlEltClosure ? ($column->customHtmlEltClosure)($entity, $column) : null;
+                        $customValue = $column->customValueClosure ? ($column->customValueClosure)($entity, $column) : null;
+                        $link = $column->url instanceof Closure 
+                                    ? ($column->url)($entity, $column) 
+                                    : ($column->url !== true 
+                                        ? $column->url 
+                                        : ($customValue ? $customValue : $value));
+                        $showLink = $link && ($customValue || $value || $column->showIconWithNoValue);
+                        $showButton = $column->buttonClass && ($value || $customValue || $column->showIconWithNoValue);
+                    @endphp
                     {{--{{ dd($entity->toArray(), $column->attribute) }}--}}
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
                         {{-- custom html element --}}
-                        @if($customHtmlEltClosure = $column->customHtmlEltClosure)
-                            {!! $customHtmlEltClosure($entity, $column) !!}
+                        @if($customHtml)
+                            {!! $customHtml !!}
                         @else
                             {{-- link --}}
-                            @if(($isLink = $column->url) && ($entity->{$column->attribute} || $column->showIconWithNoValue))
-                                <a href="{{ $isLink instanceof Closure 
-                                    ? $isLink($entity, $column) 
-                                    : ($isLink !== true 
-                                        ? $isLink 
-                                        : $entity->{$column->attribute}) }}" title="{{ strip_tags($column->title) }}">
+                            @if($showLink)
+                                <a href="{{ $link }}" title="{{ $customValue ? $customValue : $value }}">
                             @endif
                             {{-- button start--}}
-                            @if($showButton = ($buttonClass = $column->buttonClass) 
-                                && ($entity->{$column->attribute} 
-                                    || ($customValueClosure = $column->customValueClosure) 
-                                    || $column->showIconWithNoValue))
+                            @if($showButton)
                                 <button {{ classTag(
-                                    $buttonClass,
-                                    $entity->{$column->attribute} 
-                                        ? str_slug(strip_tags($entity->{$column->attribute}), '-')
-                                        : null,
-                                    isset($customValueClosure)
-                                        ? str_slug(strip_tags($customValueClosure($entity, $column)), '-')
-                                        : null
+                                    $column->buttonClass,
+                                    $value ? str_slug(strip_tags($value), '-') : null,
+                                    $customValue ? str_slug(strip_tags($customValue), '-') : null
                                 ) }}>
                             @endif
                                 {{-- icon--}}
-                                @if(($entity->{$column->attribute} && $column->icon) 
-                                || (! $entity->{$column->attribute} && $column->icon && $column->showIconWithNoValue))
+                                @if(($value && $column->icon) || (! $value && $column->icon && $column->showIconWithNoValue))
                                     {!! $column->icon !!}
                                 @endif
                                 {{-- custom value --}}
-                                @if($customValueClosure = $column->customValueClosure)
-                                    {{ $customValueClosure($entity, $column) }}
+                                @if($customValue)
+                                    {{ $customValue }}
                                 {{-- string limit --}}
-                                @elseif($stringLimit = $column->stringLimit)
-                                    {{ str_limit(strip_tags($entity->{$column->attribute}), $stringLimit) }}
+                                @elseif($column->stringLimit)
+                                    {{ str_limit(strip_tags($value), $column->stringLimit) }}
                                 {{-- date format --}}
-                                @elseif($columnDateFormat = $column->columnDateFormat)
-                                    {{ $entity->{$column->attribute} 
-                                        ? Carbon\Carbon::parse($entity->{$column->attribute})->format($columnDateFormat) 
+                                @elseif($column->columnDateFormat)
+                                    {{ $value 
+                                        ? Carbon\Carbon::parse($value)->format($column->columnDateFormat) 
                                         : null }}
                                 {{-- time format --}}
-                                @elseif($columnDateTimeFormat = $column->columnDateTimeFormat)
-                                    {{ $entity->{$column->attribute} 
-                                        ? Carbon\Carbon::parse($entity->{$column->attribute})->format($columnDateTimeFormat)
+                                @elseif($column->columnDateTimeFormat)
+                                    {{ $value 
+                                        ? Carbon\Carbon::parse($value)->format($column->columnDateTimeFormat)
                                         : null }}
                                 {{-- basic value --}}
                                 @else
-                                    {!! $entity->{$column->attribute} !!}
+                                    {!! $value !!}
                                 @endif
                             {{-- button end --}}
                             @if($showButton)
                                 </button>
                             @endif
                             {{-- link end --}}
-                            @if($isLink)
+                            @if($showLink)
                                 </a>
                             @endif
                         @endif

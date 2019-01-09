@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1.8](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.8)
+2019-01-09
+- `isLink()` does now work with custom values. 
+- `isLink()` does now use the custom value or the value to set the link title.
+
 ## [2.1.7](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.7)
 2018-11-23
 - Custom values can now be wrapped into a button and a link as all other kind of values.
