@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.1.9](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.9)
+2019-01-09
+- `setIcon()` does now show the defined icon when a custom value is set, without needing forcing the icon displaying with the second boolean param. 
+
 ## [2.1.8](https://github.com/Okipa/laravel-bootstrap-table-list/releases/tag/2.1.8)
 2019-01-09
 - `isLink()` does now work with custom values. 

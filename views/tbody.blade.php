@@ -27,8 +27,9 @@
                                     : ($column->url !== true 
                                         ? $column->url 
                                         : ($customValue ? $customValue : $value));
-                        $showLink = $link && ($customValue || $value || $column->showIconWithNoValue);
-                        $showButton = $column->buttonClass && ($value || $customValue || $column->showIconWithNoValue);
+                        $showIcon = $column->icon && (($customValue || $value) || $column->showIconWithNoValue);
+                        $showLink = $link && ($customValue || $value || $showIcon);
+                        $showButton = $column->buttonClass && ($value || $customValue || $showIcon);
                     @endphp
                     {{--{{ dd($entity->toArray(), $column->attribute) }}--}}
                     <td {{ classTag(config('tablelist.template.table.td.class'), config('tablelist.template.table.tbody.td.class')) }}>
@@ -49,7 +50,7 @@
                                 ) }}>
                             @endif
                                 {{-- icon--}}
-                                @if(($value && $column->icon) || (! $value && $column->icon && $column->showIconWithNoValue))
+                                @if($showIcon)
                                     {!! $column->icon !!}
                                 @endif
                                 {{-- custom value --}}

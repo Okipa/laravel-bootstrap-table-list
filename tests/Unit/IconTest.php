@@ -38,6 +38,22 @@ class IconTest extends TableListTestCase
         $this->assertContains('icon', $html);
     }
 
+    public function testSetIconWithCustomValueHtml()
+    {
+        $this->createMultipleUsers(1);
+        $this->setRoutes(['users'], ['index']);
+        $routes = [
+            'index' => ['alias' => 'users.index', 'parameters' => []],
+        ];
+        $table = app(TableList::class)->setRoutes($routes)->setModel(User::class);
+        $table->addColumn('name')->sortByDefault()->useForDestroyConfirmation()->setIcon('icon')->isCustomValue(function(){
+            return 'test';
+        });
+        $table->render();
+        $html = view('tablelist::tbody', ['table' => $table])->render();
+        $this->assertContains('icon', $html);
+    }
+
     public function testSetIconWithNoValueHtml()
     {
         $user = $this->createUniqueUser();
@@ -53,7 +69,7 @@ class IconTest extends TableListTestCase
         $this->assertNotContains('icon', $html);
     }
 
-    public function testSetIconWithNoButShowAnywayValueHtml()
+    public function testSetIconWithNoValueButShowAnywayValueHtml()
     {
         $user = $this->createUniqueUser();
         $user->update(['name' => null]);
