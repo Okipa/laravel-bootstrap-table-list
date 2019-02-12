@@ -59,5 +59,6 @@
             ]
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "abandoned": "This package is abandoned and has been replaced by https://github.com/Okipa/laravel-table. Only bug fixes will be merged. Please consider moving to the new package."
 }
