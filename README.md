@@ -135,7 +135,7 @@ $table->addColumn('title')
     ->isSortable()
     ->isSearchable()
     ->useForDestroyConfirmation();
-// display an abreviated content from a text with the number of caracters you want.
+// display an abbreviated content from a text with the number of caracters you want.
 $table->addColumn('content')
     ->setStringLimit(30);
 // display a value from a sql alias
